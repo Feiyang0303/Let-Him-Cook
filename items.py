@@ -4,3 +4,6 @@ class Item:
         self.name=name
         self.id=id
         self.image=image
+        
+     def display_item(self):
+         pass
