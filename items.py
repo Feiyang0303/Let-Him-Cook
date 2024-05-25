@@ -1,3 +1,6 @@
 
 class Item:
-    pass
+    def __init__(self, name, id, image=''):
+        self.name=name
+        self.id=id
+        self.image=image
