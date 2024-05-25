@@ -1,3 +1,6 @@
+import pygame as pg
+import math
+import sys
 
 class Item:
     def __init__(self, name, id, image=''):
