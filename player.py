@@ -10,12 +10,13 @@ class Player:
 
         self.game = game
         self.x, self.y = 0, 0
+        self.show_inventory = False
     
 
     def update(self):
         self.move()
     
-        def call_key_event(self, event):
+    def call_key_event(self, event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_i:
                 self.toggle_inventory()
