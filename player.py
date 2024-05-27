@@ -15,8 +15,10 @@ class Player:
     def update(self):
         self.move()
     
-    def call_key_event(self, key_event):
-        pass
+        def call_key_event(self, event):
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_i:
+                self.toggle_inventory()
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -47,6 +49,6 @@ class Player:
         }    
     def draw(self):
         pg.draw.rect(self.game.screen, (255, 255, 255), (self.x*TILE_WIDTH, SCREEN_HEIGHT - self.y*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT))
-
-class Inventory:
-    pass
+    
+    def toggle_inventory(self):
+        self.show_inventory = True
