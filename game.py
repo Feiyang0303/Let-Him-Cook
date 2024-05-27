@@ -4,6 +4,7 @@ import math, sys, random
 from player import *
 from world import *
 from settings import *
+from items import Inventory
 
 class Game:
     def __init__(self):
@@ -18,6 +19,7 @@ class Game:
     def new_game(self):
         self.world = World(self)
         self.player = Player(self)
+        self.inventory = Inventory()
 
     def load_game(self, savedata):
         pass
