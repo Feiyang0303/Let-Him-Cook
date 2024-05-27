@@ -38,6 +38,8 @@ class Game:
     def draw(self):
         self.world.draw()
         self.player.draw()
+        if self.player.show_inventory:
+            self.inventory.draw(self.screen)
 
     def run(self):
         while True:
