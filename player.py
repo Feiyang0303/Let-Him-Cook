@@ -40,6 +40,11 @@ class Player:
         self.x += dx * self.game.DT
         self.y += dy * self.game.DT
 
+    def serialize_state(self):
+        return {
+            'x': self.x,
+            'y': self.y
+        }    
     def draw(self):
         pg.draw.rect(self.game.screen, (255, 255, 255), (self.x*TILE_WIDTH, SCREEN_HEIGHT - self.y*TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT))
 
