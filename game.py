@@ -5,6 +5,7 @@ from savesystem import *
 from player import *
 from world import *
 from settings import *
+from items import Storage
 
 class Game:
     def __init__(self):
@@ -19,6 +20,7 @@ class Game:
     def new_game(self):
         self.world = World(self)
         self.player = Player(self)
+        self.storage = Storage()
 
     def load_game(self):
         self.world = World(self)
@@ -42,6 +44,8 @@ class Game:
     def draw(self):
         self.world.draw()
         self.player.draw()
+        if self.player.show_storage:
+            self.storage.draw(self.screen)
 
     def run(self):
         while True:
