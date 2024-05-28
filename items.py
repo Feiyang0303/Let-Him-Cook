@@ -14,7 +14,7 @@ class Item:
 
 
 #inventory
-class Inventory:
+class Storage:
     #table
     ROWS = 6
     COLS = 6
@@ -23,22 +23,22 @@ class Inventory:
 
     def __init__(self):
         self.items = []
-        for row in range(Inventory.ROWS):
+        for row in range(Storage.ROWS):
             row_current = []
-            for col in range(Inventory.COLS):
+            for col in range(Storage.COLS):
                 row_current.append(None)  # initilize with empty space
             self.items.append(row_current)
 
     def append_items(self, item, row, col):
-        if 0 <= row <= Inventory.ROWS and 0 <= col < Inventory.COLS:
+        if 0 <= row <= Storage.ROWS and 0 <= col <Storage.COLS:
             self.items[row][col] = item
 
     def draw(self, screen):
-        for row in range(Inventory.ROWS):
-            for col in range(Inventory.COLS):
-                x = col * Inventory.SLOT_SIZE
-                y = row * Inventory.SLOT_SIZE
-                pg.draw.rect(screen, (255, 255, 255), (x, y, Inventory.SLOT_SIZE, Inventory.SLOT_SIZE), 3)
+        for row in range(Storage.ROWS):
+            for col in range(Storage.COLS):
+                x = col * Storage.SLOT_SIZE
+                y = row * Storage.SLOT_SIZE
+                pg.draw.rect(screen, (255, 255, 255), (x, y, Storage.SLOT_SIZE, Storage.SLOT_SIZE), 3)
                 if self.items[row][col]:
                     self.items[row][col].display_image(screen, x, y)
 
