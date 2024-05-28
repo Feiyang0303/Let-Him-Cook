@@ -9,6 +9,10 @@ class World:
         self.game = game
         self.world_objects = []
 
+        # floor
+        self.floor_tile_image = pg.image.load("sprites/floor_tile.png")
+        self.floor_tile_image = pg.transform.scale(self.floor_tile_image, (TILE_WIDTH, TILE_HEIGHT))
+
     def update(self):
         pass
 
@@ -21,12 +25,17 @@ class World:
             world_object.draw()
     
     def debug_draw_grid(self):
-        # draw debug grid
-        for x in range(0, SCREEN_WIDTH, TILE_WIDTH):
-            pg.draw.line(self.game.screen, (40, 40, 40), (x, 0), (x, SCREEN_HEIGHT))
+        
+            
         for y in range(0, SCREEN_HEIGHT, TILE_HEIGHT):
-            pg.draw.line(self.game.screen, (40, 40, 40), (0, y), (SCREEN_WIDTH, y))
+            for x in range(0, SCREEN_WIDTH, TILE_WIDTH):
+                self.game.screen.blit(self.floor_tile_image, (x, y))
 
+        # draw debug grid
+        # for x in range(0, SCREEN_WIDTH, TILE_WIDTH):
+        #     pg.draw.line(self.game.screen, (40, 40, 40), (x, 0), (x, SCREEN_HEIGHT))
+        # for y in range(0, SCREEN_HEIGHT, TILE_HEIGHT):
+        #     pg.draw.line(self.game.screen, (40, 40, 40), (0, y), (SCREEN_WIDTH, y))
 
 class WorldObject:
     def __init__(self, game) -> None:

@@ -1,6 +1,7 @@
 import pygame as pg
 import math, sys, random
 
+from savesystem import *
 from player import *
 from world import *
 from settings import *
@@ -19,13 +20,16 @@ class Game:
         self.world = World(self)
         self.player = Player(self)
 
-    def load_game(self, savedata):
-        pass
+    def load_game(self):
+        self.world = World(self)
+        self.player = Player(self)
+        load_game_state(self)
 
     # tickables
     def events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
+                save_game_state(self)
                 pg.quit()
                 sys.exit()
             self.player.call_key_event(event)
