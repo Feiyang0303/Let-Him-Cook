@@ -1,18 +1,18 @@
 import pygame as pg
 import math, sys, random
 
-from player import *
-from world import *
+from player import Player
+from world import World
 from settings import *
 from items import Inventory
+
 
 class Game:
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
         self.FPS = 60
-        self.DT = 1/self.FPS
+        self.DT = 1 / self.FPS
         self.clock = pg.time.Clock()
 
     # initialization
@@ -20,6 +20,7 @@ class Game:
         self.world = World(self)
         self.player = Player(self)
         self.inventory = Inventory()
+
 
     def load_game(self, savedata):
         pass
