@@ -15,12 +15,13 @@ class Game:
         self.FPS = 60
         self.DT = 1/self.FPS
         self.clock = pg.time.Clock()
+        self.storage = Storage()
 
-    # initialization
+        # initialization
     def new_game(self):
         self.world = World(self)
         self.player = Player(self)
-        self.storage = Storage()
+
 
     def load_game(self):
         self.world = World(self)
