@@ -53,4 +53,4 @@ class Player:
                      (self.x * TILE_WIDTH, SCREEN_HEIGHT - self.y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT))
 
     def toggle_storage(self):
-        self.show_storage = True
+        self.show_storage = not self.show_storage
