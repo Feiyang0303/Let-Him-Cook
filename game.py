@@ -1,9 +1,11 @@
 import pygame as pg
 import math, sys, random
 
+from gameObject import *
 from savesystem import *
 from player import *
 from world import *
+from worldEditor import *
 from settings import *
 from items import Storage
 
@@ -17,6 +19,18 @@ class Game:
         self.clock = pg.time.Clock()
         self.storage = Storage()
 
+        self.eventees = []
+
+        self.isFreezed = False
+        self.isPaused = False
+        self.gameState = PLAY_STATE
+
+        self.eventees = []
+
+        self.isFreezed = False
+        self.isPaused = False
+        self.gameState = PLAY_STATE
+
         # initialization
     def new_game(self):
         self.world = World(self)
@@ -28,6 +42,13 @@ class Game:
         self.player = Player(self)
         load_game_state(self)
 
+    def set_game_state(self, state):
+        self.gameState = state
+        self.isFreezed = self.gameState != PLAY_STATE
+    
+    def check_freeze(self):
+        self.isFreezed = self.isPaused or (self.gameState != PLAY_STATE)
+
     # tickables
     def events(self):
         for event in pg.event.get():
@@ -35,22 +56,34 @@ class Game:
                 save_game_state(self)
                 pg.quit()
                 sys.exit()
-            self.player.call_key_event(event)
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.isPaused = not self.isPaused
+            
+            for eventee in self.eventees:
+                eventee.callEvent(event)
 
     def update(self):
         self.world.update()
         self.player.update()
-        pg.display.update()
+    
+    def immuneUpdate(self):
+        self.world.immuneUpdate()
+        self.player.immuneUpdate()
 
     def draw(self):
         self.world.draw()
         self.player.draw()
+        pg.display.update()
         if self.player.show_storage:
             self.storage.draw(self.screen)
 
     def run(self):
         while True:
+            self.check_freeze()
             self.events()
-            self.update()
+            if not self.isFreezed:
+                self.update()
+            self.immuneUpdate()
             self.draw()
-            self.clock.tick(self.FPS)
+            self.DT = self.clock.tick(self.FPS) / 1000

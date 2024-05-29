@@ -2,16 +2,20 @@ import pygame as pg
 import math
 import sys
 
+from gameObject import *
 from settings import *
 
-class World:
+class World(GameObject):
     def __init__(self, game):
         self.game = game
-        self.world_objects = []
-
-        # floor
-        self.floor_tile_image = pg.image.load("sprites/floor_tile.png")
-        self.floor_tile_image = pg.transform.scale(self.floor_tile_image, (TILE_WIDTH, TILE_HEIGHT))
+        self.world = []
+        
+        self.floor_image = pg.image.load("sprites/floor_tile.png")
+        self.floor_image = pg.transform.scale(self.floor_image, (TILE_WIDTH, TILE_HEIGHT))
+    
+    def generateWorld(self):
+        self.world = [[0]*WORLD_WIDTH for row in range(WORLD_HEIGHT)]
+        self.world[10] = [1]*WORLD_WIDTH
 
     def update(self):
         pass
@@ -21,31 +25,20 @@ class World:
 
         self.debug_draw_grid()
         
-        for world_object in self.world_objects:
-            world_object.draw()
+        # for world_object in self.world_objects:
+        #     world_object.draw()
     
     def debug_draw_grid(self):
-        
-            
         for y in range(0, SCREEN_HEIGHT, TILE_HEIGHT):
             for x in range(0, SCREEN_WIDTH, TILE_WIDTH):
-                self.game.screen.blit(self.floor_tile_image, (x, y))
+                self.game.screen.blit(self.floor_image, (x, y))
 
-        # draw debug grid
-        # for x in range(0, SCREEN_WIDTH, TILE_WIDTH):
-        #     pg.draw.line(self.game.screen, (40, 40, 40), (x, 0), (x, SCREEN_HEIGHT))
-        # for y in range(0, SCREEN_HEIGHT, TILE_HEIGHT):
-        #     pg.draw.line(self.game.screen, (40, 40, 40), (0, y), (SCREEN_WIDTH, y))
+        #draw debug grid
+        for x in range(0, SCREEN_WIDTH, TILE_WIDTH):
+            pg.draw.line(self.game.screen, (40, 40, 40), (x, 0), (x, SCREEN_HEIGHT))
+        for y in range(0, SCREEN_HEIGHT, TILE_HEIGHT):
+            pg.draw.line(self.game.screen, (40, 40, 40), (0, y), (SCREEN_WIDTH, y))
 
-class WorldObject:
-    def __init__(self, game) -> None:
-        self.game = game
-    
-    def update(self):
-        pass
-
-    def draw(self):
-        pass
 
 
 class Tile:

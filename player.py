@@ -2,24 +2,19 @@ import pygame as pg
 import math
 import sys
 
+from gameObject import *
 from settings import *
 
-
-class Player:
+class Player(GameObject):
     def __init__(self, game):
-        self.MSPEED = 10
-
         self.game = game
-        self.x, self.y = 0, 0
+        self.game.eventees.append(self)
         self.show_storage = False
+        self.x, self.y = 2, 2
+        self.mspeed = PLAYER_MOVEMENT_SPEED    
 
     def update(self):
         self.move()
-
-    def call_key_event(self, event):
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_i:
-                self.toggle_storage()
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -33,8 +28,8 @@ class Player:
             orth[1] = 1
         if keys[pg.K_s]:
             orth[1] = -1
-
-        mult = self.MSPEED * (1 if (orth[0] == 0 or orth[1] == 0) else 0.7071)
+        
+        mult = self.mspeed * (1 if (orth[0]==0 or orth[1]==0) else 0.7071)
 
         self.try_move(orth[0] * mult, orth[1] * mult)
 
