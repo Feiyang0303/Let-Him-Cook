@@ -38,7 +38,7 @@ class Storage:
             for col in range(Storage.COLS):
                 x = col * Storage.SLOT_SIZE
                 y = row * Storage.SLOT_SIZE
-                pg.draw.rect(screen, (255, 255, 255), (x, y, Storage.SLOT_SIZE, Storage.SLOT_SIZE), 3)
+                pg.draw.rect(screen, (255, 255, 255), (x, y, Storage.SLOT_SIZE, Storage.SLOT_SIZE), 1)
                 if self.items[row][col]:
                     self.items[row][col].display_image(screen, x, y)
 
