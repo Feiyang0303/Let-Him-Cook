@@ -102,8 +102,11 @@ class Building(Tile):
 class Shop(Building):
     pass
 
-class Storage(Building):
-    pass
+class Fridge(Building):
+    def __init__(self):
+        self.storage=Storage()
+    def interact(self):
+        pass
 
 class Processor(Building):
     pass
