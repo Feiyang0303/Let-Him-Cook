@@ -1,5 +1,2 @@
-tiles.clear()
-for h in range(level_height):
-   tiles.append([])
-   for w in range(level_width):
-       tiles[h].append(0)
+
+        self.floor_image = pg.image.load("sprites/floor_tile.png")

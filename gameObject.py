@@ -4,10 +4,12 @@ import sys
 
 class GameObject:
     def __init__(self, game) -> None:
-        self.x, self.y = 0, 0
-        self.sprite = None
-
         self.game = game
+
+        self.rect = pg.Rect(0, 0, 0, 0)
+
+        self.sprite = None
+        self.spriteRect = pg.Rect(0, 0, 0, 0)
     
     def update(self):
         pass

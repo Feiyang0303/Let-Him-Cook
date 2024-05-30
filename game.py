@@ -13,6 +13,7 @@ class Game:
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.world_surf = pg.Surface((WORLD_WIDTH * TILE_WIDTH, WORLD_HEIGHT * TILE_HEIGHT))
 
         self.FPS = 60
         self.DT = 1/self.FPS
@@ -72,11 +73,15 @@ class Game:
         self.player.immuneUpdate()
 
     def draw(self):
+        self.screen.fill(BACKGROUND_COLOUR)
         self.world.draw()
         self.player.draw()
-        pg.display.update()
         if self.player.show_storage:
             self.storage.draw(self.screen)
+
+        self.screen.blit(self.world_surf, (MARGIN, MARGIN))
+
+        pg.display.update()
 
     def run(self):
         while True:

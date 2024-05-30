@@ -11,7 +11,7 @@ class Player(GameObject):
         self.game.eventees.append(self)
         self.show_storage = False
         self.x, self.y = 2, 2
-        self.mspeed = PLAYER_MOVEMENT_SPEED    
+        self.mspeed = PLAYER_MOVEMENT_SPEED
 
     def update(self):
         self.move()
@@ -44,7 +44,7 @@ class Player(GameObject):
         }
 
     def draw(self):
-        pg.draw.rect(self.game.screen, (255, 255, 255),
+        pg.draw.rect(self.game.world_surf, (255, 255, 255),
                      (self.x * TILE_WIDTH, SCREEN_HEIGHT - self.y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT))
 
     def toggle_storage(self):
