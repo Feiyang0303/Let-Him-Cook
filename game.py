@@ -60,6 +60,8 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.isPaused = not self.isPaused
+                elif event.key == pg.K_i:
+                    self.player.show_inventory = not self.player.show_inventory
             
             for eventee in self.eventees:
                 eventee.callEvent(event)
