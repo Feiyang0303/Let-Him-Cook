@@ -1,1 +1,1 @@
-from game import Game
+8

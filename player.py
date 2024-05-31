@@ -40,6 +40,8 @@ class Player(GameObject):
         # Collision Info
         self.collisionInfo = PlayerCollisionInfo()
 
+        self.disable_movement_cap_timer = 0
+
     def update(self):
         self.move()
     
@@ -50,6 +52,9 @@ class Player(GameObject):
                     self.selected_building.interact()
             elif event.key == pg.K_i:
                 self.toggle_storage()
+            elif event.key == pg.K_LSHIFT:
+                self.velocity = self.dir * DASH_POWER
+                self.disable_movement_cap_timer = TIME_TO_TAKE_DASH
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -75,14 +80,19 @@ class Player(GameObject):
             self.dir = orth.copy()
         
         acceleration = (1 if (orth[0]==0 or orth[1]==0) else 0.7071) * orth * PLAYER_ACCELERATION
-        if not (keys[pg.K_d] or keys[pg.K_a]):
-            acceleration.x = -sign(self.velocity.x) * min(abs(self.velocity.x / self.game.DT), PLAYER_DECELERATION)
-        if not (keys[pg.K_w] or keys[pg.K_s]):
-            acceleration.y = -sign(self.velocity.y) * min(abs(self.velocity.y / self.game.DT), PLAYER_DECELERATION)
 
-        self.velocity += acceleration * self.game.DT
+        if self.disable_movement_cap_timer <= 0:
+            if not (keys[pg.K_d] or keys[pg.K_a]):
+                acceleration.x = -sign(self.velocity.x) * min(abs(self.velocity.x / self.game.DT), PLAYER_DECELERATION)
+            if not (keys[pg.K_w] or keys[pg.K_s]):
+                acceleration.y = -sign(self.velocity.y) * min(abs(self.velocity.y / self.game.DT), PLAYER_DECELERATION)
+
+            self.velocity += acceleration * self.game.DT
         
         max_speed = (1 if (orth[0]==0 or orth[1]==0) else 0.7071) * PLAYER_MAX_SPEED
+        if self.disable_movement_cap_timer > 0:
+            max_speed = math.inf
+            self.disable_movement_cap_timer -= self.game.DT
         self.velocity = pg.Vector2(clampAbsolute(self.velocity.x, max_speed), clampAbsolute(self.velocity.y, max_speed))
 
         self.try_move(self.velocity * self.game.DT)
@@ -140,7 +150,19 @@ class Player(GameObject):
 
         if not self.collisionInfo.collidingY:
             self.pos.y += delta.y
+        
 
+        if self.pos.x < 0:
+            self.pos.x = 0
+        if self.pos.y < 0:
+            self.pos.y = 0
+        
+        if self.pos.x > WORLD_WIDTH - self.hitbox.x:
+            self.pos.x = WORLD_WIDTH - self.hitbox.x
+        if self.pos.y > WORLD_HEIGHT - self.hitbox.y:
+            self.pos.y = WORLD_HEIGHT - self.hitbox.y
+
+    
     def get_selected_tile(self):
         rounded_pos = pg.Vector2(round(self.pos.x), round(self.pos.y))
         selected_pos = rounded_pos + self.dir

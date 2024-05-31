@@ -32,7 +32,9 @@ class Game:
     def new_game(self):
         self.world = World(self)
         self.player = Player(self)
-        self.scoreText = Text(self, "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), pg.Vector2(0, 0))
+
+        self.scoreText = Text(self, "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), pg.Vector2(MARGIN, MARGIN))
+        self.scoreText.set_text(f"${MONEY}")
 
     def load_game(self):
         self.new_game()
@@ -86,16 +88,11 @@ class Game:
 
     def run(self):
         while True:
-            self.DT = self.clock.tick(self.FPS) / 1000
             self.events()
-            if (not self.lagCompensation):
-                self.DT = 1/self.FPS
+            self.DT = min(self.clock.tick(self.FPS) / 1000, 1/12)
             
             self.check_freeze()
             if not self.isFreezed:
                 self.update()
             self.immuneUpdate()
             self.draw()
-            # if (self.removeLagCompensation > 0):
-            #     self.DT = 1/self.FPS
-                # self.removeLagCompensation -= 1
