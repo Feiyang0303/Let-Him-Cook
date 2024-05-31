@@ -4,48 +4,153 @@ import sys
 
 from gameObject import *
 from settings import *
+from tools import *
+from world import *
+
+class PlayerCollisionInfo:
+    def __init__(self):
+        self.reset()
+    
+    def reset(self):
+        self.isColliding = False
+        self.collidingX = False
+        self.collidingY = False
+        self.collidingRight = False
+        self.collidingLeft = False
+        self.collidingTop = False
+        self.collidingDown = False
+        self.collidingTile = None
+
 
 class Player(GameObject):
     def __init__(self, game):
         self.game = game
+        self.pos = pg.Vector2(2, 2)
+        self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
+
+        self.velocity = pg.Vector2(0, 0)
+
         self.game.eventees.append(self)
         self.show_storage = False
-        self.x, self.y = 2, 2
-        self.mspeed = PLAYER_MOVEMENT_SPEED
+        
+        # Selected Tile
+        self.selected_building = None
+        self.dir = pg.Vector2(1, 0)
+
+        # Collision Info
+        self.collisionInfo = PlayerCollisionInfo()
 
     def update(self):
         self.move()
+    
+    def callEvent(self, event):
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_e:
+                if self.selected_building != None:
+                    self.selected_building.interact()
 
     def move(self):
         keys = pg.key.get_pressed()
 
-        orth = [0, 0]
+        orth = pg.Vector2(0, 0)
         if keys[pg.K_d]:
-            orth[0] = 1
+            self.dir.x = 1
+            orth.x = 1
+            if self.velocity.x < 0: self.velocity.x = 0
         if keys[pg.K_a]:
-            orth[0] = -1
+            self.dir.x = -1
+            orth.x = -1
+            if self.velocity.x > 0: self.velocity.x = 0
         if keys[pg.K_w]:
-            orth[1] = 1
+            self.dir.y = -1
+            orth.y = -1
+            if self.velocity.y > 0: self.velocity.y = 0
         if keys[pg.K_s]:
-            orth[1] = -1
+            self.dir.x = 1
+            orth.y = 1
+            if self.velocity.y < 0: self.velocity.y = 0
+        if keys[pg.K_d] or keys[pg.K_a] or keys[pg.K_w] or keys[pg.K_s]:
+            self.dir = orth.copy()
         
-        mult = self.mspeed * (1 if (orth[0]==0 or orth[1]==0) else 0.7071)
+        acceleration = (1 if (orth[0]==0 or orth[1]==0) else 0.7071) * orth * PLAYER_ACCELERATION
+        if not (keys[pg.K_d] or keys[pg.K_a]):
+            acceleration.x = -sign(self.velocity.x) * min(abs(self.velocity.x / self.game.DT), PLAYER_DECELERATION)
+        if not (keys[pg.K_w] or keys[pg.K_s]):
+            acceleration.y = -sign(self.velocity.y) * min(abs(self.velocity.y / self.game.DT), PLAYER_DECELERATION)
 
-        self.try_move(orth[0] * mult, orth[1] * mult)
+        self.velocity += acceleration * self.game.DT
+        
+        max_speed = (1 if (orth[0]==0 or orth[1]==0) else 0.7071) * PLAYER_MAX_SPEED
+        self.velocity = pg.Vector2(clampAbsolute(self.velocity.x, max_speed), clampAbsolute(self.velocity.y, max_speed))
 
-    def try_move(self, dx, dy):
-        self.x += dx * self.game.DT
-        self.y += dy * self.game.DT
+        self.try_move(self.velocity * self.game.DT)
+        self.get_selected_tile()
 
-    def serialize_state(self):
-        return {
-            'x': self.x,
-            'y': self.y
-        }
+    def try_move(self, delta:pg.Vector2):
+        self.collisionInfo.reset()
+
+        # resolve x collisions first before the other
+        fposx = pg.Vector2(self.pos.x + delta.x, self.pos.y)
+
+        for y in range(WORLD_HEIGHT):
+            for x in range(WORLD_WIDTH):
+                tile = self.game.world.get(x, y)
+
+                isSolidBuilding = isinstance(tile, Building) and tile.isSolid
+                if not isSolidBuilding: continue
+
+                if (are_hitboxes_colliding(fposx, self.hitbox, tile.pos, tile.hitbox)):
+                    self.collisionInfo.isColliding = True
+                    self.collisionInfo.collidingX = True
+                    self.collisionInfo.collidingLeft = delta.x < 0
+                    self.collisionInfo.collidingRight = delta.x > 0
+
+                    if self.collisionInfo.collidingRight:
+                        self.pos.x = tile.pos.x - self.hitbox.x
+                    else:
+                        self.pos.x = tile.pos.x + tile.hitbox.x
+
+        if not self.collisionInfo.collidingX:
+            self.pos.x += delta.x
+        
+
+        # now we can safely do y collisions! hoorah
+
+        fposy = pg.Vector2(self.pos.x, self.pos.y + delta.y)
+
+        for y in range(WORLD_HEIGHT):
+            for x in range(WORLD_WIDTH):
+                tile = self.game.world.get(x, y)
+
+                isSolidBuilding = isinstance(tile, Building) and tile.isSolid
+                if not isSolidBuilding: continue
+
+                if (are_hitboxes_colliding(fposy, self.hitbox, tile.pos, tile.hitbox)):
+                    self.collisionInfo.isColliding = True
+                    self.collisionInfo.collidingY = True
+                    self.collisionInfo.collidingTop = delta.y < 0
+                    self.collisionInfo.collidingDown = delta.y > 0
+
+                    if self.collisionInfo.collidingTop:
+                        self.pos.y = tile.pos.y + tile.hitbox.y
+                    else:
+                        self.pos.y = tile.pos.y - self.hitbox.y
+
+        if not self.collisionInfo.collidingY:
+            self.pos.y += delta.y
+
+    def get_selected_tile(self):
+        rounded_pos = pg.Vector2(round(self.pos.x), round(self.pos.y))
+        selected_pos = rounded_pos + self.dir
+        self.selected_building = self.game.world.get(int(selected_pos.x), int(selected_pos.y))
+        if not isinstance(self.selected_building, Building):
+            self.selected_building = None
 
     def draw(self):
-        pg.draw.rect(self.game.world_surf, (255, 255, 255),
-                     (self.x * TILE_WIDTH, SCREEN_HEIGHT - self.y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT))
-
+        pg.draw.rect(self.game.world_surf, (255, 255, 255), (self.pos.x * TILE_WIDTH, self.pos.y * TILE_HEIGHT, self.hitbox.x*TILE_WIDTH, self.hitbox.y*TILE_HEIGHT))
+        if self.selected_building != None:
+            pg.draw.rect(self.game.world_surf, (255, 255, 255), (self.selected_building.pos.x * TILE_WIDTH, self.selected_building.pos.y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT), 2)
+    
     def toggle_storage(self):
         self.show_storage = not self.show_storage
+    

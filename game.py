@@ -28,15 +28,11 @@ class Game:
 
         self.eventees = []
 
-        self.isFreezed = False
-        self.isPaused = False
-        self.gameState = PLAY_STATE
+        self.removeLagCompensation = False
 
-        # initialization
     def new_game(self):
         self.world = World(self)
         self.player = Player(self)
-
 
     def load_game(self):
         self.world = World(self)
@@ -50,8 +46,9 @@ class Game:
     def check_freeze(self):
         self.isFreezed = self.isPaused or (self.gameState != PLAY_STATE)
 
-    # tickables
     def events(self):
+        self.removeLagCompensation = False
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 save_game_state(self)
@@ -62,7 +59,11 @@ class Game:
                     self.isPaused = not self.isPaused
                 elif event.key == pg.K_i:
                     self.player.show_inventory = not self.player.show_inventory
-            
+            elif event.type == pg.VIDEOEXPOSE:
+                print("MOVIGN WINDOW BEEP BEEP")
+                self.removeLagCompensation = 5
+                self.DT = 1/self.FPS
+
             for eventee in self.eventees:
                 eventee.callEvent(event)
 
@@ -87,10 +88,17 @@ class Game:
 
     def run(self):
         while True:
-            self.check_freeze()
+            self.DT = self.clock.tick(self.FPS) / 1000
             self.events()
+            if (self.removeLagCompensation > 0):
+                self.DT = 1/self.FPS
+                self.removeLagCompensation -= 1
+            
+            self.check_freeze()
             if not self.isFreezed:
                 self.update()
             self.immuneUpdate()
             self.draw()
-            self.DT = self.clock.tick(self.FPS) / 1000
+            # if (self.removeLagCompensation > 0):
+            #     self.DT = 1/self.FPS
+                # self.removeLagCompensation -= 1
