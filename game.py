@@ -13,7 +13,7 @@ class Game:
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.world_surf = pg.Surface((WORLD_WIDTH * TILE_WIDTH, WORLD_HEIGHT * TILE_HEIGHT))
+        self.world_surf = pg.Surface((WORLD_WIDTH * TILE_WIDTH, (WORLD_HEIGHT + WORLD_WALL_HEIGHT) * TILE_HEIGHT))
 
         self.FPS = 60
         self.DT = 1/self.FPS
@@ -25,8 +25,6 @@ class Game:
         self.isFreezed = False
         self.isPaused = False
         self.gameState = PLAY_STATE
-
-        self.eventees = []
 
         self.removeLagCompensation = False
 
@@ -57,8 +55,6 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.isPaused = not self.isPaused
-                elif event.key == pg.K_i:
-                    self.player.show_inventory = not self.player.show_inventory
             elif event.type == pg.VIDEOEXPOSE:
                 print("MOVIGN WINDOW BEEP BEEP")
                 self.removeLagCompensation = 5
@@ -79,10 +75,9 @@ class Game:
         self.screen.fill(BACKGROUND_COLOUR)
         self.world.draw()
         self.player.draw()
+        self.screen.blit(self.world_surf, (MARGIN, MARGIN + STATS_MARGIN))
         if self.player.show_storage:
             self.storage.draw(self.screen)
-
-        self.screen.blit(self.world_surf, (MARGIN, MARGIN))
 
         pg.display.update()
 

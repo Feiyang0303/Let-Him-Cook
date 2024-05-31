@@ -48,6 +48,8 @@ class Player(GameObject):
             if event.key == pg.K_e:
                 if self.selected_building != None:
                     self.selected_building.interact()
+            elif event.key == pg.K_i:
+                self.toggle_storage()
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -147,9 +149,9 @@ class Player(GameObject):
             self.selected_building = None
 
     def draw(self):
-        pg.draw.rect(self.game.world_surf, (255, 255, 255), (self.pos.x * TILE_WIDTH, self.pos.y * TILE_HEIGHT, self.hitbox.x*TILE_WIDTH, self.hitbox.y*TILE_HEIGHT))
+        pg.draw.rect(self.game.world_surf, (255, 255, 255), ((self.pos.x + self.game.world.scroll.x) * TILE_WIDTH, (self.pos.y + self.game.world.scroll.y) * TILE_HEIGHT, self.hitbox.x*TILE_WIDTH, self.hitbox.y*TILE_HEIGHT))
         if self.selected_building != None:
-            pg.draw.rect(self.game.world_surf, (255, 255, 255), (self.selected_building.pos.x * TILE_WIDTH, self.selected_building.pos.y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT), 2)
+            pg.draw.rect(self.game.world_surf, (255, 255, 255), ((self.selected_building.pos.x + self.game.world.scroll.x) * TILE_WIDTH, (self.selected_building.pos.y + self.game.world.scroll.y) * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT), 2)
     
     def toggle_storage(self):
         self.show_storage = not self.show_storage

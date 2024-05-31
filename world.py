@@ -20,6 +20,8 @@ class World(GameObject):
                              "fridge" :     Building(self.game, "fridge", "sprites/Fridge.png")}
         
         self.generateWorld()
+
+        self.scroll = pg.Vector2(0, WORLD_WALL_HEIGHT)
     
     def generateWorld(self):
         self.floor_layer = [[self.tile_library["wood-floor"].copy(pg.Vector2(x, y)) for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
@@ -36,6 +38,7 @@ class World(GameObject):
         pass
 
     def draw(self):
+        self.game.world_surf.fill((255, 255, 255))
         [[self.floor_layer[y][x].draw() for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
         [[self.building_layer[y][x].draw() for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
 
@@ -54,7 +57,7 @@ class Tile(GameObject):
         super().__init__(game, pos, hitbox, sprite, spriteRect)
     
     def draw(self):
-        self.game.world_surf.blit(self.sprite, (self.pos.x*TILE_WIDTH + self.spriteRect.x, self.pos.y*TILE_HEIGHT + self.spriteRect.y))
+        self.game.world_surf.blit(self.sprite, ((self.pos.x + self.game.world.scroll.x)*TILE_WIDTH + self.spriteRect.x, (self.pos.y + self.game.world.scroll.y)*TILE_HEIGHT + self.spriteRect.y))
 
     def copy(self, pos:pg.Vector2):
         return Tile(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect)
