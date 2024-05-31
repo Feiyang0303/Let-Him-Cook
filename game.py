@@ -7,6 +7,7 @@ from player import *
 from world import *
 from worldEditor import *
 from settings import *
+from userinterface import *
 from items import Storage
 
 class Game:
@@ -26,15 +27,15 @@ class Game:
         self.isPaused = False
         self.gameState = PLAY_STATE
 
-        self.removeLagCompensation = False
+        self.lagCompensation = True
 
     def new_game(self):
         self.world = World(self)
         self.player = Player(self)
+        self.scoreText = Text(self, "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), pg.Vector2(0, 0))
 
     def load_game(self):
-        self.world = World(self)
-        self.player = Player(self)
+        self.new_game()
         load_game_state(self)
 
     def set_game_state(self, state):
@@ -45,7 +46,7 @@ class Game:
         self.isFreezed = self.isPaused or (self.gameState != PLAY_STATE)
 
     def events(self):
-        self.removeLagCompensation = False
+        self.lagCompensation = True
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -57,7 +58,7 @@ class Game:
                     self.isPaused = not self.isPaused
             elif event.type == pg.VIDEOEXPOSE:
                 print("MOVIGN WINDOW BEEP BEEP")
-                self.removeLagCompensation = 5
+                self.lagCompensation = False
                 self.DT = 1/self.FPS
 
             for eventee in self.eventees:
@@ -79,15 +80,16 @@ class Game:
         if self.player.show_storage:
             self.storage.draw(self.screen)
 
+        self.scoreText.draw()
+
         pg.display.update()
 
     def run(self):
         while True:
             self.DT = self.clock.tick(self.FPS) / 1000
             self.events()
-            if (self.removeLagCompensation > 0):
+            if (not self.lagCompensation):
                 self.DT = 1/self.FPS
-                self.removeLagCompensation -= 1
             
             self.check_freeze()
             if not self.isFreezed:

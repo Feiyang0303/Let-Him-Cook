@@ -25,7 +25,7 @@ class World(GameObject):
     
     def generateWorld(self):
         self.floor_layer = [[self.tile_library["wood-floor"].copy(pg.Vector2(x, y)) for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
-        self.building_layer = [[(self.tile_library["counter"].copy(pg.Vector2(x, y)) if (x==0 or x==WORLD_WIDTH-1 or y==0 or y==WORLD_HEIGHT-1 or y==5) else self.tile_library["empty"]) for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
+        self.building_layer = [[(self.tile_library["counter"].copy(pg.Vector2(x, y)) if (x==0 or x==WORLD_WIDTH-1 or y==0 or y==WORLD_HEIGHT-1 or (x==4 and y!=1 and y!=WORLD_HEIGHT-2)) else self.tile_library["empty"]) for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
 
     def oob(self, x, y):
         return x < 0 or x >= WORLD_WIDTH or y < 0 or y >= WORLD_HEIGHT
@@ -61,6 +61,7 @@ class Tile(GameObject):
 
     def copy(self, pos:pg.Vector2):
         return Tile(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect)
+
 
 class EmptyTile(GameObject):
     def __init__(self, game, id):
