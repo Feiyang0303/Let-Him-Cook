@@ -13,7 +13,7 @@ class Item:
         screen.blit(self.image, (x, y))
 
 
-#inventory
+#storage
 class Storage:
     #table
     ROWS = 6
@@ -40,6 +40,16 @@ class Storage:
                 y = row * Storage.SLOT_SIZE
                 pg.draw.rect(screen, (255, 255, 255), (x, y, Storage.SLOT_SIZE, Storage.SLOT_SIZE), 1)
                 if self.items[row][col]:
-                    self.items[row][col].display_image(screen, x, y)
+                    self.items[row][col].display_item(screen, x, y)
 
+class Inventory:
+    def __init__(self, storage):
+        self.storage = storage
+        self.show_inventory = False
 
+    def toggle_inventory(self):
+        self.show_inventory = not self.show_inventory
+
+    def draw(self, screen):
+        if self.show_inventory:
+            self.storage.draw(screen)

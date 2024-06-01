@@ -8,7 +8,7 @@ from world import *
 from worldEditor import *
 from settings import *
 from userinterface import *
-from items import Storage
+from items import Storage, Inventory
 from worldrenderer import *
 
 class Game:
@@ -20,6 +20,7 @@ class Game:
         self.DT = 1/self.FPS
         self.clock = pg.time.Clock()
         self.storage = Storage()
+        self.inventory= Inventory(Storage())
 
         self.eventees = []
 

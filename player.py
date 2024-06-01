@@ -6,6 +6,7 @@ from gameObject import *
 from settings import *
 from tools import *
 from world import *
+from items import Storage, Inventory
 
 class PlayerCollisionInfo:
     def __init__(self):
@@ -53,7 +54,7 @@ class Player(GameObject):
                 if self.selected_building != None:
                     self.selected_building.interact()
             elif event.key == pg.K_i:
-                self.toggle_storage()
+                self.toggle_inventory()
             elif event.key == pg.K_LSHIFT:
                 self.velocity = self.dir * DASH_POWER
                 self.disable_movement_cap_timer = TIME_TO_TAKE_DASH
@@ -178,6 +179,4 @@ class Player(GameObject):
         if self.selected_building != None:
             self.selected_building.draw_highlighted()
     
-    def toggle_storage(self):
-        self.show_storage = not self.show_storage
-    
+
