@@ -27,6 +27,8 @@ class Player(GameObject):
         self.game = game
         self.pos = pg.Vector2(2, 2)
         self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
+        self.spriteRect = pg.Rect(0, 0, TILE_WIDTH*PLAYER_HITBOX_HEIGHT, TILE_HEIGHT*PLAYER_HITBOX_HEIGHT)
+        self.sprite = pg.transform.scale(pg.image.load("sprites\Cookie.png"), self.spriteRect.size)
 
         self.velocity = pg.Vector2(0, 0)
 
@@ -171,9 +173,10 @@ class Player(GameObject):
             self.selected_building = None
 
     def draw(self):
-        pg.draw.rect(self.game.world_surf, (255, 255, 255), ((self.pos.x + self.game.world.scroll.x) * TILE_WIDTH, (self.pos.y + self.game.world.scroll.y) * TILE_HEIGHT, self.hitbox.x*TILE_WIDTH, self.hitbox.y*TILE_HEIGHT))
+        self.game.world_renderer.draw_object(self)
+
         if self.selected_building != None:
-            pg.draw.rect(self.game.world_surf, (255, 255, 255), ((self.selected_building.pos.x + self.game.world.scroll.x) * TILE_WIDTH, (self.selected_building.pos.y + self.game.world.scroll.y) * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT), 2)
+            self.selected_building.draw_highlighted()
     
     def toggle_storage(self):
         self.show_storage = not self.show_storage

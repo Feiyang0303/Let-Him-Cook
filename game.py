@@ -9,12 +9,12 @@ from worldEditor import *
 from settings import *
 from userinterface import *
 from items import Storage
+from worldrenderer import *
 
 class Game:
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.world_surf = pg.Surface((WORLD_WIDTH * TILE_WIDTH, (WORLD_HEIGHT + WORLD_WALL_HEIGHT) * TILE_HEIGHT))
 
         self.FPS = 60
         self.DT = 1/self.FPS
@@ -32,6 +32,7 @@ class Game:
     def new_game(self):
         self.world = World(self)
         self.player = Player(self)
+        self.world_renderer = WorldRenderer(self)
 
         self.scoreText = Text(self, "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), pg.Vector2(MARGIN, MARGIN))
         self.scoreText.set_text(f"${MONEY}")
@@ -78,7 +79,8 @@ class Game:
         self.screen.fill(BACKGROUND_COLOUR)
         self.world.draw()
         self.player.draw()
-        self.screen.blit(self.world_surf, (MARGIN, MARGIN + STATS_MARGIN))
+        self.world_renderer.draw()
+
         if self.player.show_storage:
             self.storage.draw(self.screen)
 

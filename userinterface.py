@@ -15,7 +15,7 @@ class Text:
         self.color = color
         self.justification = justification
         
-        self.set_text("DEEZ?")
+        self.set_text("")
     
     def set_text(self, text:str):
         self.text = text
