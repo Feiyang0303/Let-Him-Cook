@@ -34,8 +34,14 @@ class Game:
         self.player = Player(self)
         self.world_renderer = WorldRenderer(self)
 
+        # UI
+        self.debug_button = Button(self, pg.Rect(SCREEN_HEIGHT/2, SCREEN_WIDTH/2, 80, 80))
+
         self.scoreText = Text(self, "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), pg.Vector2(MARGIN, MARGIN))
         self.scoreText.set_text(f"${MONEY}")
+
+        self.timerText = Text(self, "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), justification=JUSTIFY_RIGHT)
+        self.timerText.set_text(f"1:00")
 
     def load_game(self):
         self.new_game()
@@ -59,10 +65,10 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.isPaused = not self.isPaused
-            elif event.type == pg.VIDEOEXPOSE:
-                print("MOVIGN WINDOW BEEP BEEP")
-                self.lagCompensation = False
-                self.DT = 1/self.FPS
+            # elif event.type == pg.VIDEOEXPOSE:
+            #     print("MOVIGN WINDOW BEEP BEEP")
+            #     self.lagCompensation = False
+            #     self.DT = 1/self.FPS
 
             for eventee in self.eventees:
                 eventee.callEvent(event)
@@ -70,10 +76,12 @@ class Game:
     def update(self):
         self.world.update()
         self.player.update()
+        self.debug_button.update()
     
     def immuneUpdate(self):
         self.world.immuneUpdate()
         self.player.immuneUpdate()
+        self.debug_button.immuneUpdate()
 
     def draw(self):
         self.screen.fill(BACKGROUND_COLOUR)
@@ -85,6 +93,8 @@ class Game:
             self.storage.draw(self.screen)
 
         self.scoreText.draw()
+        self.timerText.draw()
+        self.debug_button.draw()
 
         pg.display.update()
 
