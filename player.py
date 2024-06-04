@@ -29,7 +29,7 @@ class Player(GameObject):
         self.pos = pg.Vector2(2, 2)
         self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
         self.spriteRect = pg.Rect(0, 0, TILE_WIDTH*PLAYER_HITBOX_HEIGHT, TILE_HEIGHT*PLAYER_HITBOX_HEIGHT)
-        self.sprite = pg.transform.scale(pg.image.load("sprites\Cookie.png"), self.spriteRect.size)
+        self.sprite = pg.transform.scale(pg.image.load("sprites/Cookie.png"), self.spriteRect.size)
 
         self.velocity = pg.Vector2(0, 0)
 
