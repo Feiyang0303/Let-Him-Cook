@@ -11,19 +11,30 @@ class WorldEditor(GameObject):
         self.game.eventees.append(self)
 
         self.selectedBuilding = None
-    
-    def screen_to_world(pos:pg.Vector2):
-        pass
 
-    def place(self, building_id:str):
+    def place(self, id:str):
         self.game.state = EDIT_STATE
-        print(f"placing {building_id}!")
+        print(f"placing {id}!")
+
+        world_pos = self.game.world_renderer.worldspace_pos(pg.Vector2(pg.mouse.get_pos()))
+        rounded_pos = pg.Vector2(round(world_pos.x), round(world_pos.y))
+
+        self.selectedBuilding = self.game.world.tile_library[id].copy(rounded_pos)
     
     def immuneUpdate(self):
-        pass
+        if self.game.state == EDIT_STATE:
+            world_pos = self.game.world_renderer.worldspace_pos(pg.Vector2(pg.mouse.get_pos()))
+            rounded_pos = pg.Vector2(int(world_pos.x), int(world_pos.y))
+
+            self.selectedBuilding.pos = rounded_pos
     
+    def callEvent(self, event):
+        if self.game.state == EDIT_STATE:
+            if event.type == pg.MOUSEBUTTONDOWN:
+                if self.game.world.is_legible_tile_placement(self.selectedBuilding.id, self.selectedBuilding.pos):
+                    self.game.world.place(self.selectedBuilding.id, self.selectedBuilding.pos)
+                    self.game.state = PLAY_STATE
+        
     def draw(self):
-        pass
-        # mouse_pos = self.screen_to_world(pg.mouse.get_pos())
-        # pg.draw.rect(self.game.world_surf)
-        # self.game.world_surf.blit(highlight, ((pos.x + self.game.world.scroll.x)*TILE_WIDTH + self.spriteRect.x, (pos.y + self.game.world.scroll.y)*TILE_HEIGHT + self.spriteRect.y))
+        if self.game.state == EDIT_STATE:
+            self.selectedBuilding.draw_ghost()

@@ -7,7 +7,7 @@ JUSTIFY_CENTER = 1
 JUSTIFY_RIGHT = 2
 
 class Text:
-    def __init__(self, game, fontpath, size, color, pos:pg.Vector2, justification=JUSTIFY_LEFT):
+    def __init__(self, game, fontpath, size, color, pos:pg.Vector2, justification=JUSTIFY_LEFT, text="default"):
         self.game = game
 
         self.pos = pos
@@ -15,7 +15,7 @@ class Text:
         self.color = color
         self.justification = justification
         
-        self.set_text("")
+        self.set_text(text)
     
     def set_text(self, text:str):
         self.text = text
@@ -44,6 +44,7 @@ class Button(GameObject):
 
         self.hovering = False
         self.clicking = False
+        self.disabled = False
 
     def immuneUpdate(self):
         mouse_pos = pg.mouse.get_pos()
@@ -58,7 +59,9 @@ class Button(GameObject):
             self.clicking = False
 
     def draw(self):
-        if self.clicking:
+        if self.disabled:
+            pg.draw.rect(self.game.screen, (60, 60, 60), self.rect)
+        elif self.clicking:
             pg.draw.rect(self.game.screen, (100, 100, 100), self.rect)
         elif self.hovering:
             pg.draw.rect(self.game.screen, (200, 200, 200), self.rect)
@@ -66,8 +69,32 @@ class Button(GameObject):
             pg.draw.rect(self.game.screen, (255, 255, 255), self.rect)
 
 class BuyStructureButton(Button):
-    def __init__(self, game, rect: pg.Rect, building_id:str) -> None:
-        super().__init__(game, rect, lambda:world.build(building_id))
+    def __init__(self, game, rect: pg.Rect, building_id:str):
+        super().__init__(game, rect, lambda:self.game.world_editor.place(building_id))
+        self.building_id = building_id
+
+        self.name_text = Text(game, "fonts/pixel-bit-advanced.ttf", 12, (0, 0, 0), pg.Vector2(rect.center[0], rect.y + 12), justification=JUSTIFY_CENTER)
+        self.name_text.set_text(building_id)
+
+        self.disabled = False
+    
+    def immuneUpdate(self):
+        super().immuneUpdate()
+        self.disabled = self.game.money < self.game.tile_library[self.building_id].price
+
+    def callEvent(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if self.hovering and not self.disabled:
+                self.game.money -= self.game.tile_library[self.building_id].price
+                self.clicking = True
+                self.call()
+        elif event.type == pg.MOUSEBUTTONUP:
+            self.clicking = False
+    
+    def draw(self):
+        super().draw()
+        self.game.screen.blit(self.game.tile_library[self.building_id].sprite, (self.rect.x + TILE_WIDTH/2, self.rect.y + TILE_HEIGHT/2))
+        self.name_text.draw()
 
 class Panel:
     def __init__(self) -> None:

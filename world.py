@@ -14,41 +14,21 @@ class World(GameObject):
         self.floor_layer = []
         self.building_layer = []
 
-        self.floor_image = pg.image.load("sprites/floor_tile.png")
-        self.floor_image = pg.transform.scale(self.floor_image, (TILE_WIDTH, TILE_HEIGHT))
         self.tile_library = {"empty" :      EmptyTile(self.game, "empty"),
-                             "wood-floor" : Tile(self.game, "wood-floor", "sprites/wood-tile.png"),
-                             "counter" :    Building(self.game, "counter", "sprites/e-counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU)),
-                             "fridge" :     Building(self.game, "fridge", "sprites/fridge.png"), 
-                             "shop" :       Building(self.game, "shop", "sprites/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT))}
+                             "floor" : Tile(self.game, "floor", "new-sprites/floor.png"),
+                             "counter" :    Building(self.game, "counter", "new-sprites/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=10),
+                             "fridge" :     Building(self.game, "fridge", "new-sprites/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=500), 
+                             "shop" :       Building(self.game, "shop", "new-sprites/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT))}
         
         self.generateWorld()
         
     
     def generateWorld(self):
-        self.floor_layer = [[self.tile_library["wood-floor"].copy(pg.Vector2(x, y)) for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
+        self.floor_layer = [[self.tile_library["floor"].copy(pg.Vector2(x, y)) for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
         # self.building_layer = [[self.tile_library["empty"] for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
-        self.building_layer = [[(self.tile_library["counter"].copy(pg.Vector2(x, y)) if (x==0 or x==WORLD_WIDTH-1 or y==0 or y==WORLD_HEIGHT-1 or (x==4 and y!=1 and y!=WORLD_HEIGHT-2)) else self.tile_library["empty"]) for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
+        self.building_layer = [[self.tile_library["empty"] for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
 
-        self.placeTile("shop", pg.Vector2(4, 0))
-        self.placeTile("shop", pg.Vector2(4, 2))
-        self.placeTile("shop", pg.Vector2(4, 4))
-        self.placeTile("shop", pg.Vector2(4, 6))
-
-        self.placeTile("shop", pg.Vector2(7, 0))
-        self.placeTile("shop", pg.Vector2(7, 2))
-        self.placeTile("shop", pg.Vector2(7, 4))
-        self.placeTile("shop", pg.Vector2(7, 6))
-
-        self.placeTile("shop", pg.Vector2(10, 0))
-        self.placeTile("shop", pg.Vector2(10, 2))
-        self.placeTile("shop", pg.Vector2(10, 4))
-        self.placeTile("shop", pg.Vector2(10, 6))
-
-        self.placeTile("shop", pg.Vector2(13, 0))
-        self.placeTile("shop", pg.Vector2(13, 2))
-        self.placeTile("shop", pg.Vector2(13, 4))
-        self.placeTile("shop", pg.Vector2(13, 6))
+        self.place("shop", pg.Vector2(7, 0))
 
     def is_legible_tile_placement(self, id:str, pos:pg.Vector2):
         tile = self.tile_library[id].copy(pos)
@@ -57,7 +37,7 @@ class World(GameObject):
                 return False
         return True
 
-    def placeTile(self, id:str, pos:pg.Vector2):
+    def place(self, id:str, pos:pg.Vector2):
         if not self.is_legible_tile_placement(id, pos):
             return
 
@@ -78,6 +58,7 @@ class World(GameObject):
         pass
 
     def draw(self):
+        [[self.game.world_renderer]]
         [[self.floor_layer[y][x].draw() for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
         [[self.building_layer[y][x].draw() for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
 
@@ -106,29 +87,30 @@ class EmptyTile(GameObject):
         return self
 
 class Building(Tile):
-    def __init__(self, game, id, sprite, pos:pg.Vector2=pg.Vector2(0, 0), hitbox:pg.Vector2=pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True):
+    def __init__(self, game, id, sprite, pos:pg.Vector2=pg.Vector2(0, 0), hitbox:pg.Vector2=pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect)
         self.isSolid = isSolid
+        self.price = price
     
     def interact(self):
         print(f"wowww you interacted with the {self.id}!")
     
     def draw(self):
-        # self.game.world_renderer.draw_object(self)
-        self.draw_ghost(self.pos)
+        self.game.world_renderer.draw_object(self)
     
     def copy(self, pos:pg.Vector2):
         return Building(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid)
 
     def draw_highlighted(self):
         highlight = self.sprite.convert_alpha()
-        highlight.fill((255, 255, 255, 80))
+        highlight.fill((255, 255, 255), special_flags=pg.BLEND_RGB_ADD)
+        highlight.set_alpha(128)
         self.game.world_renderer.draw_object(self, highlight)
     
-    def draw_ghost(self, pos:pg.Vector2):
+    def draw_ghost(self):
         ghost = self.sprite.convert_alpha()
         ghost.set_alpha(128)
-        self.game.world_renderer.draw_object(self, ghost, pos, 128)
+        self.game.world_renderer.draw_object(self, ghost, self.pos)
 
 
 class ReferenceTile(Building):
