@@ -3,9 +3,8 @@ import math
 import sys
 
 from gameObject import *
-from gameObject import TILE_HEIGHT, TILE_WIDTH
 from settings import *
-from settings import TILE_HEIGHT, TILE_WIDTH
+from items import *
 
 class World(GameObject):
     def __init__(self, game):
@@ -15,10 +14,18 @@ class World(GameObject):
         self.building_layer = []
 
         self.tile_library = {"empty" :      EmptyTile(self.game, "empty"),
-                             "floor" : Tile(self.game, "floor", "new-sprites/floor.png"),
-                             "counter" :    Building(self.game, "counter", "new-sprites/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=10),
-                             "fridge" :     Building(self.game, "fridge", "new-sprites/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=500), 
-                             "shop" :       Building(self.game, "shop", "new-sprites/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT))}
+                             "floor" : Tile(self.game, "floor", "new-sprites/buildings/floor.png"),
+                             "counter" :    Building(self.game, "counter", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=10),
+                             "fridge" :     Building(self.game, "fridge", "new-sprites/buildings/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=500), 
+                             "shop" :       Building(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT))
+        }
+
+        self.item_library = {
+            "sugar":    Item("sugar", "new-sprites/items/sugar.png"),
+            "butter":   Item("butter", "new-sprites/items/butter.png"),
+            "flour":    Item("flour", "new-sprites/items/flour.png"),
+            "cookie":   Item("cookie", "new-sprites/items/cookie.png"),
+        }
         
         self.generateWorld()
         
