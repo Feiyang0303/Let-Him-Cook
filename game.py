@@ -26,7 +26,9 @@ class Game:
 
         self.isFreezed = False
         self.isPaused = False
-        self.gameState = PLAY_STATE
+        self.state = PLAY_STATE
+
+        self.money = AERSOL
 
         self.lagCompensation = True
 
@@ -34,26 +36,26 @@ class Game:
         self.world = World(self)
         self.player = Player(self)
         self.world_renderer = WorldRenderer(self)
+        self.world_editor = WorldEditor(self)
+        self.tile_library = self.world.tile_library
 
         # UI
-        self.debug_button = Button(self, pg.Rect(SCREEN_HEIGHT/2, SCREEN_WIDTH/2, 80, 80))
+        self.debug_button = BuyStructureButton(self, pg.Rect(SCREEN_HEIGHT/2, SCREEN_WIDTH/2, TILE_WIDTH*2, TILE_HEIGHT*2), "fridge")
 
-        self.scoreText = Text(self, "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), pg.Vector2(MARGIN, MARGIN))
-        self.scoreText.set_text(f"${MONEY}")
+        self.scoreText = Text(self, "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), pg.Vector2(MARGIN, MARGIN), text=f"${AERSOL}")
 
-        self.timerText = Text(self, "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), justification=JUSTIFY_RIGHT)
-        self.timerText.set_text(f"1:00")
+        self.timerText = Text(self, "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), justification=JUSTIFY_RIGHT, text="1:00")
 
     def load_game(self):
         self.new_game()
         load_game_state(self)
 
     def set_game_state(self, state):
-        self.gameState = state
-        self.isFreezed = self.gameState != PLAY_STATE
+        self.state = state
+        self.isFreezed = self.state != PLAY_STATE
     
     def check_freeze(self):
-        self.isFreezed = self.isPaused or (self.gameState != PLAY_STATE)
+        self.isFreezed = self.isPaused or (self.state != PLAY_STATE)
 
     def events(self):
         self.lagCompensation = True
@@ -86,17 +88,21 @@ class Game:
         self.world.update()
         self.player.update()
         self.debug_button.update()
+        self.world_editor.update()
+        self.scoreText.set_text(f"${self.money}")
     
     def immuneUpdate(self):
         self.world.immuneUpdate()
         self.player.immuneUpdate()
         self.debug_button.immuneUpdate()
+        self.world_editor.immuneUpdate()
 
     def draw(self):
         self.screen.fill(BACKGROUND_COLOUR)
         self.world.draw()
         self.player.draw()
         self.world_renderer.draw()
+        self.world_editor.draw()
 
         if self.player.show_storage:
             self.storage.draw(self.screen)
