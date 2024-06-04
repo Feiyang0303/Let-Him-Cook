@@ -10,6 +10,7 @@ from settings import *
 from userinterface import *
 from items import Storage, Inventory
 from worldrenderer import *
+from preferencescreen import *
 
 class Game:
     def __init__(self):
@@ -39,8 +40,10 @@ class Game:
         self.world_editor = WorldEditor(self)
         self.tile_library = self.world.tile_library
 
+        self.pause_screen = PreferenceScreen(self)
+
         # UI
-        self.debug_button = BuyStructureButton(self, pg.Rect(SCREEN_HEIGHT/2, SCREEN_WIDTH/2, TILE_WIDTH*2, TILE_HEIGHT*2), "fridge")
+        self.debug_button = BuyStructureButton(self, pg.Rect(SCREEN_HEIGHT/2, SCREEN_WIDTH/2, TILE_WIDTH*2, TILE_HEIGHT*2), "counter")
 
         self.scoreText = Text(self, "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), pg.Vector2(MARGIN, MARGIN), text=f"${AERSOL}")
 
@@ -102,6 +105,9 @@ class Game:
         self.scoreText.draw()
         self.timerText.draw()
         self.debug_button.draw()
+
+        if self.isPaused:
+            self.pause_screen.draw()
 
         pg.display.update()
 
