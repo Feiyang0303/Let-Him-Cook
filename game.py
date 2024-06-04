@@ -70,11 +70,6 @@ class Game:
                     self.isPaused = not self.isPaused
                 elif event.key == pg.K_i:
                     self.state = INVENTORY_STATE if self.state == PLAY_STATE else PLAY_STATE
-                elif event.key == pg.K_e:
-                    player_pos = self.player.get_pos()
-                    tile = self.world.get(player_pos.x, player_pos.y)
-                    if isinstance(tile, Fridge):
-                        tile.interact()
             # elif event.type == pg.VIDEOEXPOSE:
             #     print("MOVIGN WINDOW BEEP BEEP")
             #     self.lagCompensation = False
