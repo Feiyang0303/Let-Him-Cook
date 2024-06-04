@@ -8,7 +8,7 @@ from world import *
 from worldEditor import *
 from settings import *
 from userinterface import *
-from items import Storage, Inventory
+from items import *
 from worldrenderer import *
 from preferencescreen import *
 
@@ -71,6 +71,8 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.isPaused = not self.isPaused
+                elif event.key == pg.K_i:
+                    self.state = INVENTORY_STATE if self.state == PLAY_STATE else PLAY_STATE
             # elif event.type == pg.VIDEOEXPOSE:
             #     print("MOVIGN WINDOW BEEP BEEP")
             #     self.lagCompensation = False
@@ -99,7 +101,7 @@ class Game:
         self.world_renderer.draw()
         self.world_editor.draw()
 
-        if self.player.show_storage:
+        if self.state == INVENTORY_STATE:
             self.storage.draw(self.screen)
 
         self.scoreText.draw()

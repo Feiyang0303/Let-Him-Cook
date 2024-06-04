@@ -16,7 +16,7 @@ class WorldRenderer:
         self.img = pg.Surface((WORLD_WIDTH * TILE_WIDTH, (WORLD_HEIGHT + WORLD_WALL_HEIGHT) * TILE_HEIGHT))
         self.scroll = pg.Vector2(0, WORLD_WALL_HEIGHT)
 
-        self.wall_image = pg.transform.scale(pg.image.load("new-sprites/wall.png"), (TILE_WIDTH, TILE_HEIGHT))
+        self.wall_image = pg.transform.scale(pg.image.load("new-sprites/buildings/wall.png"), (TILE_WIDTH, TILE_HEIGHT))
 
     def worldspace_pos(self, screen_pos):
         x = (screen_pos.x - MARGIN) / TILE_WIDTH - self.scroll.x

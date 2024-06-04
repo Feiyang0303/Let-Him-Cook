@@ -2,16 +2,13 @@ import pygame as pg
 import math
 import sys
 
-#item
 class Item:
-    def __init__(self, name, id, image=''):
+    def __init__(self, name, image):
         self.name = name
-        self.id = id
         self.image = pg.image.load(image).convert_alpha()
 
     def display_item(self, screen, x, y):
         screen.blit(self.image, (x, y))
-
 
 #storage
 class Storage:

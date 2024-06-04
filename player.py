@@ -53,8 +53,6 @@ class Player(GameObject):
             if event.key == pg.K_e:
                 if self.selected_building != None:
                     self.selected_building.interact()
-            elif event.key == pg.K_i:
-                self.toggle_inventory()
             elif event.key == pg.K_LSHIFT:
                 self.velocity = self.dir * DASH_POWER
                 self.disable_movement_cap_timer = TIME_TO_TAKE_DASH
