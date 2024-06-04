@@ -6,6 +6,7 @@ from gameObject import *
 from gameObject import TILE_HEIGHT, TILE_WIDTH
 from settings import *
 from settings import TILE_HEIGHT, TILE_WIDTH
+from items import Storage
 
 class World(GameObject):
     def __init__(self, game):
@@ -147,10 +148,19 @@ class Shop(Building):
     pass
 
 class Fridge(Building):
-    def __init__(self):
-        self.storage=Storage()
+    def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1),
+                 spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True):
+        super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid)
+        self.storage = Storage()
+        self.show_storage = False
+
     def interact(self):
-        pass
+        self.show_storage = not self.show_storage
+
+    def copy(self, pos: pg.Vector2):
+        return Fridge(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid)
+
+
 
 class Processor(Building):
     pass

@@ -66,6 +66,14 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.isPaused = not self.isPaused
+            elif event.key == pg.K_i:
+                self.inventory.toggle_inventory()
+            elif event.key == pg.K_e:
+                player_pos = self.player.get_pos()
+                tile = self.world.get(player_pos.x, player_pos.y)
+                if isinstance(tile, Fridge):
+                    tile.interact()
+
             # elif event.type == pg.VIDEOEXPOSE:
             #     print("MOVIGN WINDOW BEEP BEEP")
             #     self.lagCompensation = False
