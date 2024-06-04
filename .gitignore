@@ -1,7 +1,3 @@
 
-/__pycache__
-gamesave.json
-__pycache__/game.cpython-312.pyc
-__pycache__/player.cpython-312.pyc
-__pycache__/world.cpython-312.pyc
+__pycache__/*
 gamesave.json
