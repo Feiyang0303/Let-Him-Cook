@@ -40,13 +40,23 @@ class Storage:
                     self.items[row][col].display_item(screen, x, y)
 
 class Inventory:
-    def __init__(self, storage):
-        self.storage = storage
-        self.show_inventory = False
-
+    MAX=10
+    def __init__(self):
+        self.items=[]
+        self.show_inventory=False
     def toggle_inventory(self):
         self.show_inventory = not self.show_inventory
 
-    def draw(self, screen):
+    def push(self,item):
+        if len(self.items)<Inventory.MAX:
+            self.items.append(item) #chatgpt
+    def pop(self):
+        if self.items:
+            return self.items.pop()
+
+    def draw(self, screen, character_x, character_y):
         if self.show_inventory:
-            self.storage.draw(screen)
+            for i, item in enumerate(self.items):
+                x = character_x
+                y = character_y - (i + 1) * 50
+                item.display_item(screen, x, y)  #chatgpt

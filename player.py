@@ -6,7 +6,7 @@ from gameObject import *
 from settings import *
 from tools import *
 from world import *
-from items import Storage, Inventory
+from items import Storage, Inventory, Item
 
 class PlayerCollisionInfo:
     def __init__(self):
@@ -24,17 +24,17 @@ class PlayerCollisionInfo:
 
 
 class Player(GameObject):
+    HEAD_OFFSET = pg.Vector2(0, -50)
     def __init__(self, game):
         self.game = game
         self.pos = pg.Vector2(2, 2)
         self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
         self.spriteRect = pg.Rect(0, 0, TILE_WIDTH*PLAYER_HITBOX_HEIGHT, TILE_HEIGHT*PLAYER_HITBOX_HEIGHT)
-        self.sprite = pg.transform.scale(pg.image.load("sprites\Cookie.png"), self.spriteRect.size)
+        self.sprite = pg.transform.scale(pg.image.load("sprites/Cookie.png"), self.spriteRect.size)
 
         self.velocity = pg.Vector2(0, 0)
 
         self.game.eventees.append(self)
-        self.show_storage = False
         
         # Selected Tile
         self.selected_building = None
@@ -44,6 +44,7 @@ class Player(GameObject):
         self.collisionInfo = PlayerCollisionInfo()
 
         self.disable_movement_cap_timer = 0
+        self.inventory = Inventory()
 
     def update(self):
         self.move()
@@ -56,6 +57,13 @@ class Player(GameObject):
             elif event.key == pg.K_LSHIFT:
                 self.velocity = self.dir * DASH_POWER
                 self.disable_movement_cap_timer = TIME_TO_TAKE_DASH
+            elif event.key == pg.K_i:
+                self.inventory.toggle_inventory()
+                print("inventory shows")
+            elif event.key == pg.K_SPACE:
+                item=Item('Sugar', 'sprites/Sugar.png')
+                self.inventory.push(item)
+                print("item added to inventory")
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -176,5 +184,10 @@ class Player(GameObject):
 
         if self.selected_building != None:
             self.selected_building.draw_highlighted()
+
+        if self.inventory.show_inventory:
+            print("draw inventory")
+            self.inventory.draw(self.game.screen, self.pos.x, self.pos.y)
+
     
 
