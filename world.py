@@ -4,6 +4,7 @@ import sys
 
 from gameObject import *
 from gameObject import TILE_HEIGHT, TILE_WIDTH
+from items import TILE_HEIGHT, TILE_WIDTH
 from settings import *
 from items import *
 from settings import TILE_HEIGHT, TILE_WIDTH
@@ -19,7 +20,8 @@ class World(GameObject):
                              "floor" :      Tile(self.game, "floor", "new-sprites/buildings/floor.png"),
                              "counter" :    Counter(self.game, "counter", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=10),
                              "fridge" :     Building(self.game, "fridge", "new-sprites/buildings/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=500), 
-                             "shop" :       Shop(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT))
+                             "shop" :       Shop(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
+                             "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100),
         }
         
 
@@ -152,7 +154,10 @@ class Counter(Building):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
 
     def interact(self):
-        print("place item whatever")
+        pass
+
+    def draw(self):
+        super().draw()
     
     def copy(self, pos: pg.Vector2):
         return Counter(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
@@ -173,4 +178,21 @@ class Fridge(Building):
 
 
 class Processor(Building):
-    pass
+    def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
+        super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
+        
+        self.held_item = None
+
+        self.progress = 0
+
+        self.pps = 0 # process per interaction
+        self.ppi = 0 # process per interaction
+    
+    def interact(self):
+        pass
+
+    def draw(self):
+        pass
+    
+    def copy(self, pos: pg.Vector2):
+        return Processor(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)

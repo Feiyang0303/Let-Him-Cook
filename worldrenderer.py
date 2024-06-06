@@ -4,10 +4,11 @@ import pygame as pg
 from settings import *
 
 class DrawCall:
-    def __init__(self, sprite:pg.Surface, pos:pg.Vector2, spriteRect:pg.Rect) -> None:
+    def __init__(self, sprite:pg.Surface, pos:pg.Vector2, spriteRect:pg.Rect, z=0) -> None:
         self.sprite = sprite
         self.pos = pos
         self.spriteRect = spriteRect
+        self.z = z
 
 class WorldRenderer:
     def __init__(self, game) -> None:
@@ -30,11 +31,11 @@ class WorldRenderer:
         else:
             self.img.blit(sprite, screenspace_pos)
 
-    def draw_object(self, go, sprite=None, pos=None):
+    def draw_object(self, go, sprite=None, pos=None, z=0):
         sprite = go.sprite if sprite==None else sprite
         pos = go.pos if pos==None else pos
 
-        self.draw_call.append(DrawCall(sprite, pos, go.spriteRect))
+        self.draw_call.append(DrawCall(sprite, pos, go.spriteRect, z))
     
     def draw(self):
         # self.img.fill((255, 255, 255))
@@ -42,7 +43,7 @@ class WorldRenderer:
 
         self.draw_call.sort(key=lambda dc: dc.pos.y)
         for dc in self.draw_call:
-            screenspace_pos = ((dc.pos.x + self.scroll.x)*TILE_WIDTH + dc.spriteRect.x, (dc.pos.y + self.scroll.y)*TILE_HEIGHT + dc.spriteRect.y)
+            screenspace_pos = ((dc.pos.x + self.scroll.x)*TILE_WIDTH + dc.spriteRect.x, (dc.pos.y + self.scroll.y - dc.z)*TILE_HEIGHT + dc.spriteRect.y)
             self.img.blit(dc.sprite, screenspace_pos)
         
         self.game.screen.blit(self.img, (MARGIN, MARGIN + STATS_MARGIN))

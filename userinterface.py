@@ -144,7 +144,7 @@ class BuyMenu(Panel):
 
     def __init__(self, game, hitbox):
         super().__init__(game, hitbox)
-        buildings = ["counter", "fridge"]
+        buildings = ["counter", "fridge", "chopper"]
 
         for i, building in enumerate(buildings):
             x = TILE_WIDTH/2 + (BuyMenu.BUTTON_WIDTH + BuyMenu.MARGIN) * i

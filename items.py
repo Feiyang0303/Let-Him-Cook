@@ -12,8 +12,8 @@ class Item(GameObject):
         self.spriteRect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
         self.image = pg.transform.scale(pg.image.load(image).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 
-    def draw(self, pos):
-        self.game.world_renderer.draw_object(self, self.image, pos)
+    def draw(self, pos, z=0):
+        self.game.world_renderer.draw_object(self, self.image, pos, z)
         print(pos)
 
 #storage
@@ -72,5 +72,5 @@ class Inventory:
 
     def draw(self):
         for i, item in enumerate(self.items):
-            pos = self.game.player.pos - pg.Vector2(0, (i+1)*0.8)
-            item.draw(pos)  #chatgpt
+            pos = self.game.player.pos
+            item.draw(pos, z=(i+1)*0.8)
