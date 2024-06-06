@@ -1,6 +1,10 @@
 import pygame as pg
 from gameObject import GameObject
 
+def is_point_in_hitbox(point, pos, hitbox):
+    return (point.x >= pos.x and point.x <= pos.x + hitbox.x) and \
+            (point.y >= pos.y and point.y <= pos.y + hitbox.y)
+
 def are_hitboxes_colliding(pos1, hitbox1, pos2, hitbox2):
     return not (pos1.y >= pos2.y + hitbox2.y or pos1.y + hitbox1.y <= pos2.y or
                 pos1.x >= pos2.x + hitbox2.x or pos1.x + hitbox1.x <= pos2.x)

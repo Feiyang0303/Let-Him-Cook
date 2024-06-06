@@ -14,7 +14,8 @@ class GameObject:
         if spriteRect == None: self.spriteRect = pg.Rect((0, 0), (self.hitbox.x*TILE_WIDTH, self.hitbox.y*TILE_HEIGHT))
         else: self.spriteRect = spriteRect
 
-        if isinstance(sprite, pg.Surface): self.sprite = sprite
+        if sprite == None: self.sprite = None
+        elif isinstance(sprite, pg.Surface): self.sprite = sprite
         else: self.sprite = pg.transform.scale(pg.image.load(sprite), self.spriteRect.size)
     
     def update(self):
