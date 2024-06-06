@@ -155,15 +155,25 @@ class ReferenceTile(Building):
 class Counter(Building):
     def __init__(self, game, id, sprite, pos:pg.Vector2=pg.Vector2(0, 0), hitbox:pg.Vector2=pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
+        self.item = None
 
     def interact(self):
-        pass
+        if self.item == None and not self.game.player.inventory.isEmpty():
+            self.item = self.game.player.inventory.next()
+            self.game.player.inventory.pop()
+
+        elif self.item != None and not self.game.player.inventory.isFull():
+            self.game.player.inventory.add_item(self.item)
+            self.item = None
 
     def draw(self):
         super().draw()
+        if self.item != None:
+            self.item.draw(self.pos, z=0.6)
     
     def copy(self, pos: pg.Vector2):
         return Counter(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
+
 
 class Fridge(Building):
     def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1),

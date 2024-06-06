@@ -62,13 +62,26 @@ class Inventory:
     def toggle_inventory(self):
         self.show_inventory = not self.show_inventory
 
-    def add_item(self, id):
-        if len(self.items)<Inventory.MAX:
-            self.items.append(self.item_library[id])
+    def add_item(self, item):
+        if type(item) is str:
+            self.items.append(self.item_library[item])
+        elif type(item) is Item:
+            self.items.append(item)
 
     def pop(self):
         if self.items:
             return self.items.pop()
+    
+    def isFull(self):
+        return len(self.items) >= Inventory.MAX
+
+    def isEmpty(self):
+        return len(self.items) == 0
+
+    def next(self):
+        if len(self.items) >= 1:
+            return self.items[-1]
+        return None
 
     def draw(self):
         for i, item in enumerate(self.items):
