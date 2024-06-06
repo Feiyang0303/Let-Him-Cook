@@ -13,7 +13,7 @@ class Item(GameObject):
         self.image = pg.transform.scale(pg.image.load(image).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 
     def draw(self, pos, z=0):
-        self.game.world_renderer.draw_object(self, self.image, pos, z)
+        self.game.world_renderer.draw_object(self, self.image, pos, z=z)
 
 #storage
 class Storage:
@@ -52,10 +52,10 @@ class Inventory:
         self.show_inventory=False
 
         self.item_library = {
-            "sugar": Item(self.game, "sugar", "new-sprites/items/sugar.png"),
-            "butter": Item(self.game, "butter", "new-sprites/items/butter.png"),
-            "flour": Item(self.game, "flour", "new-sprites/items/flour.png"),
-            "cookie": Item(self.game, "cookie", "new-sprites/items/cookie.png"),
+            "sugar":    Item(self.game, "sugar", "new-sprites/items/sugar.png"),
+            "butter":   Item(self.game, "butter", "new-sprites/items/butter.png"),
+            "flour":    Item(self.game, "flour", "new-sprites/items/flour.png"),
+            "cookie":   Item(self.game, "cookie", "new-sprites/items/cookie.png"),
         }
 
     def toggle_inventory(self):

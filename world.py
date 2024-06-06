@@ -187,18 +187,35 @@ class Processor(Building):
     def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
         
-        self.held_item = None
+        self.item = None
 
         self.progress = 0
 
         self.pps = 0 # process per interaction
-        self.ppi = 0 # process per interaction
-    
+        self.ppi = 0.2 # process per interaction
+
     def interact(self):
-        pass
+        if self.item == None and not self.game.player.inventory.isEmpty():
+            self.item = self.game.player.inventory.next()
+            self.game.player.inventory.pop()
+
+        elif self.item != None:
+            if self.progress < 1:
+                self.progress += self.ppi
+                if self.progress >= 1:
+                    self.item = self.game.player.inventory.item_library["cookie"]
+            
+            elif self.item != None and not self.game.player.inventory.isFull():
+                self.game.player.inventory.add_item(self.item)
+                self.item = None
 
     def draw(self):
-        pass
+        super().draw()
+        if self.item != None:
+            self.item.draw(self.pos, z=0.6)
+
+        # draw the progress bar
+
     
     def copy(self, pos: pg.Vector2):
         return Processor(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)

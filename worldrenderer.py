@@ -4,10 +4,10 @@ import pygame as pg
 from settings import *
 
 class DrawCall:
-    def __init__(self, sprite:pg.Surface, pos:pg.Vector2, spriteRect:pg.Rect, z=0) -> None:
+    def __init__(self, sprite:pg.Surface, pos:pg.Vector2, offset:pg.Vector2=pg.Vector2(0, 0), z=0) -> None:
         self.sprite = sprite
         self.pos = pos
-        self.spriteRect = spriteRect
+        self.offset = offset
         self.z = z
 
 class WorldRenderer:
@@ -31,19 +31,19 @@ class WorldRenderer:
         else:
             self.img.blit(sprite, screenspace_pos)
 
-    def draw_object(self, go, sprite=None, pos=None, z=0):
+    def draw_object(self, go, sprite=None, pos=None, offset=None, z=0):
         sprite = go.sprite if sprite==None else sprite
         pos = go.pos if pos==None else pos
+        offset = pg.Vector2(go.spriteRect.x, go.spriteRect.y) if offset==None else offset
 
-        self.draw_call.append(DrawCall(sprite, pos, go.spriteRect, z))
+        self.draw_call.append(DrawCall(sprite, pos, offset, z))
     
     def draw(self):
-        # self.img.fill((255, 255, 255))
         [[self.img.blit(self.wall_image, (x*TILE_WIDTH, y*TILE_HEIGHT)) for x in range(WORLD_WIDTH)] for y in range(WORLD_WALL_HEIGHT)]
 
         self.draw_call.sort(key=lambda dc: dc.pos.y)
         for dc in self.draw_call:
-            screenspace_pos = ((dc.pos.x + self.scroll.x)*TILE_WIDTH + dc.spriteRect.x, (dc.pos.y + self.scroll.y - dc.z)*TILE_HEIGHT + dc.spriteRect.y)
+            screenspace_pos = ((dc.pos.x + self.scroll.x)*TILE_WIDTH + dc.offset.x, (dc.pos.y + self.scroll.y - dc.z)*TILE_HEIGHT + dc.offset.y)
             self.img.blit(dc.sprite, screenspace_pos)
         
         self.game.screen.blit(self.img, (MARGIN, MARGIN + STATS_MARGIN))
