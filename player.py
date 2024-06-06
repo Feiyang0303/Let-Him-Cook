@@ -7,6 +7,7 @@ from settings import *
 from tools import *
 from world import *
 from items import Storage, Inventory, Item
+import random
 
 class PlayerCollisionInfo:
     def __init__(self):
@@ -44,7 +45,7 @@ class Player(GameObject):
         self.collisionInfo = PlayerCollisionInfo()
 
         self.disable_movement_cap_timer = 0
-        self.inventory = Inventory()
+        self.inventory = Inventory(game)
 
     def update(self):
         self.move()
@@ -59,11 +60,10 @@ class Player(GameObject):
                 self.disable_movement_cap_timer = TIME_TO_TAKE_DASH
             elif event.key == pg.K_i:
                 self.inventory.toggle_inventory()
-                print("inventory shows")
             elif event.key == pg.K_SPACE:
-                item=Item('Sugar', 'sprites/Sugar.png')
-                self.inventory.push(item)
-                print("item added to inventory")
+                item = random.choice(["sugar", "butter", "flour", "cookie"])
+                self.inventory.add_item(item)
+                print(f"added {item}")
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -185,9 +185,7 @@ class Player(GameObject):
         if self.selected_building != None:
             self.selected_building.draw_highlighted()
 
-        if self.inventory.show_inventory:
-            print("draw inventory")
-            self.inventory.draw(self.game.screen, self.pos.x, self.pos.y)
+        self.inventory.draw()
 
     
 

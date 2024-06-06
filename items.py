@@ -2,13 +2,19 @@ import pygame as pg
 import math
 import sys
 
-class Item:
-    def __init__(self, name, image):
-        self.name = name
-        self.image = pg.image.load(image).convert_alpha()
+from settings import *
+from gameObject import *
 
-    def display_item(self, screen, x, y):
-        screen.blit(self.image, (x, y))
+class Item(GameObject):
+    def __init__(self, game, name, image):
+        self.game = game
+        self.name = name
+        self.spriteRect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
+        self.image = pg.transform.scale(pg.image.load(image).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
+
+    def draw(self, pos):
+        self.game.world_renderer.draw_object(self, self.image, pos)
+        print(pos)
 
 #storage
 class Storage:
@@ -41,22 +47,30 @@ class Storage:
 
 class Inventory:
     MAX=10
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
         self.items=[]
         self.show_inventory=False
+
+        self.item_library = {
+            "sugar": Item(self.game, "sugar", "new-sprites/items/sugar.png"),
+            "butter": Item(self.game, "butter", "new-sprites/items/butter.png"),
+            "flour": Item(self.game, "flour", "new-sprites/items/flour.png"),
+            "cookie": Item(self.game, "cookie", "new-sprites/items/cookie.png"),
+        }
+
     def toggle_inventory(self):
         self.show_inventory = not self.show_inventory
 
-    def push(self,item):
+    def add_item(self, id):
         if len(self.items)<Inventory.MAX:
-            self.items.append(item) #chatgpt
+            self.items.append(self.item_library[id])
+
     def pop(self):
         if self.items:
             return self.items.pop()
 
-    def draw(self, screen, character_x, character_y):
-        if self.show_inventory:
-            for i, item in enumerate(self.items):
-                x = character_x
-                y = character_y - (i + 1) * 50
-                item.display_item(screen, x, y)  #chatgpt
+    def draw(self):
+        for i, item in enumerate(self.items):
+            pos = self.game.player.pos - pg.Vector2(0, (i+1)*0.8)
+            item.draw(pos)  #chatgpt
