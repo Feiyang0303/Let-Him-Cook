@@ -191,13 +191,14 @@ class Processor(Building):
 
         self.progress = 0
 
-        self.pps = 0 # process per interaction
+        self.pps = 0.1 # process per interaction
         self.ppi = 0.2 # process per interaction
 
     def interact(self):
         if self.item == None and not self.game.player.inventory.isEmpty():
             self.item = self.game.player.inventory.next()
             self.game.player.inventory.pop()
+            self.progress = 0
 
         elif self.item != None:
             if self.progress < 1:
@@ -209,12 +210,21 @@ class Processor(Building):
                 self.game.player.inventory.add_item(self.item)
                 self.item = None
 
+    def update(self):
+        return super().update()
+
     def draw(self):
         super().draw()
         if self.item != None:
             self.item.draw(self.pos, z=0.6)
 
-        # draw the progress bar
+            # draw the progress bar
+            background_bar = pg.Surface((TILE_WIDTH, 12))
+            progress_bar = pg.Surface((self.progress * TILE_WIDTH, 12))
+            progress_bar.fill((0, 255, 0))
+
+            self.game.world_renderer.draw_object(self, background_bar, self.pos, z=0.5)
+            self.game.world_renderer.draw_object(self, progress_bar, self.pos, z=0.5)
 
     
     def copy(self, pos: pg.Vector2):
