@@ -145,6 +145,9 @@ class ReferenceTile(Building):
     
     def draw(self):
         pass
+    
+    def interact(self):
+        self.reference.interact()
 
     def draw_highlighted(self):
         self.reference.draw_highlighted()
