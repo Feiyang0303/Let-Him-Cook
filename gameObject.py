@@ -5,7 +5,7 @@ import sys
 from settings import *
 
 class GameObject:
-    def __init__(self, game, pos:pg.Vector2, hitbox:pg.Vector2, sprite, spriteRect:pg.Rect=None) -> None:
+    def __init__(self, game, pos:pg.Vector2, hitbox:pg.Vector2, sprite=None, spriteRect:pg.Rect=None) -> None:
         self.game = game
 
         self.pos = pos
