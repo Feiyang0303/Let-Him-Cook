@@ -76,6 +76,8 @@ class Game:
             #     print("MOVIGN WINDOW BEEP BEEP")
             #     self.lagCompensation = False
             #     self.DT = 1/self.FPS
+                elif event.key == pg.K_i:
+                    self.state = INVENTORY_STATE if self.state == PLAY_STATE else PLAY_STATE
 
                 elif event.key == pg.K_i:
                     self.state = INVENTORY_STATE if self.state == PLAY_STATE else PLAY_STATE
