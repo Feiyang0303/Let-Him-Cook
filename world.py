@@ -24,12 +24,6 @@ class World(GameObject):
                              "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100),
         }
         
-
-        # shop = Shop(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, 0, 1, 1))
-        # # print(type(shop))
-        # shop.speak()
-
-        
         self.generateWorld()
         
 
@@ -104,7 +98,6 @@ class Building(Tile):
         self.price = price
     
     def interact(self):
-        print(f"my current type is {type(self)}")
         print(f"wowww you interacted with the {self.id}!")
     
     def draw(self):

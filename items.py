@@ -14,7 +14,6 @@ class Item(GameObject):
 
     def draw(self, pos, z=0):
         self.game.world_renderer.draw_object(self, self.image, pos, z)
-        print(pos)
 
 #storage
 class Storage:

@@ -63,7 +63,6 @@ class Player(GameObject):
             elif event.key == pg.K_SPACE:
                 item = random.choice(["sugar", "butter", "flour", "cookie"])
                 self.inventory.add_item(item)
-                print(f"added {item}")
 
     def move(self):
         keys = pg.key.get_pressed()

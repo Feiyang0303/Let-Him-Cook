@@ -98,7 +98,6 @@ class BuyStructureButton(Button):
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             if self.hovering and not self.disabled and self.game.state == BUY_STATE:
-                print(f"bought a {self.building_id}")
                 self.game.money -= self.game.tile_library[self.building_id].price
                 self.clicking = True
                 self.call()

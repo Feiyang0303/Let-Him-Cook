@@ -14,7 +14,6 @@ class WorldEditor(GameObject):
 
     def place(self, id:str):
         self.game.state = EDIT_STATE
-        print(f"placing {id}!")
 
         world_pos = self.game.world_renderer.worldspace_pos(pg.Vector2(pg.mouse.get_pos()))
         rounded_pos = pg.Vector2(round(world_pos.x), round(world_pos.y))
