@@ -181,7 +181,6 @@ class Fridge(Building):
         super().interact()
         if self.game.state == PLAY_STATE:
             self.game.state = BUY_STATE
-            self.fridge
 
     def copy(self, pos: pg.Vector2):
         return Fridge(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
@@ -189,7 +188,7 @@ class Fridge(Building):
     def draw(self):
         super().draw()
         if self.show_storage:
-            self.draw_storage(self.pos, z=0.6)
+            self.draw_storage()
 
     def draw_storage(self):
         storage_bg_color=(50,50,50)
@@ -200,7 +199,7 @@ class Fridge(Building):
         item_start_pos = pg.Vector2(storage_bg_rect.left + 20, storage_bg_rect.top + 20)
         for i, item in enumerate(self.storage.get_items()):
             item_pos = pg.Vector2(item_start_pos.x, item_start_pos.y + i * item_spacing)
-            item.draw(item_pos)
+            item.draw(item_pos, z=0.6)
 
 class Processor(Building):
     def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100, pps=0.05, ppi=0.1):
