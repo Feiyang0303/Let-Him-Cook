@@ -154,13 +154,15 @@ class BuyMenu(Panel):
 # ideally i make a self-refferential ui_element class
 
 class FridgeOpenButton(Button):
-    def __init__(self, game, pos, hitbox, item, parentPanel=None):
+    def __init__(self, game, pos, hitbox, parentPanel=None):
         super().__init__(game, pos, hitbox,self.toggle_fridge_menu, parentPanel)
         self.sprite = pg.image.load("sprites/Fridge.png")
         scale = min(TILE_WIDTH / building_sprite.get_width(), TILE_HEIGHT / building_sprite.get_height())
-        self.sprite = pg.transform.scale_by(self.game.tile_library[self.building_id].sprite, scale)
-
+        self.sprite = pg.transform.scale(self.sprite,
+                                         (int(self.sprite.get_width() * scale), int(self.sprite.get_height() * scale)))
         self.disabled = False
+
+
     def toggle_fridge_menu(self):
         if self.game.state!=FRIDGE_STATE:
             self.game.state=FRIDGE_STATE
@@ -169,6 +171,7 @@ class FridgeOpenButton(Button):
     def draw(self):
         super().draw()
         self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2,
+
                                             self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2))
 class FridgeItemButton(Button):
     def __init__(self, game, pos, hitbox, item, parentPanel=None):
@@ -200,7 +203,7 @@ class FridgeMenu(Panel):
                                    item, self))
 
     def draw(self,world_renderer):
-        pg.draw.rect(self.game.screen,(50,50,50), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
+        super().draw()
         for element in self.elements:
             element.draw()
         world_renderer.draw_fridge_menu(self)
