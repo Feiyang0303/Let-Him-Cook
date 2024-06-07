@@ -5,6 +5,7 @@ import sys
 from settings import *
 from gameObject import *
 
+
 class Item(GameObject):
     def __init__(self, game, name, image):
         self.game = game
@@ -61,15 +62,14 @@ class Inventory:
     def toggle_inventory(self):
         self.show_inventory = not self.show_inventory
 
-    def add_item(self, item):
-        if type(item) is str:
-            self.items.append(self.item_library[item])
-        elif type(item) is Item:
-            self.items.append(item)
+    def add_item(self, id):
+        if len(self.items) < Inventory.MAX:
+            self.items.append(self.item_library[id])
 
     def pop(self):
         if self.items:
-            return self.items.pop()
+            return [self.items.pop()]
+        return []
     
     def isFull(self):
         return len(self.items) >= Inventory.MAX
