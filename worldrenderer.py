@@ -37,6 +37,7 @@ class WorldRenderer:
         offset = pg.Vector2(go.spriteRect.x, go.spriteRect.y) if offset==None else offset
 
         self.draw_call.append(DrawCall(sprite, pos, offset, z))
+
     
     def draw(self):
         [[self.img.blit(self.wall_image, (x*TILE_WIDTH, y*TILE_HEIGHT)) for x in range(WORLD_WIDTH)] for y in range(WORLD_WALL_HEIGHT)]
@@ -49,3 +50,4 @@ class WorldRenderer:
         self.game.screen.blit(self.img, (MARGIN, MARGIN + STATS_MARGIN))
 
         self.draw_call.clear()
+
