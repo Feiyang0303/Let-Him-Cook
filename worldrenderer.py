@@ -31,7 +31,7 @@ class WorldRenderer:
         else:
             self.img.blit(sprite, screenspace_pos)
 
-    def draw_object(self, go, sprite=None, pos=None, offset=None, z=0):
+    def draw_object(self, go, sprite:pg.Surface=None, pos:pg.Vector2=None, offset:pg.Vector2=None, z=0):
         sprite = go.sprite if sprite==None else sprite
         pos = go.pos if pos==None else pos
         offset = pg.Vector2(go.spriteRect.x, go.spriteRect.y) if offset==None else offset

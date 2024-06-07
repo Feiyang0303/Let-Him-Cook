@@ -21,7 +21,8 @@ class World(GameObject):
                              "counter" :    Counter(self.game, "counter", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=10),
                              "fridge" :     Building(self.game, "fridge", "new-sprites/buildings/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=500), 
                              "shop" :       Shop(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
-                             "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100),
+                             "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100, pps=0),
+                             "oven" :    Processor(self.game, "oven", "new-sprites/buildings/oven.png", spriteRect=pg.Rect(0, -TILE_WIDTH, TILE_WIDTH, 2*TILE_HEIGHT), price=100, pps=0.1, ppi=0),
         }
         
         self.generateWorld()
@@ -60,7 +61,7 @@ class World(GameObject):
         else: return self.building_layer[int(y)][int(x)]
 
     def update(self):
-        pass
+        [[building.update() for building in row] for row in self.building_layer]
 
     def draw(self):
         [[self.game.world_renderer]]
@@ -202,20 +203,21 @@ class Fridge(Building):
             item.draw(item_pos)
 
 class Processor(Building):
-    def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
+    def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100, pps=0.05, ppi=0.1):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
         
         self.item = None
 
         self.progress = 0
 
-        self.pps = 0 # process per interaction
-        self.ppi = 0.2 # process per interaction
+        self.pps = pps # process per interaction
+        self.ppi = ppi # process per interaction
 
     def interact(self):
         if self.item == None and not self.game.player.inventory.isEmpty():
             self.item = self.game.player.inventory.next()
             self.game.player.inventory.pop()
+            self.progress = 0
 
         elif self.item != None:
             if self.progress < 1:
@@ -227,12 +229,24 @@ class Processor(Building):
                 self.game.player.inventory.add_item(self.item)
                 self.item = None
 
+    def update(self):
+        if self.item != None and self.progress < 1:
+            self.progress += self.pps * self.game.DT
+            if self.progress >= 1:
+                    self.item = self.game.player.inventory.item_library["cookie"]
+
     def draw(self):
         super().draw()
         if self.item != None:
             self.item.draw(self.pos, z=0.6)
 
-        # draw the progress bar
+            # draw the progress bar
+            background_bar = pg.Surface((TILE_WIDTH, 12))
+            progress_bar = pg.Surface((min(1, self.progress) * TILE_WIDTH, 12))
+            progress_bar.fill((0, 255, 0))
+
+            self.game.world_renderer.draw_object(self, background_bar, self.pos, z=0.5)
+            self.game.world_renderer.draw_object(self, progress_bar, self.pos, z=0.5)
 
     
     def copy(self, pos: pg.Vector2):
