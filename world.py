@@ -221,6 +221,8 @@ class Processor(Building):
         elif self.item != None:
             if self.progress < 1:
                 self.progress += self.ppi
+                if self.progress >= 1:
+                    self.item = self.game.player.inventory.item_library["cookie"]
             
             elif self.item != None and not self.game.player.inventory.isFull():
                 self.game.player.inventory.add_item(self.item)
