@@ -2,6 +2,7 @@ import pygame as pg
 
 from gameObject import *
 from tools import *
+from items import *
 
 JUSTIFY_LEFT = 0
 JUSTIFY_CENTER = 1
@@ -41,6 +42,14 @@ class Text(UIElement):
 
         self.game.screen.blit(self.img, (npos.x, npos.y))
 
+class Image(UIElement):
+    def __init__(self, game, pos:pg.Vector2, imagepath:str, parentPanel=None):
+        super().__init__(game, pos, parentPanel=parentPanel)
+        
+        self.image = pg.image.load(imagepath)
+
+    def draw(self):
+        self.game.screen.blit(self.img, (self.pos.x, self.pos.y))
 
 class Button(UIElement):
     def __init__(self, game, pos, hitbox, call=lambda:print('button call'), parentPanel=None) -> None:
@@ -153,58 +162,64 @@ class BuyMenu(Panel):
 # i could probably use a decorator for scroll bars...
 # ideally i make a self-refferential ui_element class
 
-class FridgeOpenButton(Button):
-    def __init__(self, game, pos, hitbox, parentPanel=None):
-        super().__init__(game, pos, hitbox,self.toggle_fridge_menu, parentPanel)
-        self.sprite = pg.image.load("sprites/Fridge.png")
-        scale = min(TILE_WIDTH / building_sprite.get_width(), TILE_HEIGHT / building_sprite.get_height())
-        self.sprite = pg.transform.scale(self.sprite,
-                                         (int(self.sprite.get_width() * scale), int(self.sprite.get_height() * scale)))
-        self.disabled = False
+# class FridgeOpenButton(Button):
+#     def __init__(self, game, pos, hitbox, parentPanel=None):
+#         super().__init__(game, pos, hitbox,self.toggle_fridge_menu, parentPanel)
+#         self.sprite = pg.image.load("sprites/Fridge.png")
+#         scale = min(TILE_WIDTH / building_sprite.get_width(), TILE_HEIGHT / building_sprite.get_height())
+#         self.sprite = pg.transform.scale(self.sprite,
+#                                          (int(self.sprite.get_width() * scale), int(self.sprite.get_height() * scale)))
+#         self.disabled = False
 
 
-    def toggle_fridge_menu(self):
-        if self.game.state!=FRIDGE_STATE:
-            self.game.state=FRIDGE_STATE
-        else:
-            self.game.state=PLAY_STATE
-    def draw(self):
-        super().draw()
-        self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2,
+#     def toggle_fridge_menu(self):
+#         if self.game.state!=FRIDGE_STATE:
+#             self.game.state=FRIDGE_STATE
+#         else:
+#             self.game.state=PLAY_STATE
 
-                                            self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2))
-class FridgeItemButton(Button):
-    def __init__(self, game, pos, hitbox, item, parentPanel=None):
-        super().__init__(game, pos, hitbox, lambda: self.game.player.inventory.remove_item(item), parentPanel)
-        self.item=item
-        self.sprite = pg.image.load("sprites/Cookie.png")
-        scale = min(hitbox.x / self.sprite.get_width(), hitbox.y / self.sprite.get_height())
-        self.sprite = pg.transform.scale(self.sprite,
-                                         (int(self.sprite.get_width() * scale), int(self.sprite.get_height() * scale)))
-    def draw(self):
-        super().draw()
-        self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2,
-                                            self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2))
+#     def draw(self):
+#         super().draw()
+#         self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2,
 
-class FridgeMenu(Panel):
-    BUTTON_WIDTH = 25 * PPU
-    MARGIN = 2 * PPU
+#                                             self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2))
+# class FridgeItemButton(Button):
+#     def __init__(self, game, pos, hitbox, item, parentPanel=None):
+#         super().__init__(game, pos, hitbox, lambda: self.game.player.inventory.remove_item(item), parentPanel)
+#         self.item=item
+#         self.sprite = pg.image.load("sprites/Cookie.png")
+#         scale = min(hitbox.x / self.sprite.get_width(), hitbox.y / self.sprite.get_height())
+#         self.sprite = pg.transform.scale(self.sprite,
+#                                          (int(self.sprite.get_width() * scale), int(self.sprite.get_height() * scale)))
+#     def draw(self):
+#         super().draw()
+#         self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2,
+#                                             self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2))
 
+class StorageMenu(Panel):
     def __init__(self, game, hitbox):
         super().__init__(game, hitbox)
-        self.update()
-
-    def update(self):
+        self.storage = None
+    
+    def set(self, storage:Storage):
         self.elements.clear()
-        for i, item in enumerate(self.game.player.inventory.items):
-            x = TILE_WIDTH / 2 + (FridgeMenu.BUTTON_WIDTH + FridgeMenu.MARGIN) * i
-            y = TILE_WIDTH / 2 + 0
-            self.elements.append(FridgeItemButton(self.game, pg.Vector2(x, y), pg.Vector2(FridgeMenu.BUTTON_WIDTH, FridgeMenu.BUTTON_WIDTH),
-                                   item, self))
+        self.storage = storage
 
-    def draw(self,world_renderer):
-        super().draw()
-        for element in self.elements:
-            element.draw()
-        world_renderer.draw_fridge_menu(self)
+        for i, items in enumerate(self.storage.items):
+            self.elements.append(Image(self.game, pg.Vector2(TILE_WIDTH * i, 0), ))
+
+
+    # def update(self):
+    #     self.elements.clear()
+    #     for i, item in enumerate(self.game.player.inventory.items):
+    #         x = TILE_WIDTH / 2 + (FridgeMenu.BUTTON_WIDTH + FridgeMenu.MARGIN) * i
+            # y = TILE_WIDTH / 2 + 0
+            # self.elements.append(FridgeItemButton(self.game, pg.Vector2(x, y), pg.Vector2(FridgeMenu.BUTTON_WIDTH, FridgeMenu.BUTTON_WIDTH),
+            #                        item, self))
+
+    # def draw(self, world_renderer):
+    #     super().draw()
+    #     for element in self.elements:
+    #         element.draw()
+    #     world_renderer.draw_fridge_menu(self)
 

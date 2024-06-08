@@ -44,7 +44,7 @@ class Game:
 
         # UI
         self.buyMenu = BuyMenu(self, pg.Vector2(12*TILE_WIDTH, 10*TILE_HEIGHT))
-        self.fridgeMenu = FridgeMenu(self, pg.Vector2(12*TILE_WIDTH, 10*TILE_HEIGHT))
+        self.fridgeMenu = StorageMenu(self, pg.Vector2(12*TILE_WIDTH, 10*TILE_HEIGHT))
 
         self.scoreText = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), text=f"${AERSOL}")
 
@@ -112,7 +112,7 @@ class Game:
             self.pause_screen.draw()
         if self.state == BUY_STATE:
             self.buyMenu.draw()
-        elif self.state == FRIDGE_STATE:
+        if self.state == FRIDGE_STATE:
             self.fridgeMenu.draw()
 
         pg.display.update()
