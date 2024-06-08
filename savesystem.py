@@ -7,8 +7,7 @@ def save_game_state(game):
 
     game_state = {
       'playerx' : game.player.pos.x,
-      'playery' : game.player.pos.y,
-      'building_layer' : game.building_layer
+      'playery' : game.player.pos.y
     }
 
     with open('gamesave.json','w') as f:
@@ -19,7 +18,6 @@ def load_game_state(game):
       with open('gamesave.json','r') as f:
           game_state = json.load(f)
           game.player.pos = pg.Vector2(game_state["playerx"], game_state["playery"])
-          game.building_layer = game_state["building_layer"]
           return True
     except FileNotFoundError:
       print("Save File not Found")

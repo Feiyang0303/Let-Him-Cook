@@ -18,13 +18,32 @@ class Item(GameObject):
 
 #storage
 class Storage:
-    def __init__(self, capacity):
-        self.items = []
-        self.capacity = capacity
+    #table
+    ROWS = 6
+    COLS = 6
+    CAPACITY = ROWS * COLS
+    SLOT_SIZE = 50
 
-    def append_items(self, item):
-        if len(self.items) < self.capacity:
-            self.items.append(item)
+    def __init__(self):
+        self.items = []
+        for row in range(Storage.ROWS):
+            row_current = []
+            for col in range(Storage.COLS):
+                row_current.append(None)  # initilize with empty space
+            self.items.append(row_current)
+
+    def append_items(self, item, row, col):
+        if 0 <= row <= Storage.ROWS and 0 <= col <Storage.COLS:
+            self.items[row][col] = item
+
+    def draw(self, screen):
+        for row in range(Storage.ROWS):
+            for col in range(Storage.COLS):
+                x = col * Storage.SLOT_SIZE
+                y = row * Storage.SLOT_SIZE
+                pg.draw.rect(screen, (255, 255, 255), (x, y, Storage.SLOT_SIZE, Storage.SLOT_SIZE), 1)
+                if self.items[row][col]:
+                    self.items[row][col].display_item(screen, x, y)
 
 class Inventory:
     MAX=10
