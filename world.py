@@ -21,18 +21,10 @@ class World(GameObject):
                              "counter" :    Counter(self.game, "counter", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=10),
                              "fridge" :     Building(self.game, "fridge", "new-sprites/buildings/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=500), 
                              "shop" :       Shop(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
-<<<<<<< Updated upstream
+
                              "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100, pps=0),
                              "oven" :    Processor(self.game, "oven", "new-sprites/buildings/oven.png", spriteRect=pg.Rect(0, -TILE_WIDTH, TILE_WIDTH, 2*TILE_HEIGHT), price=100, pps=0.1, ppi=0),
-=======
-<<<<<<< HEAD
-                             "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/Counter with Knife.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100, pps=0),
-                             "oven" :       Processor(self.game, "oven", "new-sprites/buildings/oven.png", spriteRect=pg.Rect(0, -TILE_WIDTH, TILE_WIDTH, 2*TILE_HEIGHT), price=100, pps=0.1, ppi=0),
-=======
-                             "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100, pps=0),
-                             "oven" :    Processor(self.game, "oven", "new-sprites/buildings/oven.png", spriteRect=pg.Rect(0, -TILE_WIDTH, TILE_WIDTH, 2*TILE_HEIGHT), price=100, pps=0.1, ppi=0),
->>>>>>> c9ec5341b8278ad75f9c918f45b358f492822f3d
->>>>>>> Stashed changes
+
         }
         
         self.generateWorld()
@@ -181,18 +173,15 @@ class Counter(Building):
 
 class Fridge(Building):
     def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1),
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-                 spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
+
+        spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
         # self.storage = Storage()
-=======
->>>>>>> Stashed changes
-                 spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True):
-        super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid)
-        self.storage = Storage()
->>>>>>> c9ec5341b8278ad75f9c918f45b358f492822f3d
+
+        # spriteRect=pg.Rect((0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True):
+        # super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid)
+        # self.storage = Storage()
+
         self.show_storage = False
         self.storage_sprite = pg.Surface((200, 150))
 
