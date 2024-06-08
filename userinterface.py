@@ -163,19 +163,58 @@ class BuyMenu(Panel):
 # i could probably use a decorator for scroll bars...
 # ideally i make a self-refferential ui_element class
 
-
 class StorageMenu(Panel):
-
-
+    BUTTON_WIDTH = 25 * PPU
+    MARGIN = 4 * PPU
     def __init__(self, game, hitbox):
         super().__init__(game, hitbox)
         self.storage = None
 
-    def set(self, storage:Storage):
+    def set(self, storage: Storage):
         self.elements.clear()
         self.storage = storage
         for i, items in enumerate(self.storage.items):
-            self.elements.append(Image(self.game, pg.Vector2(TILE_WIDTH * i, 0), ))
+            self.elements.append(Image(self.game, pg.Vector2(TILE_WIDTH * i, 0),item))
 
+    def draw(self):
+        super().draw()
+        for i, item in enumerate(self.storage.items):
+            x = self.MARGIN + (self.SLOT_SIZE + self.MARGIN) * (i % 5)
+            y = self.MARGIN + (self.SLOT_SIZE + self.MARGIN) * (i // 5)
+            self.elements.append(
+                    StorageSlot(self.game, pg.Vector2(x, y), pg.Vector2(self.SLOT_SIZE, self.SLOT_SIZE), item, self))
 
+class StorageSlot(UIElement):
+    def __init__(self, game, pos: pg.Vector2, size: int, item, parentPanel=None):
+        super().__init__(game, pos, pg.Vector2(size, size), parentPanel)
+        self.size = size
+        self.item = item
+        self.game.eventees.append(self)
+        self.hovering = False
+        self.clicking = False
 
+    def draw(self):
+        if self.disabled:
+            pg.draw.rect(self.game.screen, (60, 60, 60), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
+        elif self.clicking:
+            pg.draw.rect(self.game.screen, (100, 100, 100), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
+        elif self.hovering:
+            pg.draw.rect(self.game.screen, (200, 200, 200), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
+        else:
+            pg.draw.rect(self.game.screen, (89, 77, 81), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
+
+    def immuneUpdate(self):
+        mouse_pos=pg.Vector2(pg.mouse.get_pos())
+        self.hovering=is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
+
+    def callEvent(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if self.hovering and not self.disabled and self.game.state == BUY_STATE:
+                self.game.money -= self.game.tile_library[self.building_id].price
+                self.clicking = True
+                self.call()
+        elif event.type == pg.MOUSEBUTTONUP:
+            self.clicking = False
+    def place_item(self):
+        if self.game.player.inventory.items:
+            self.item = self.game.player.inventory.items.pop(0)

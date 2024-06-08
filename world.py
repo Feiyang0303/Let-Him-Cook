@@ -174,7 +174,7 @@ class Counter(Building):
 class Fridge(Building):
     def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1),
 
-        spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
+            spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
 
         self.show_storage = False
@@ -191,18 +191,7 @@ class Fridge(Building):
         super().draw()
         # if self.show_storage:
         #     self.draw_storage()
-
-    def draw_storage(self):
-        pass
-        # storage_bg_color=(50,50,50)
-        # storage_bg_rect=pg.Rect(0,0,200,150)
-        # storage_bg_rect.center=self.pos.x+ TILE_WIDTH // 2, self.pos.y - TILE_HEIGHT // 2
-        # pg.draw.rect(self.game.world_renderer, storage_bg_color, storage_bg_rect)
-        # item_spacing = 20
-        # item_start_pos = pg.Vector2(storage_bg_rect.left + 20, storage_bg_rect.top + 20)
-        # for i, item in enumerate(self.storage.get_items()):
-        #     item_pos = pg.Vector2(item_start_pos.x, item_start_pos.y + i * item_spacing)
-        #     item.draw(item_pos, z=0.6)
+        # pass
 
 class Processor(Building):
     def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100, pps=0.05, ppi=0.1):

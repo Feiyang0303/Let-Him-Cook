@@ -20,8 +20,8 @@ class Game:
         self.FPS = 60
         self.DT = 1/self.FPS
         self.clock = pg.time.Clock()
-        self.storage = Storage()
-        self.inventory= Inventory(Storage())
+        self.storage = Storage(10)
+        self.inventory= Inventory(Storage(10))
 
         self.eventees = []
 
@@ -112,7 +112,7 @@ class Game:
             self.pause_screen.draw()
         if self.state == BUY_STATE:
             self.buyMenu.draw()
-        elif self.state == FRIDGE_STATE:
+        if self.state == FRIDGE_STATE:
             self.fridgeMenu.draw()
 
         pg.display.update()
