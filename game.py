@@ -12,16 +12,17 @@ from items import *
 from worldrenderer import *
 from preferencescreen import *
 
+
 class Game:
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
         self.FPS = 60
-        self.DT = 1/self.FPS
+        self.DT = 1 / self.FPS
         self.clock = pg.time.Clock()
         self.storage = Storage(10)
-        self.inventory= Inventory(Storage(10))
+        self.inventory = Inventory(Storage(10))
 
         self.eventees = []
 
@@ -43,12 +44,14 @@ class Game:
         self.pause_screen = PreferenceScreen(self)
 
         # UI
-        self.buyMenu = BuyMenu(self, pg.Vector2(12*TILE_WIDTH, 10*TILE_HEIGHT))
-        self.fridgeMenu = StorageMenu(self, pg.Vector2(12*TILE_WIDTH, 10*TILE_HEIGHT))
+        self.buyMenu = BuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
+        self.fridgeMenu = StorageMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
 
-        self.scoreText = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), text=f"${AERSOL}")
+        self.scoreText = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255),
+                              text=f"${AERSOL}")
 
-        self.timerText = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text="1:00")
+        self.timerText = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24,
+                              (255, 255, 255), justification=JUSTIFY_RIGHT, text="1:00")
 
     def load_game(self):
         self.new_game()
@@ -57,7 +60,7 @@ class Game:
     def set_game_state(self, state):
         self.state = state
         self.isFreezed = self.state != PLAY_STATE
-    
+
     def check_freeze(self):
         self.isFreezed = self.isPaused or (self.state != PLAY_STATE)
 
@@ -88,7 +91,7 @@ class Game:
         self.fridgeMenu.update()
         self.world_editor.update()
         self.scoreText.set_text(f"${self.money}")
-    
+
     def immuneUpdate(self):
         self.world.immuneUpdate()
         self.player.immuneUpdate()
@@ -103,7 +106,6 @@ class Game:
         self.world_editor.draw()
         self.scoreText.draw()
         self.timerText.draw()
-
 
         # these menus should really be handling that themselves....
         if self.state == INVENTORY_STATE:
@@ -120,8 +122,8 @@ class Game:
     def run(self):
         while True:
             self.events()
-            self.DT = min(self.clock.tick(self.FPS) / 1000, 1/12)
-            
+            self.DT = min(self.clock.tick(self.FPS) / 1000, 1 / 12)
+
             self.check_freeze()
             if not self.isFreezed:
                 self.update()

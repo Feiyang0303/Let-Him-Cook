@@ -8,6 +8,7 @@ from items import TILE_HEIGHT, TILE_WIDTH
 from settings import *
 from items import *
 from settings import TILE_HEIGHT, TILE_WIDTH
+from game import *
 
 class World(GameObject):
     def __init__(self, game):
@@ -182,7 +183,7 @@ class Fridge(Building):
 
     def interact(self):
         print("opening storage...")
-        self.show_storage = True
+        self.game.state = FRIDGE_STATE
 
     def copy(self, pos: pg.Vector2):
         return Fridge(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)

@@ -8,6 +8,7 @@ JUSTIFY_LEFT = 0
 JUSTIFY_CENTER = 1
 JUSTIFY_RIGHT = 2
 
+
 class UIElement(GameObject):
     def __init__(self, game, pos: pg.Vector2, hitbox=pg.Vector2(1, 1), parentPanel=None) -> None:
         self.parentPanel = parentPanel
@@ -19,16 +20,17 @@ class UIElement(GameObject):
 
 
 class Text(UIElement):
-    def __init__(self, game, pos:pg.Vector2, fontpath, size, color, justification=JUSTIFY_LEFT, text="default", parentPanel=None):
+    def __init__(self, game, pos: pg.Vector2, fontpath, size, color, justification=JUSTIFY_LEFT, text="default",
+                 parentPanel=None):
         super().__init__(game, pos, parentPanel=parentPanel)
-        
+
         self.font = pg.font.Font(fontpath, size)
         self.color = color
         self.justification = justification
-        
+
         self.set_text(text)
-    
-    def set_text(self, text:str):
+
+    def set_text(self, text: str):
         self.text = text
         self.img = self.font.render(self.text, False, self.color)
 
@@ -52,8 +54,9 @@ class Image(UIElement):
     def draw(self):
         self.game.screen.blit(self.img, (self.pos.x, self.pos.y))
 
+
 class Button(UIElement):
-    def __init__(self, game, pos, hitbox, call=lambda:print('button call'), parentPanel=None) -> None:
+    def __init__(self, game, pos, hitbox, call=lambda: print('button call'), parentPanel=None) -> None:
         super().__init__(game, pos, hitbox, parentPanel)
         self.call = call
 
@@ -87,20 +90,20 @@ class Button(UIElement):
 
 
 class BuyStructureButton(Button):
-    def __init__(self, game, pos, hitbox, building_id:str, parentPanel=None):
-        super().__init__(game, pos, hitbox, lambda:self.game.world_editor.place(building_id), parentPanel)
+    def __init__(self, game, pos, hitbox, building_id: str, parentPanel=None):
+        super().__init__(game, pos, hitbox, lambda: self.game.world_editor.place(building_id), parentPanel)
         self.building_id = building_id
 
-        self.name_text = Text(game, pg.Vector2(pos.x + hitbox.x / 2, pos.y), "fonts/pixel-bit-advanced.ttf", 16, (130, 149, 130), justification=JUSTIFY_CENTER, parentPanel=parentPanel)
+        self.name_text = Text(game, pg.Vector2(pos.x + hitbox.x / 2, pos.y), "fonts/pixel-bit-advanced.ttf", 16,
+                              (130, 149, 130), justification=JUSTIFY_CENTER, parentPanel=parentPanel)
         self.name_text.set_text(str(self.game.tile_library[self.building_id].price))
-
 
         building_sprite = self.game.tile_library[self.building_id].sprite
         scale = min(TILE_WIDTH / building_sprite.get_width(), TILE_HEIGHT / building_sprite.get_height())
         self.sprite = pg.transform.scale_by(self.game.tile_library[self.building_id].sprite, scale)
 
         self.disabled = False
-    
+
     def immuneUpdate(self):
         super().immuneUpdate()
         self.disabled = self.game.money < self.game.tile_library[self.building_id].price
@@ -113,22 +116,23 @@ class BuyStructureButton(Button):
                 self.call()
         elif event.type == pg.MOUSEBUTTONUP:
             self.clicking = False
-    
+
     def draw(self):
         super().draw()
 
-        self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2, self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2 + 8))
+        self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2,
+                                            self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2 + 8))
         self.name_text.draw()
 
 
 class Panel(GameObject):
-    def __init__(self, game, hitbox:pg.Vector2):
+    def __init__(self, game, hitbox: pg.Vector2):
         self.game = game
 
         self.hitbox = hitbox
 
         self.elements = []
-        self.pos = pg.Vector2((SCREEN_WIDTH - hitbox.x)/2, (SCREEN_HEIGHT - hitbox.y)/2)
+        self.pos = pg.Vector2((SCREEN_WIDTH - hitbox.x) / 2, (SCREEN_HEIGHT - hitbox.y) / 2)
 
     def immuneUpdate(self):
         if self.game.state == BUY_STATE:
@@ -144,10 +148,9 @@ class Panel(GameObject):
         pg.draw.rect(self.game.screen, (57, 59, 60), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
         for element in self.elements:
             element.draw()
-        
+
 
 class BuyMenu(Panel):
-
     BUTTON_WIDTH = 32 * PPU
     MARGIN = 4 * PPU
 
@@ -156,9 +159,12 @@ class BuyMenu(Panel):
         buildings = ["counter", "fridge", "chopper", "oven"]
 
         for i, building in enumerate(buildings):
-            x = TILE_WIDTH/2 + (BuyMenu.BUTTON_WIDTH + BuyMenu.MARGIN) * i
-            y = TILE_WIDTH/2 + 0
-            self.elements.append(BuyStructureButton(game, pg.Vector2(x, y), pg.Vector2(BuyMenu.BUTTON_WIDTH, BuyMenu.BUTTON_WIDTH), building, self))
+            x = TILE_WIDTH / 2 + (BuyMenu.BUTTON_WIDTH + BuyMenu.MARGIN) * i
+            y = TILE_WIDTH / 2 + 0
+            self.elements.append(
+                BuyStructureButton(game, pg.Vector2(x, y), pg.Vector2(BuyMenu.BUTTON_WIDTH, BuyMenu.BUTTON_WIDTH),
+                                   building, self))
+
 
 # i could probably use a decorator for scroll bars...
 # ideally i make a self-refferential ui_element class
@@ -166,6 +172,7 @@ class BuyMenu(Panel):
 class StorageMenu(Panel):
     BUTTON_WIDTH = 25 * PPU
     MARGIN = 4 * PPU
+
     def __init__(self, game, hitbox):
         super().__init__(game, hitbox)
         self.storage = None
@@ -174,15 +181,13 @@ class StorageMenu(Panel):
         self.elements.clear()
         self.storage = storage
         for i, items in enumerate(self.storage.items):
-            self.elements.append(Image(self.game, pg.Vector2(TILE_WIDTH * i, 0),item))
+            self.elements.append(Image(self.game, pg.Vector2(TILE_WIDTH * i, 0), ))
 
     def draw(self):
         super().draw()
-        for i, item in enumerate(self.storage.items):
-            x = self.MARGIN + (self.SLOT_SIZE + self.MARGIN) * (i % 5)
-            y = self.MARGIN + (self.SLOT_SIZE + self.MARGIN) * (i // 5)
-            self.elements.append(
-                    StorageSlot(self.game, pg.Vector2(x, y), pg.Vector2(self.SLOT_SIZE, self.SLOT_SIZE), item, self))
+        for element in self.elements:
+            element.draw()
+
 
 class StorageSlot(UIElement):
     def __init__(self, game, pos: pg.Vector2, size: int, item, parentPanel=None):
@@ -204,8 +209,8 @@ class StorageSlot(UIElement):
             pg.draw.rect(self.game.screen, (89, 77, 81), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
 
     def immuneUpdate(self):
-        mouse_pos=pg.Vector2(pg.mouse.get_pos())
-        self.hovering=is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
+        mouse_pos = pg.Vector2(pg.mouse.get_pos())
+        self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
 
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -215,6 +220,9 @@ class StorageSlot(UIElement):
                 self.call()
         elif event.type == pg.MOUSEBUTTONUP:
             self.clicking = False
+
     def place_item(self):
         if self.game.player.inventory.items:
             self.item = self.game.player.inventory.items.pop(0)
+
+

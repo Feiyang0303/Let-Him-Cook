@@ -9,10 +9,11 @@ from world import *
 from items import Storage, Inventory, Item
 import random
 
+
 class PlayerCollisionInfo:
     def __init__(self):
         self.reset()
-    
+
     def reset(self):
         self.isColliding = False
         self.collidingX = False
@@ -26,18 +27,19 @@ class PlayerCollisionInfo:
 
 class Player(GameObject):
     HEAD_OFFSET = pg.Vector2(0, -50)
+
     def __init__(self, game):
         self.game = game
         self.pos = pg.Vector2(2, 2)
         self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
-        self.spriteRect = pg.Rect(0, 0, TILE_WIDTH*PLAYER_HITBOX_HEIGHT, TILE_HEIGHT*PLAYER_HITBOX_HEIGHT)
+        self.spriteRect = pg.Rect(0, 0, TILE_WIDTH * PLAYER_HITBOX_HEIGHT, TILE_HEIGHT * PLAYER_HITBOX_HEIGHT)
         self.sprite = (pg.image.load("sprites/player/chef-South.png"))
         # self.sprite = pg.transform.scale(pg.image.load("sprites/Cookie.png"), self.spriteRect.size) -> old code
 
         self.velocity = pg.Vector2(0, 0)
 
         self.game.eventees.append(self)
-        
+
         # Selected Tile
         self.selected_building = None
         self.dir = pg.Vector2(1, 0)
@@ -50,15 +52,15 @@ class Player(GameObject):
 
     def update(self):
         self.move()
-    
+
     def callEvent(self, event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_e:
                 if self.selected_building != None:
                     self.selected_building.interact()
                     if isinstance(self.selected_building, Fridge):
-                        if self.game.state!=FRIDGE_STATE:
-                            self.game.state=FRIDGE_STATE
+                        if self.game.state != FRIDGE_STATE:
+                            self.game.state = FRIDGE_STATE
             elif event.key == pg.K_LSHIFT:
                 self.velocity = self.dir * DASH_POWER
                 self.disable_movement_cap_timer = TIME_TO_TAKE_DASH
@@ -94,8 +96,8 @@ class Player(GameObject):
             if self.velocity.y < 0: self.velocity.y = 0
         if keys[pg.K_d] or keys[pg.K_a] or keys[pg.K_w] or keys[pg.K_s]:
             self.dir = orth.copy()
-        
-        acceleration = (1 if (orth[0]==0 or orth[1]==0) else 0.7071) * orth * PLAYER_ACCELERATION
+
+        acceleration = (1 if (orth[0] == 0 or orth[1] == 0) else 0.7071) * orth * PLAYER_ACCELERATION
 
         if self.disable_movement_cap_timer <= 0:
             if not (keys[pg.K_d] or keys[pg.K_a]):
@@ -104,8 +106,8 @@ class Player(GameObject):
                 acceleration.y = -sign(self.velocity.y) * min(abs(self.velocity.y / self.game.DT), PLAYER_DECELERATION)
 
             self.velocity += acceleration * self.game.DT
-        
-        max_speed = (1 if (orth[0]==0 or orth[1]==0) else 0.7071) * PLAYER_MAX_SPEED
+
+        max_speed = (1 if (orth[0] == 0 or orth[1] == 0) else 0.7071) * PLAYER_MAX_SPEED
         if self.disable_movement_cap_timer > 0:
             max_speed = math.inf
             self.disable_movement_cap_timer -= self.game.DT
@@ -114,7 +116,7 @@ class Player(GameObject):
         self.try_move(self.velocity * self.game.DT)
         self.get_selected_tile()
 
-    def try_move(self, delta:pg.Vector2):
+    def try_move(self, delta: pg.Vector2):
         self.collisionInfo.reset()
 
         # resolve x collisions first before the other
@@ -140,7 +142,6 @@ class Player(GameObject):
 
         if not self.collisionInfo.collidingX:
             self.pos.x += delta.x
-        
 
         # now we can safely do y collisions! hoorah
 
@@ -166,19 +167,17 @@ class Player(GameObject):
 
         if not self.collisionInfo.collidingY:
             self.pos.y += delta.y
-        
 
         if self.pos.x < 0:
             self.pos.x = 0
         if self.pos.y < 0:
             self.pos.y = 0
-        
+
         if self.pos.x > WORLD_WIDTH - self.hitbox.x:
             self.pos.x = WORLD_WIDTH - self.hitbox.x
         if self.pos.y > WORLD_HEIGHT - self.hitbox.y:
             self.pos.y = WORLD_HEIGHT - self.hitbox.y
 
-    
     def get_selected_tile(self):
         rounded_pos = pg.Vector2(round(self.pos.x), round(self.pos.y))
         selected_pos = rounded_pos + self.dir
@@ -194,5 +193,5 @@ class Player(GameObject):
 
         self.inventory.draw()
 
-    
+
 
