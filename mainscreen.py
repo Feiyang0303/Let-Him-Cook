@@ -9,7 +9,7 @@ class MainMenu:
     def __init__(self, game):
         self.game = game
         self.title_text = Text(game, pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), "fonts/pixel-bit-advanced.ttf",
-                               64, (255, 255, 255), justification=JUSTIFY_CENTER, text='COOKING')
+                               56, (255, 255, 255), justification=JUSTIFY_CENTER, text='LET HIM COOK')
         self.start_button = Button(game, pg.Vector2(SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 4 + 200),
                                    pg.Vector2(200, 50), call=self.start_game)
         self.start_button_text = Text(game, pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 200),

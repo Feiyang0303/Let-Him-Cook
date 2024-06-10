@@ -18,7 +18,7 @@ class Game:
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        pg.display.set_caption("Cooking")
+        pg.display.set_caption("LET HIM COOK")
         self.FPS = 60
         self.DT = 1 / self.FPS
         self.clock = pg.time.Clock()
