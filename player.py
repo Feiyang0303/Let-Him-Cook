@@ -74,11 +74,12 @@ class Player(GameObject):
     def set_sprite(self):
         if self.dir.x == 1:
             self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-East.png"), self.spriteRect.size)
-        else:
+        elif self.dir.x == -1:
             self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-West.png"), self.spriteRect.size)
-        if self.dir.y == 1:
+
+        if self.dir.y == -1:
             self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-North.png"), self.spriteRect.size)
-        else:
+        elif self.dir.y == 1:
             self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-South.png"), self.spriteRect.size)
 
     def move(self):
@@ -193,6 +194,7 @@ class Player(GameObject):
             self.selected_building = None
 
     def draw(self):
+        self.set_sprite()
         self.game.world_renderer.draw_object(self)
 
         if self.selected_building != None:

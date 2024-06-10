@@ -78,6 +78,9 @@ class Button(UIElement):
         elif event.type == pg.MOUSEBUTTONUP:
             self.clicking = False
 
+    def disable(self):
+        self.game.eventees.remove(self)
+
     def draw(self):
         if self.disabled:
             pg.draw.rect(self.game.screen, (60, 60, 60), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
