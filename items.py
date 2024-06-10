@@ -10,6 +10,7 @@ class Item(GameObject):
     def __init__(self, game, name, image):
         self.game = game
         self.name = name
+        self.id = name
         self.spriteRect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
         self.image = pg.transform.scale(pg.image.load(image).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 
@@ -46,9 +47,12 @@ class Inventory:
     def toggle_inventory(self):
         self.show_inventory = not self.show_inventory
 
-    def add_item(self, id):
+    def add_item(self, item):
         if len(self.items) < Inventory.MAX:
-            self.items.append(self.item_library[id])
+            if type(item) is str:
+                self.items.append(self.item_library[item])
+            else:
+                self.items.append(self.item_library[item.id])
 
     def pop(self):
         if self.items:
