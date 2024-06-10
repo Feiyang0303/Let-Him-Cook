@@ -9,6 +9,7 @@ from settings import *
 from items import *
 from settings import TILE_HEIGHT, TILE_WIDTH
 from game import *
+from savesystem import *
 
 class World(GameObject):
     def __init__(self, game):
@@ -23,7 +24,7 @@ class World(GameObject):
                              "fridge" :     Fridge(self.game, "fridge", "new-sprites/buildings/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=1000),
                              "shop" :       Shop(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
 
-                             "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100, pps=0),
+                             "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/Counter with Knife.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100, pps=0),
                              "oven" :       Processor(self.game, "oven", "new-sprites/buildings/oven.png", spriteRect=pg.Rect(0, -TILE_WIDTH, TILE_WIDTH, 2*TILE_HEIGHT), price=100, pps=0.1, ppi=0),
 
         }
@@ -47,6 +48,8 @@ class World(GameObject):
         return True
 
     def place(self, id:str, pos:pg.Vector2):
+        
+        
         if not self.is_legible_tile_placement(id, pos):
             return
 
