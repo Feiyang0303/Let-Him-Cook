@@ -124,6 +124,47 @@ class BuyStructureButton(Button):
                                             self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2 + 8))
         self.name_text.draw()
 
+class StorageSlot(Button):
+    def __init__(self, game, pos, hitbox, item, parentPanel=None):
+        super().__init__(game, pos, hitbox, parentPanel)
+        self.item=item
+        self.name_text = Text(game, pg.Vector2(pos.x + hitbox.x / 2, pos.y), "fonts/pixel-bit-advanced.ttf", 16,
+                              (130, 149, 130), justification=JUSTIFY_CENTER, parentPanel=parentPanel)
+        self.name_text.set_text(self.item.name)
+        scale = min(TILE_WIDTH / self.item.sprite.get_width(), TILE_HEIGHT / self.item.sprite.get_height())
+        self.sprite = pg.transform.scale_by( self.item.sprite, (int(self.item.sprite.get_width() * scale), int(self.item.sprite.get_height() * scale)))
+        # chatgpt
+        self.disabled = False
+
+    def immuneUpdate(self):
+        mouse_pos = pg.Vector2(pg.mouse.get_pos())
+        self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
+
+
+    def callEvent(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if self.hovering and not self.disabled and self.game.state == FRIDGE_STATE:
+                self.clicking = True
+                self.call()
+            elif event.type == pg.MOUSEBUTTONUP:
+                self.clicking = False
+    def draw(self):
+        super().draw()
+
+        self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2, self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2 + 8))
+        self.name_text.draw()
+
+    # def place_item(self):
+    #     if self.game.player.inventory.items:
+    #         self.item = self.game.player.inventory.items.pop(0)
+
+    #def take_item(self):
+    # if self.item:
+    #     self.game.player.inventory.add(self.item)
+    #     self.item = None
+    #     self.name_text.set_text("Empty")
+
+
 
 class Panel(GameObject):
     def __init__(self, game, hitbox: pg.Vector2):
@@ -180,49 +221,14 @@ class StorageMenu(Panel):
     def set(self, storage: Storage):
         self.elements.clear()
         self.storage = storage
-        for i, items in enumerate(self.storage.items):
-            self.elements.append(Image(self.game, pg.Vector2(TILE_WIDTH * i, 0), ))
-
+        for i, item in enumerate(self.storage.items):
+            x =(StorageMenu.BUTTON_WIDTH +StorageMenu.MARGIN) * i
+            y =  0
+            self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item, self))
+        print(f"{self.item} is added to the fridge storage")
     def draw(self):
         super().draw()
         for element in self.elements:
             element.draw()
-
-
-class StorageSlot(UIElement):
-    def __init__(self, game, pos: pg.Vector2, size: int, item, parentPanel=None):
-        super().__init__(game, pos, pg.Vector2(size, size), parentPanel)
-        self.size = size
-        self.item = item
-        self.game.eventees.append(self)
-        self.hovering = False
-        self.clicking = False
-
-    def draw(self):
-        if self.disabled:
-            pg.draw.rect(self.game.screen, (60, 60, 60), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
-        elif self.clicking:
-            pg.draw.rect(self.game.screen, (100, 100, 100), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
-        elif self.hovering:
-            pg.draw.rect(self.game.screen, (200, 200, 200), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
-        else:
-            pg.draw.rect(self.game.screen, (89, 77, 81), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
-
-    def immuneUpdate(self):
-        mouse_pos = pg.Vector2(pg.mouse.get_pos())
-        self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
-
-    def callEvent(self, event):
-        if event.type == pg.MOUSEBUTTONDOWN:
-            if self.hovering and not self.disabled and self.game.state == BUY_STATE:
-                self.game.money -= self.game.tile_library[self.building_id].price
-                self.clicking = True
-                self.call()
-        elif event.type == pg.MOUSEBUTTONUP:
-            self.clicking = False
-
-    def place_item(self):
-        if self.game.player.inventory.items:
-            self.item = self.game.player.inventory.items.pop(0)
 
 

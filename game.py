@@ -96,6 +96,7 @@ class Game:
         self.world.immuneUpdate()
         self.player.immuneUpdate()
         self.buyMenu.immuneUpdate()
+        self.fridgeMenu.immuneUpdate()
         self.world_editor.immuneUpdate()
 
     def draw(self):
