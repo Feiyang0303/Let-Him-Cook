@@ -32,8 +32,9 @@ class Player(GameObject):
         self.game = game
         self.pos = pg.Vector2(2, 2)
         self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
-        self.spriteRect = pg.Rect(0, 0, TILE_WIDTH * PLAYER_HITBOX_HEIGHT, TILE_HEIGHT * PLAYER_HITBOX_HEIGHT)
-        self.sprite = (pg.image.load("sprites/player/chef-South.png"))
+        self.spriteRect = pg.Rect(0, 0, 47*PPU, 50*PPU)
+
+        self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-South.png"), self.spriteRect.size)
         # self.sprite = pg.transform.scale(pg.image.load("sprites/Cookie.png"), self.spriteRect.size) -> old code
 
         self.velocity = pg.Vector2(0, 0)
@@ -70,27 +71,33 @@ class Player(GameObject):
                 item = random.choice(["sugar", "butter", "flour"])
                 self.inventory.add_item(item)
 
+    def set_sprite(self):
+        if self.dir.x == 1:
+            self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-East.png"), self.spriteRect.size)
+        else:
+            self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-West.png"), self.spriteRect.size)
+        if self.dir.y == 1:
+            self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-North.png"), self.spriteRect.size)
+        else:
+            self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-South.png"), self.spriteRect.size)
+
     def move(self):
         keys = pg.key.get_pressed()
 
         orth = pg.Vector2(0, 0)
         if keys[pg.K_d]:
-            self.sprite = (pg.image.load("sprites/player/chef-East.png"))
             self.dir.x = 1
             orth.x = 1
             if self.velocity.x < 0: self.velocity.x = 0
         if keys[pg.K_a]:
-            self.sprite = (pg.image.load("sprites/player/chef-West.png"))
             self.dir.x = -1
             orth.x = -1
             if self.velocity.x > 0: self.velocity.x = 0
         if keys[pg.K_w]:
-            self.sprite = (pg.image.load("sprites/player/chef-North.png"))
             self.dir.y = -1
             orth.y = -1
             if self.velocity.y > 0: self.velocity.y = 0
         if keys[pg.K_s]:
-            self.sprite = (pg.image.load("sprites/player/chef-South.png"))
             self.dir.x = 1
             orth.y = 1
             if self.velocity.y < 0: self.velocity.y = 0
