@@ -11,13 +11,14 @@ from userinterface import *
 from items import *
 from worldrenderer import *
 from preferencescreen import *
+from mainscreen import MainMenu
 
 
 class Game:
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
+        pg.display.set_caption("Cooking")
         self.FPS = 60
         self.DT = 1 / self.FPS
         self.clock = pg.time.Clock()
@@ -28,11 +29,13 @@ class Game:
 
         self.isFreezed = False
         self.isPaused = False
-        self.state = PLAY_STATE
+        self.state=MAIN_MENU_STATE
+        # self.state = PLAY_STATE
 
         self.money = AERSOL
 
         self.lagCompensation = True
+        self.mainscreen=MainMenu(self)
 
     def new_game(self):
         self.world = World(self)
@@ -58,6 +61,7 @@ class Game:
         load_game_state(self)
 
     def set_game_state(self, state):
+        print(state)
         self.state = state
         self.isFreezed = self.state != PLAY_STATE
 
@@ -85,28 +89,37 @@ class Game:
                 eventee.callEvent(event)
 
     def update(self):
-        self.world.update()
-        self.player.update()
-        self.buyMenu.update()
-        self.fridgeMenu.update()
-        self.world_editor.update()
-        self.scoreText.set_text(f"${self.money}")
+        if self.state == MAIN_MENU_STATE:
+            self.mainscreen.update()
+        else:
+            self.world.update()
+            self.player.update()
+            self.buyMenu.update()
+            self.fridgeMenu.update()
+            self.world_editor.update()
+            self.scoreText.set_text(f"${self.money}")
 
     def immuneUpdate(self):
-        self.world.immuneUpdate()
-        self.player.immuneUpdate()
-        self.buyMenu.immuneUpdate()
-        self.fridgeMenu.immuneUpdate()
-        self.world_editor.immuneUpdate()
+        if self.state==MAIN_MENU_STATE:
+            self.mainscreen.immuneUpdate()
+        else:
+            self.world.immuneUpdate()
+            self.player.immuneUpdate()
+            self.buyMenu.immuneUpdate()
+            self.fridgeMenu.immuneUpdate()
+            self.world_editor.immuneUpdate()
 
     def draw(self):
-        self.screen.fill(BACKGROUND_COLOUR)
-        self.world.draw()
-        self.player.draw()
-        self.world_renderer.draw()
-        self.world_editor.draw()
-        self.scoreText.draw()
-        self.timerText.draw()
+        if self.state==MAIN_MENU_STATE:
+            self.mainscreen.draw()
+        else:
+            self.screen.fill(BACKGROUND_COLOUR)
+            self.world.draw()
+            self.player.draw()
+            self.world_renderer.draw()
+            self.world_editor.draw()
+            self.scoreText.draw()
+            self.timerText.draw()
 
         # these menus should really be handling that themselves....
         if self.state == INVENTORY_STATE:
