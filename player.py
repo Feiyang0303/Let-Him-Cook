@@ -72,15 +72,20 @@ class Player(GameObject):
                 self.inventory.add_item(item)
 
     def set_sprite(self):
-        if self.dir.x == 1:
+
+        if self.dir.y == 1 and self.dir.x == 1:
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-se.png"), self.spriteRect.size)
+        elif self.dir.y == 1 and self.dir.x == -1:
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-sw.png"), self.spriteRect.size)
+        elif self.dir.y == 1:
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.spriteRect.size)
+        elif self.dir.x == 1:
             self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-e.png"), self.spriteRect.size)
         elif self.dir.x == -1:
             self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-w.png"), self.spriteRect.size)
-
+        
         if self.dir.y == -1:
             self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-n.png"), self.spriteRect.size)
-        elif self.dir.y == 1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.spriteRect.size)
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -199,13 +204,6 @@ class Player(GameObject):
 
         if self.selected_building != None:
             self.selected_building.draw_highlighted()
-        
-        # hitbox = pg.Surface((PPU*7, PPU*7))
-        # self.game.world_renderer.draw_object(self, hitbox, offset=pg.Vector2(0, 0))
-        
-        # hitbox = pg.Surface((PPU*2, PPU*2))
-        # hitbox.fill((255, 0, 0))
-        # self.game.world_renderer.draw_object(self, hitbox, offset=pg.Vector2(0, 0), pos=self.rounded_pos)
 
         self.inventory.draw()
 

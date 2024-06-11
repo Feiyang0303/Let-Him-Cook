@@ -229,15 +229,15 @@ class Processor(Building):
     def draw(self):
         super().draw()
         if self.item != None:
-            self.item.draw(self.pos, z=0.6)
+            self.item.draw(self.pos, z=0.8)
 
             # draw the progress bar
-            background_bar = pg.Surface((TILE_WIDTH, 12))
-            progress_bar = pg.Surface((min(1, self.progress) * TILE_WIDTH, 12))
+            background_bar = pg.Surface((TILE_WIDTH, 8))
+            progress_bar = pg.Surface((min(1, self.progress) * TILE_WIDTH, 8))
             progress_bar.fill((0, 255, 0))
 
-            self.game.world_renderer.draw_object(self, background_bar, self.pos, z=0.5)
-            self.game.world_renderer.draw_object(self, progress_bar, self.pos, z=0.5)
+            self.game.world_renderer.draw_object(self, background_bar, self.pos, z=0.4)
+            self.game.world_renderer.draw_object(self, progress_bar, self.pos, z=0.4)
 
     
     def copy(self, pos: pg.Vector2):
