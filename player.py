@@ -32,9 +32,9 @@ class Player(GameObject):
         self.game = game
         self.pos = pg.Vector2(2, 2)
         self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
-        self.spriteRect = pg.Rect(0, 0, 47*PPU, 50*PPU)
+        self.spriteRect = pg.Rect(-3*PPU, -19*PPU, 13*PPU, 26*PPU)
 
-        self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-South.png"), self.spriteRect.size)
+        self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.spriteRect.size)
         # self.sprite = pg.transform.scale(pg.image.load("sprites/Cookie.png"), self.spriteRect.size) -> old code
 
         self.velocity = pg.Vector2(0, 0)
@@ -73,14 +73,14 @@ class Player(GameObject):
 
     def set_sprite(self):
         if self.dir.x == 1:
-            self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-East.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-e.png"), self.spriteRect.size)
         elif self.dir.x == -1:
-            self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-West.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-w.png"), self.spriteRect.size)
 
         if self.dir.y == -1:
-            self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-North.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-n.png"), self.spriteRect.size)
         elif self.dir.y == 1:
-            self.sprite = pg.transform.scale(pg.image.load("sprites/player/chef-South.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.spriteRect.size)
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -187,7 +187,7 @@ class Player(GameObject):
             self.pos.y = WORLD_HEIGHT - self.hitbox.y
 
     def get_selected_tile(self):
-        rounded_pos = pg.Vector2(round(self.pos.x), round(self.pos.y))
+        rounded_pos = pg.Vector2(int(self.pos.x + PLAYER_HITBOX_WIDTH/2), int(self.pos.y + PLAYER_HITBOX_HEIGHT/2))
         selected_pos = rounded_pos + self.dir
         self.selected_building = self.game.world.get(int(selected_pos.x), int(selected_pos.y))
         if not isinstance(self.selected_building, Building):
@@ -199,6 +199,13 @@ class Player(GameObject):
 
         if self.selected_building != None:
             self.selected_building.draw_highlighted()
+        
+        # hitbox = pg.Surface((PPU*7, PPU*7))
+        # self.game.world_renderer.draw_object(self, hitbox, offset=pg.Vector2(0, 0))
+        
+        # hitbox = pg.Surface((PPU*2, PPU*2))
+        # hitbox.fill((255, 0, 0))
+        # self.game.world_renderer.draw_object(self, hitbox, offset=pg.Vector2(0, 0), pos=self.rounded_pos)
 
         self.inventory.draw()
 

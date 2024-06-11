@@ -28,16 +28,16 @@ def load_game_state(game):
     try:
       with open('gamesave.json','r') as f:
           game_state = json.load(f)
-          building_storage = game_state["building_layer"]
+          # building_storage = game_state["building_layer"]
           game.player.pos = pg.Vector2(game_state["playerx"], game_state["playery"])
 
           # for building_tile in building_storage:
           #    if building_tile != "empty":
           #       building_storage[building_tile] = building_storage
-          for row in building_storage:
-              for i, building_tile in enumerate(row):
-                  if building_tile == "empty":
-                      row[i] = building_storage
+          # for row in building_storage:
+          #     for i, building_tile in enumerate(row):
+          #         if building_tile == "empty":
+          #             row[i] = building_storage
                 
                 
           

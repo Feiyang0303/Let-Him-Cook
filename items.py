@@ -72,5 +72,5 @@ class Inventory:
 
     def draw(self):
         for i, item in enumerate(self.items):
-            pos = self.game.player.pos
-            item.draw(pos, z=(i + 1) * 0.8)
+            pos = pg.Vector2(self.game.player.pos.x-0.3, self.game.player.pos.y)
+            item.draw(pos, z=(i + 3) * 0.6)
