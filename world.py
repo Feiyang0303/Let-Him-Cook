@@ -48,8 +48,6 @@ class World(GameObject):
         return True
 
     def place(self, id:str, pos:pg.Vector2):
-        
-        
         if not self.is_legible_tile_placement(id, pos):
             return
 
