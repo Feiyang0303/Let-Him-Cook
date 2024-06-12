@@ -22,8 +22,6 @@ class Game:
         self.FPS = 60
         self.DT = 1 / self.FPS
         self.clock = pg.time.Clock()
-        self.storage = Storage(10)
-        self.inventory = Inventory(Storage(10))
 
         self.eventees = []
 
@@ -38,11 +36,19 @@ class Game:
         self.mainscreen=MainMenu(self)
 
     def new_game(self):
+        self.item_library = self.item_library = {
+            "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
+            "butter": Item(self, "butter", "new-sprites/items/butter.png"),
+            "flour": Item(self, "flour", "new-sprites/items/flour.png"),
+            "cookie": Item(self, "cookie", "new-sprites/items/cookie.png"),
+        }
         self.world = World(self)
+
         self.player = Player(self)
         self.world_renderer = WorldRenderer(self)
         self.world_editor = WorldEditor(self)
         self.tile_library = self.world.tile_library
+        self.inventory = Inventory(Storage(self, 10))
 
         self.pause_screen = PreferenceScreen(self)
 

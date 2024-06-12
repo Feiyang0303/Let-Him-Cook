@@ -46,13 +46,12 @@ class Text(UIElement):
 
 
 class Image(UIElement):
-    def __init__(self, game, pos: pg.Vector2, imagepath: str, parentPanel=None):
+    def __init__(self, game, pos: pg.Vector2, image: pg.Surface, parentPanel=None):
         super().__init__(game, pos, parentPanel=parentPanel)
-
-        self.image = pg.image.load(imagepath)
+        self.image = image
 
     def draw(self):
-        self.game.screen.blit(self.img, (self.pos.x, self.pos.y))
+        self.game.screen.blit(self.image, (self.pos.x, self.pos.y))
 
 
 class Button(UIElement):
@@ -205,33 +204,32 @@ class BuyMenu(Panel):
         for i, building in enumerate(buildings):
             x = TILE_WIDTH / 2 + (BuyMenu.BUTTON_WIDTH + BuyMenu.MARGIN) * i
             y = TILE_WIDTH / 2 + 0
-            self.elements.append(
-                BuyStructureButton(game, pg.Vector2(x, y), pg.Vector2(BuyMenu.BUTTON_WIDTH, BuyMenu.BUTTON_WIDTH),
-                                   building, self))
+            self.elements.append(BuyStructureButton(game, pg.Vector2(x, y), pg.Vector2(BuyMenu.BUTTON_WIDTH, BuyMenu.BUTTON_WIDTH), building, self))
 
-
-# i could probably use a decorator for scroll bars...
+ # i could probably use a decorator for scroll bars...
 # ideally i make a self-refferential ui_element class
 
 class StorageMenu(Panel):
     BUTTON_WIDTH = 25 * PPU
     MARGIN = 4 * PPU
+    SLOTS_PER_ROW=7
 
     def __init__(self, game, hitbox):
         super().__init__(game, hitbox)
         self.storage = None
 
     def set(self, storage: Storage):
+        print("set storage")
+
         self.elements.clear()
         self.storage = storage
         for i, item in enumerate(self.storage.items):
-            x =(StorageMenu.BUTTON_WIDTH +StorageMenu.MARGIN) * i
-            y =  0
-            self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item, self))
-        print(f"{self.item} is added to the fridge storage")
-    def draw(self):
-        super().draw()
-        for element in self.elements:
-            element.draw()
+            x = (i % StorageMenu.SLOTS_PER_ROW) * (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN)
+            y = (i // StorageMenu.SLOTS_PER_ROW) * (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN)
+            self.elements.append(Image(self.game, pg.Vector2(x, y), item.sprite, self))
+
+            # self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item, self))
+            print(f"{item.name} is added to the storage menu")
+
 
 

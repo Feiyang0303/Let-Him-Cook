@@ -5,28 +5,31 @@ import sys
 from settings import *
 from gameObject import *
 
-
 class Item(GameObject):
     def __init__(self, game, name, image):
         self.game = game
         self.name = name
         self.id = name
         self.spriteRect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
-        self.image = pg.transform.scale(pg.image.load(image).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
+        self.sprite = pg.transform.scale(pg.image.load(image).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 
     def draw(self, pos, z=0):
-        self.game.world_renderer.draw_object(self, self.image, pos, z=z)
-
+        self.game.world_renderer.draw_object(self, self.sprite, pos, z=z)
 
 # storage
 class Storage:
-    def __init__(self, capacity):
+    def __init__(self, game, capacity):
+        self.game = game
         self.items = []
         self.capacity = capacity
 
-    def append_items(self, item):
+    def add(self, item):
+        print("adding", item)
         if len(self.items) < self.capacity:
-            self.items.append(item)
+            if type(item) is str:
+                self.items.append(self.game.item_library[item])
+            else:
+                self.items.append(self.game.item_library[item.id])
 
 
 class Inventory:
@@ -37,22 +40,15 @@ class Inventory:
         self.items = []
         self.show_inventory = False
 
-        self.item_library = {
-            "sugar": Item(self.game, "sugar", "new-sprites/items/sugar.png"),
-            "butter": Item(self.game, "butter", "new-sprites/items/butter.png"),
-            "flour": Item(self.game, "flour", "new-sprites/items/flour.png"),
-            "cookie": Item(self.game, "cookie", "new-sprites/items/cookie.png"),
-        }
-
     def toggle_inventory(self):
         self.show_inventory = not self.show_inventory
 
     def add_item(self, item):
         if len(self.items) < Inventory.MAX:
             if type(item) is str:
-                self.items.append(self.item_library[item])
+                self.items.append(self.game.item_library[item])
             else:
-                self.items.append(self.item_library[item.id])
+                self.items.append(self.game.item_library[item.id])
 
     def pop(self):
         if self.items:

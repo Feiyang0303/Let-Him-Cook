@@ -1,3 +1,5 @@
+import random
+
 import pygame as pg
 import math
 import sys
@@ -181,12 +183,14 @@ class Fridge(Building):
             spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
 
-        self.show_storage = False
-        self.storage_sprite = pg.Surface((200, 150))
+        self.storage = Storage(self.game, 20)
+        for i in range(10000):
+            self.storage.add(random.choice(["sugar", "butter", "cookie"]))
 
     def interact(self):
         print("opening storage...")
         self.game.state = FRIDGE_STATE
+        self.game.fridgeMenu.set(self.storage)
 
     def copy(self, pos: pg.Vector2):
         return Fridge(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
