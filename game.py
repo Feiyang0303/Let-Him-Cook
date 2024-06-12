@@ -36,7 +36,9 @@ class Game:
         self.mainscreen=MainMenu(self)
 
     def new_game(self):
+
         self.item_library = self.item_library = {
+
             "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
             "butter": Item(self, "butter", "new-sprites/items/butter.png"),
             "flour": Item(self, "flour", "new-sprites/items/flour.png"),
@@ -54,7 +56,8 @@ class Game:
 
         # UI
         self.buyMenu = BuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
-        self.fridgeMenu = StorageMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
+        self.storageMenu = StorageMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
+        self.buyItemMenu = ItemBuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
 
         self.scoreText = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255),
                               text=f"${AERSOL}")
@@ -101,9 +104,8 @@ class Game:
             self.world.update()
             self.player.update()
             self.buyMenu.update()
-            self.fridgeMenu.update()
+            self.storageMenu.update()
             self.world_editor.update()
-            self.scoreText.set_text(f"${self.money}")
 
     def immuneUpdate(self):
         if self.state==MAIN_MENU_STATE:
@@ -112,8 +114,11 @@ class Game:
             self.world.immuneUpdate()
             self.player.immuneUpdate()
             self.buyMenu.immuneUpdate()
-            self.fridgeMenu.immuneUpdate()
+            self.buyItemMenu.immuneUpdate()
+            self.storageMenu.immuneUpdate()
             self.world_editor.immuneUpdate()
+            
+            self.scoreText.set_text(f"${self.money}")
 
     def draw(self):
         if self.state==MAIN_MENU_STATE:
@@ -127,15 +132,15 @@ class Game:
             self.scoreText.draw()
             self.timerText.draw()
 
-        # these menus should really be handling that themselves....
-        if self.state == INVENTORY_STATE:
-            self.storage.draw(self.screen)
-        if self.isPaused:
-            self.pause_screen.draw()
-        if self.state == BUY_STATE:
+            # these menus should really be handling that themselves....
+            # ...whatever.
+            # k i fixed it
             self.buyMenu.draw()
-        if self.state == FRIDGE_STATE:
-            self.fridgeMenu.draw()
+            self.storageMenu.draw()
+            self.buyItemMenu.draw()
+
+            if self.isPaused:
+                self.pause_screen.draw()
 
         pg.display.update()
 

@@ -68,7 +68,8 @@ class Button(UIElement):
     def immuneUpdate(self):
         mouse_pos = pg.Vector2(pg.mouse.get_pos())
         self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
-
+        self.disabled == self.parentPanel == None or self.game.state != self.parentPanel.menu_state
+    
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             if self.hovering:
@@ -104,16 +105,48 @@ class BuyStructureButton(Button):
         scale = min(TILE_WIDTH / building_sprite.get_width(), TILE_HEIGHT / building_sprite.get_height())
         self.sprite = pg.transform.scale_by(self.game.tile_library[self.building_id].sprite, scale)
 
-        self.disabled = False
-
     def immuneUpdate(self):
         super().immuneUpdate()
-        self.disabled = self.game.money < self.game.tile_library[self.building_id].price
+        self.disabled = self.disabled or self.game.money < self.game.tile_library[self.building_id].price
 
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
-            if self.hovering and not self.disabled and self.game.state == BUY_STATE:
+            if self.hovering and not self.disabled:
                 self.game.money -= self.game.tile_library[self.building_id].price
+                self.clicking = True
+                self.call()
+        elif event.type == pg.MOUSEBUTTONUP:
+            self.clicking = False
+
+    def draw(self):
+        super().draw()
+
+        self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2,
+                                            self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2 + 8))
+        self.name_text.draw()
+
+class BuyItemButton(Button):
+    def __init__(self, game, pos, hitbox, item_id: str, parentPanel=None):
+        super().__init__(game, pos, hitbox, lambda: self.game.player.inventory.add_item(item_id), parentPanel)
+        self.item_id = item_id
+
+        self.name_text = Text(game, pg.Vector2(pos.x + hitbox.x / 2, pos.y), "fonts/pixel-bit-advanced.ttf", 16,
+                              (130, 149, 130), justification=JUSTIFY_CENTER, parentPanel=parentPanel)
+        self.name_text.set_text(str(self.game.item_library[self.item_id].buyprice))
+
+        sprite = self.game.item_library[self.item_id].sprite
+        scale = min(TILE_WIDTH / sprite.get_width(), TILE_HEIGHT / sprite.get_height())
+        self.sprite = pg.transform.scale_by(self.game.item_library[self.item_id].sprite, scale)
+
+    def immuneUpdate(self):
+        super().immuneUpdate()
+        self.disabled = self.disabled or self.game.money < self.game.item_library[self.item_id].buyprice or self.game.player.inventory.isFull()
+        # law of demeter? snake_case?
+
+    def callEvent(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if self.hovering and not self.disabled and self.game.state == self.parentPanel.menu_state:
+                self.game.money -= self.game.item_library[self.item_id].buyprice
                 self.clicking = True
                 self.call()
         elif event.type == pg.MOUSEBUTTONUP:
@@ -135,13 +168,10 @@ class StorageSlot(Button):
         self.name_text.set_text(self.item.name)
         scale = min(TILE_WIDTH / self.item.sprite.get_width(), TILE_HEIGHT / self.item.sprite.get_height())
         self.sprite = pg.transform.scale_by( self.item.sprite, (int(self.item.sprite.get_width() * scale), int(self.item.sprite.get_height() * scale)))
-        # chatgpt
-        self.disabled = False
 
     def immuneUpdate(self):
         mouse_pos = pg.Vector2(pg.mouse.get_pos())
         self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
-
 
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -177,20 +207,23 @@ class Panel(GameObject):
         self.elements = []
         self.pos = pg.Vector2((SCREEN_WIDTH - hitbox.x) / 2, (SCREEN_HEIGHT - hitbox.y) / 2)
 
+        self.menu_state = None
+
     def immuneUpdate(self):
-        if self.game.state == BUY_STATE:
+        if self.game.state == self.menu_state:
             for element in self.elements:
                 element.immuneUpdate()
 
     def update(self):
-        if self.game.state == BUY_STATE:
+        if self.game.state == self.menu_state:
             for element in self.elements:
                 element.update()
 
     def draw(self):
-        pg.draw.rect(self.game.screen, (57, 59, 60), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
-        for element in self.elements:
-            element.draw()
+        if self.game.state == self.menu_state:
+            pg.draw.rect(self.game.screen, (57, 59, 60), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
+            for element in self.elements:
+                element.draw()
 
 
 class BuyMenu(Panel):
@@ -199,7 +232,6 @@ class BuyMenu(Panel):
 
     def __init__(self, game, hitbox):
         super().__init__(game, hitbox)
-        buildings = ["counter", "fridge", "chopper", "oven"]
 
         for i, building in enumerate(buildings):
             x = TILE_WIDTH / 2 + (BuyMenu.BUTTON_WIDTH + BuyMenu.MARGIN) * i
@@ -207,6 +239,34 @@ class BuyMenu(Panel):
             self.elements.append(BuyStructureButton(game, pg.Vector2(x, y), pg.Vector2(BuyMenu.BUTTON_WIDTH, BuyMenu.BUTTON_WIDTH), building, self))
 
  # i could probably use a decorator for scroll bars...
+
+        for i, building in enumerate(BUY_BUILDINGS):
+            x = TILE_WIDTH / 2 + (BuyMenu.BUTTON_WIDTH + BuyMenu.MARGIN) * (i % 5)
+            y = TILE_WIDTH / 2 + (BuyMenu.BUTTON_WIDTH + BuyMenu.MARGIN) * int(i/5)
+            self.elements.append(
+                BuyStructureButton(game, pg.Vector2(x, y), pg.Vector2(BuyMenu.BUTTON_WIDTH, BuyMenu.BUTTON_WIDTH),
+                                   building, self))
+            
+        self.menu_state = BUY_STATE
+
+class ItemBuyMenu(Panel):
+    BUTTON_WIDTH = 32 * PPU
+    MARGIN = 4 * PPU
+
+    def __init__(self, game, hitbox):
+        super().__init__(game, hitbox)
+
+        for i, itemid in enumerate(BUY_ITEMS):
+            x = TILE_WIDTH / 2 + (BuyMenu.BUTTON_WIDTH + BuyMenu.MARGIN) * (i % 5)
+            y = TILE_WIDTH / 2 + (BuyMenu.BUTTON_WIDTH + BuyMenu.MARGIN) * int(i/5)
+            self.elements.append(
+                BuyItemButton(game, pg.Vector2(x, y), pg.Vector2(BuyMenu.BUTTON_WIDTH, BuyMenu.BUTTON_WIDTH),
+                                   itemid, self))
+        
+        self.menu_state = BUY_ITEM_STATE
+
+# i could probably use a decorator for scroll bars...
+
 # ideally i make a self-refferential ui_element class
 
 class StorageMenu(Panel):
@@ -224,12 +284,26 @@ class StorageMenu(Panel):
         self.elements.clear()
         self.storage = storage
         for i, item in enumerate(self.storage.items):
+
             x = (i % StorageMenu.SLOTS_PER_ROW) * (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN)
             y = (i // StorageMenu.SLOTS_PER_ROW) * (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN)
             self.elements.append(Image(self.game, pg.Vector2(x, y), item.sprite, self))
 
             # self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item, self))
             print(f"{item.name} is added to the storage menu")
+
+
+            x =(StorageMenu.BUTTON_WIDTH +StorageMenu.MARGIN) * i
+            y =  0
+            self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item, self))
+        print(f"{self.item} is added to the fridge storage")
+
+        self.menu_state = INVENTORY_STATE
+
+    def draw(self):
+        super().draw()
+        for element in self.elements:
+            element.draw()
 
 
 
