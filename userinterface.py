@@ -144,7 +144,8 @@ class BuyItemButton(Button):
 
     def immuneUpdate(self):
         super().immuneUpdate()
-        self.disabled = self.game.money < self.game.item_library[self.item_id].buyprice
+        self.disabled = self.game.money < self.game.item_library[self.item_id].buyprice or self.game.player.inventory.isFull()
+        # law of demeter? snake_case?
 
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
