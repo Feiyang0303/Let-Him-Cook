@@ -21,12 +21,12 @@ class World(GameObject):
         self.tile_library = {"empty" :      EmptyTile(self.game, "empty"),
                              "floor" :      Tile(self.game, "floor", "new-sprites/buildings/floor.png"),
                              "counter" :    Counter(self.game, "counter", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=10),
+                             "seller" :     Seller(self.game, "seller", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=1000),
                              "fridge" :     Fridge(self.game, "fridge", "new-sprites/buildings/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=1000),
                              "shop" :       Shop(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
-
+                             "item-shop" :  ItemShop(self.game, "item-shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
                              "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/Counter with Knife.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100, pps=0),
                              "oven" :       Processor(self.game, "oven", "new-sprites/buildings/oven.png", spriteRect=pg.Rect(0, -TILE_WIDTH, TILE_WIDTH, 2*TILE_HEIGHT), price=100, pps=0.1, ppi=0),
-
         }
         
         self.generateWorld()
@@ -136,6 +136,19 @@ class Shop(Building):
         return Shop(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
 
 
+class ItemShop(Building):
+    def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
+        super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
+    
+    def interact(self):
+        super().interact()
+        if self.game.state == PLAY_STATE:
+            self.game.state = BUY_ITEM_STATE
+    
+    def copy(self, pos:pg.Vector2):
+        return ItemShop(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
+
+
 class ReferenceTile(Building):
     def __init__(self, game, reference:Building, pos:pg.Vector2, hitbox:pg.Vector2=pg.Vector2(1, 1)):
         super().__init__(game, reference.id, reference.sprite, pos, pg.Vector2(1, 1), reference.spriteRect, reference.isSolid)
@@ -171,6 +184,22 @@ class Counter(Building):
     
     def copy(self, pos: pg.Vector2):
         return Counter(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
+
+
+class Seller(Building):
+    def __init__(self, game, id, sprite, pos:pg.Vector2=pg.Vector2(0, 0), hitbox:pg.Vector2=pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
+        super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
+
+    def interact(self):
+        if not self.game.player.inventory.isEmpty():
+            self.game.money += self.game.player.inventory.next().price
+            self.game.player.inventory.pop()
+
+    def draw(self):
+        super().draw()
+    
+    def copy(self, pos: pg.Vector2):
+        return Seller(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
 
 
 class Fridge(Building):
