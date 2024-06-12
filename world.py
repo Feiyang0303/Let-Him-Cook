@@ -192,7 +192,7 @@ class Seller(Building):
 
     def interact(self):
         if not self.game.player.inventory.isEmpty():
-            self.game.money += self.game.player.inventory.next().price
+            self.game.money += self.game.player.inventory.next().sellprice
             self.game.player.inventory.pop()
 
     def draw(self):

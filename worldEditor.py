@@ -18,7 +18,7 @@ class WorldEditor(GameObject):
         world_pos = self.game.world_renderer.worldspace_pos(pg.Vector2(pg.mouse.get_pos()))
         rounded_pos = pg.Vector2(round(world_pos.x), round(world_pos.y))
 
-        self.selectedBuilding = self.game.world.tile_library[id].copy(rounded_pos)
+        self.selectedBuilding = self.game.tile_library[id].copy(rounded_pos)
     
     def immuneUpdate(self):
         if self.game.state == EDIT_STATE:

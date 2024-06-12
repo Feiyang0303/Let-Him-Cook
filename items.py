@@ -7,16 +7,17 @@ from gameObject import *
 
 
 class Item(GameObject):
-    def __init__(self, game, name, image, price=5):
+    def __init__(self, game, name, sprite, sellprice=5, buyprice=10):
         self.game = game
         self.name = name
         self.id = name
-        self.price = price
+        self.sellprice = sellprice
+        self.buyprice = buyprice
         self.spriteRect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
-        self.image = pg.transform.scale(pg.image.load(image).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
+        self.sprite = pg.transform.scale(pg.image.load(sprite).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 
     def draw(self, pos, z=0):
-        self.game.world_renderer.draw_object(self, self.image, pos, z=z)
+        self.game.world_renderer.draw_object(self, self.sprite, pos, z=z)
 
 
 # storage
