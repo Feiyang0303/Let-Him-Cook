@@ -13,7 +13,7 @@ class WorldEditor(GameObject):
         self.selectedBuilding = None
 
     def place(self, id:str):
-        self.game.state = EDIT_STATE
+        self.game.set_game_state(EDIT_STATE)
 
         world_pos = self.game.world_renderer.worldspace_pos(pg.Vector2(pg.mouse.get_pos()))
         rounded_pos = pg.Vector2(round(world_pos.x), round(world_pos.y))
@@ -32,7 +32,7 @@ class WorldEditor(GameObject):
             if event.type == pg.MOUSEBUTTONDOWN:
                 if self.game.world.is_legible_tile_placement(self.selectedBuilding.id, self.selectedBuilding.pos):
                     self.game.world.place(self.selectedBuilding.id, self.selectedBuilding.pos)
-                    self.game.state = PLAY_STATE
+                    self.game.set_game_state(PLAY_STATE)
         
     def draw(self):
         if self.game.state == EDIT_STATE:

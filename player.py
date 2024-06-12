@@ -28,7 +28,7 @@ class PlayerCollisionInfo:
 class Player(GameObject):
     HEAD_OFFSET = pg.Vector2(0, -50)
 
-    def __init__(self, game):
+    def __init__(self, game, control_schema=0):
         self.game = game
         self.pos = pg.Vector2(2, 2)
         self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
@@ -49,17 +49,36 @@ class Player(GameObject):
         self.collisionInfo = PlayerCollisionInfo()
 
         self.disable_movement_cap_timer = 0
-        self.inventory = Inventory(game)
+        self.inventory = Inventory(game, self)
+
+        self.controls = {}
+        if control_schema == 0:
+            self.controls["up"] = pg.K_w
+            self.controls["down"] = pg.K_s
+            self.controls["right"] = pg.K_d
+            self.controls["left"] = pg.K_a
+            self.controls["dash"] = pg.K_LSHIFT
+            self.controls["interact"] = pg.K_e
+        else:
+            self.controls["up"] = pg.K_UP
+            self.controls["down"] = pg.K_DOWN
+            self.controls["right"] = pg.K_RIGHT
+            self.controls["left"] = pg.K_LEFT
+            self.controls["dash"] = pg.K_KP_0
+            self.controls["interact"] = pg.K_RSHIFT
 
     def update(self):
         self.move()
 
     def callEvent(self, event):
         if event.type == pg.KEYDOWN:
-            if event.key == pg.K_e:
+            if event.key == self.controls["interact"]:
                 if self.selected_building != None:
-                    self.selected_building.interact()
-            elif event.key == pg.K_LSHIFT:
+                    self.selected_building.interact(self)
+                    if isinstance(self.selected_building, Fridge):
+                        if self.game.state != FRIDGE_STATE:
+                            self.game.state = FRIDGE_STATE
+            elif event.key == self.controls["dash"]:
                 self.velocity = self.dir * DASH_POWER
                 self.disable_movement_cap_timer = TIME_TO_TAKE_DASH
             elif event.key == pg.K_i:
@@ -69,7 +88,6 @@ class Player(GameObject):
                 self.inventory.add_item(item)
 
     def set_sprite(self):
-
         if self.dir.y == 1 and self.dir.x == 1:
             self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-se.png"), self.spriteRect.size)
         elif self.dir.y == 1 and self.dir.x == -1:
@@ -88,31 +106,31 @@ class Player(GameObject):
         keys = pg.key.get_pressed()
 
         orth = pg.Vector2(0, 0)
-        if keys[pg.K_d]:
+        if keys[self.controls["right"]]:
             self.dir.x = 1
             orth.x = 1
             if self.velocity.x < 0: self.velocity.x = 0
-        if keys[pg.K_a]:
+        if keys[self.controls["left"]]:
             self.dir.x = -1
             orth.x = -1
             if self.velocity.x > 0: self.velocity.x = 0
-        if keys[pg.K_w]:
+        if keys[self.controls["up"]]:
             self.dir.y = -1
             orth.y = -1
             if self.velocity.y > 0: self.velocity.y = 0
-        if keys[pg.K_s]:
+        if keys[self.controls["down"]]:
             self.dir.x = 1
             orth.y = 1
             if self.velocity.y < 0: self.velocity.y = 0
-        if keys[pg.K_d] or keys[pg.K_a] or keys[pg.K_w] or keys[pg.K_s]:
+        if keys[self.controls["up"]] or keys[self.controls["down"]] or keys[self.controls["left"]] or keys[self.controls["right"]]:
             self.dir = orth.copy()
 
         acceleration = (1 if (orth[0] == 0 or orth[1] == 0) else 0.7071) * orth * PLAYER_ACCELERATION
 
         if self.disable_movement_cap_timer <= 0:
-            if not (keys[pg.K_d] or keys[pg.K_a]):
+            if not (keys[self.controls["right"]] or keys[self.controls["left"]]):
                 acceleration.x = -sign(self.velocity.x) * min(abs(self.velocity.x / self.game.DT), PLAYER_DECELERATION)
-            if not (keys[pg.K_w] or keys[pg.K_s]):
+            if not (keys[self.controls["up"]] or keys[self.controls["down"]]):
                 acceleration.y = -sign(self.velocity.y) * min(abs(self.velocity.y / self.game.DT), PLAYER_DECELERATION)
 
             self.velocity += acceleration * self.game.DT

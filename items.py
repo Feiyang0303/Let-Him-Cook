@@ -14,16 +14,10 @@ class Item(GameObject):
         self.buyprice = buyprice
         self.spriteRect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
 
-        self.sprite = pg.transform.scale(pg.image.load(image).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
-
-    def draw(self, pos, z=0):
-
         self.sprite = pg.transform.scale(pg.image.load(sprite).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 
     def draw(self, pos, z=0):
         self.game.world_renderer.draw_object(self, self.sprite, pos, z=z)
-        self.game.world_renderer.draw_object(self, self.sprite, pos, z=z)
-
 
 # storage
 class Storage:
@@ -44,7 +38,8 @@ class Storage:
 class Inventory:
     MAX = 10
 
-    def __init__(self, game):
+    def __init__(self, game, player):
+        self.player = player
         self.game = game
         self.items = []
         self.show_inventory = False
@@ -77,5 +72,5 @@ class Inventory:
 
     def draw(self):
         for i, item in enumerate(self.items):
-            pos = pg.Vector2(self.game.player.pos.x-0.3, self.game.player.pos.y)
+            pos = pg.Vector2(self.player.pos.x-0.3, self.player.pos.y)
             item.draw(pos, z=(i + 3) * 0.6)

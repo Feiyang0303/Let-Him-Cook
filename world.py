@@ -104,7 +104,7 @@ class Building(Tile):
         self.isSolid = isSolid
         self.price = price
     
-    def interact(self):
+    def interact(self, player):
         print(f"wowww you interacted with the {self.id}!")
     
     def draw(self):
@@ -129,8 +129,8 @@ class Shop(Building):
     def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
     
-    def interact(self):
-        super().interact()
+    def interact(self, player):
+        super().interact(player)
         if self.game.state == PLAY_STATE:
             self.game.state = BUY_STATE
     
@@ -142,8 +142,8 @@ class ItemShop(Building):
     def __init__(self, game, id, sprite, pos: pg.Vector2 = pg.Vector2(0, 0), hitbox: pg.Vector2 = pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
     
-    def interact(self):
-        super().interact()
+    def interact(self, player):
+        super().interact(player)
         if self.game.state == PLAY_STATE:
             self.game.state = BUY_ITEM_STATE
     
@@ -159,8 +159,8 @@ class ReferenceTile(Building):
     def draw(self):
         pass
     
-    def interact(self):
-        self.reference.interact()
+    def interact(self, player):
+        self.reference.interact(player)
 
     def draw_highlighted(self):
         self.reference.draw_highlighted()
@@ -170,13 +170,13 @@ class Counter(Building):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
         self.item = None
 
-    def interact(self):
-        if self.item == None and not self.game.player.inventory.isEmpty():
-            self.item = self.game.player.inventory.next()
-            self.game.player.inventory.pop()
+    def interact(self, player):
+        if self.item == None and not player.inventory.isEmpty():
+            self.item = player.inventory.next()
+            player.inventory.pop()
 
-        elif self.item != None and not self.game.player.inventory.isFull():
-            self.game.player.inventory.add_item(self.item)
+        elif self.item != None and not player.inventory.isFull():
+            player.inventory.add_item(self.item)
             self.item = None
 
     def draw(self):
@@ -192,10 +192,10 @@ class Seller(Building):
     def __init__(self, game, id, sprite, pos:pg.Vector2=pg.Vector2(0, 0), hitbox:pg.Vector2=pg.Vector2(1, 1), spriteRect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
 
-    def interact(self):
-        if not self.game.player.inventory.isEmpty():
-            self.game.money += self.game.player.inventory.next().sellprice
-            self.game.player.inventory.pop()
+    def interact(self, player):
+        if not player.inventory.isEmpty():
+            self.game.money += player.inventory.next().sellprice
+            player.inventory.pop()
 
     def draw(self):
         super().draw()
@@ -211,13 +211,13 @@ class Fridge(Building):
         super().__init__(game, id, sprite, pos, hitbox, spriteRect, isSolid, price)
 
         self.storage = Storage(self.game, 20)
-        for i in range(10000):
+        for i in range(12):
             self.storage.add(random.choice(["sugar", "butter", "cookie"]))
 
-    def interact(self):
+    def interact(self, player):
         print("opening storage...")
         self.game.state = FRIDGE_STATE
-        self.game.fridgeMenu.set(self.storage)
+        self.game.storageMenu.set(self.storage)
 
     def copy(self, pos: pg.Vector2):
         return Fridge(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
@@ -235,27 +235,27 @@ class Processor(Building):
         self.pps = pps # process per interaction
         self.ppi = ppi # process per interaction
 
-    def interact(self):
-        if self.item == None and not self.game.player.inventory.isEmpty():
-            self.item = self.game.player.inventory.next()
-            self.game.player.inventory.pop()
+    def interact(self, player):
+        if self.item == None and not player.inventory.isEmpty():
+            self.item = player.inventory.next()
+            player.inventory.pop()
             self.progress = 0
 
         elif self.item != None:
             if self.progress < 1:
                 self.progress += self.ppi
                 if self.progress >= 1:
-                    self.item = self.game.player.inventory.item_library["cookie"]
+                    self.item = player.inventory.item_library["cookie"]
             
-            elif self.item != None and not self.game.player.inventory.isFull():
-                self.game.player.inventory.add_item(self.item)
+            elif self.item != None and not player.inventory.isFull():
+                player.inventory.add_item(self.item)
                 self.item = None
 
     def update(self):
         if self.item != None and self.progress < 1:
             self.progress += self.pps * self.game.DT
             if self.progress >= 1:
-                    self.item = self.game.player.inventory.item_library["cookie"]
+                    self.item = self.game.item_library["cookie"]
 
     def draw(self):
         super().draw()

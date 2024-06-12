@@ -38,7 +38,6 @@ class Game:
     def new_game(self):
 
         self.item_library = self.item_library = {
-
             "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
             "butter": Item(self, "butter", "new-sprites/items/butter.png"),
             "flour": Item(self, "flour", "new-sprites/items/flour.png"),
@@ -47,10 +46,11 @@ class Game:
         self.world = World(self)
 
         self.player = Player(self)
+        self.player2 = Player(self, 1)
+
         self.world_renderer = WorldRenderer(self)
         self.world_editor = WorldEditor(self)
         self.tile_library = self.world.tile_library
-        self.inventory = Inventory(Storage(self, 10))
 
         self.pause_screen = PreferenceScreen(self)
 
@@ -103,6 +103,7 @@ class Game:
         else:
             self.world.update()
             self.player.update()
+            self.player2.update()
             self.buyMenu.update()
             self.storageMenu.update()
             self.world_editor.update()
@@ -113,6 +114,7 @@ class Game:
         else:
             self.world.immuneUpdate()
             self.player.immuneUpdate()
+            self.player2.immuneUpdate()
             self.buyMenu.immuneUpdate()
             self.buyItemMenu.immuneUpdate()
             self.storageMenu.immuneUpdate()
@@ -127,6 +129,7 @@ class Game:
             self.screen.fill(BACKGROUND_COLOUR)
             self.world.draw()
             self.player.draw()
+            self.player2.draw()
             self.world_renderer.draw()
             self.world_editor.draw()
             self.scoreText.draw()
