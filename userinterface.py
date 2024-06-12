@@ -69,7 +69,8 @@ class Button(UIElement):
     def immuneUpdate(self):
         mouse_pos = pg.Vector2(pg.mouse.get_pos())
         self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
-
+        self.disabled == self.parentPanel == None or self.game.state != self.parentPanel.menu_state
+    
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             if self.hovering:
@@ -105,15 +106,13 @@ class BuyStructureButton(Button):
         scale = min(TILE_WIDTH / building_sprite.get_width(), TILE_HEIGHT / building_sprite.get_height())
         self.sprite = pg.transform.scale_by(self.game.tile_library[self.building_id].sprite, scale)
 
-        self.disabled = False
-
     def immuneUpdate(self):
         super().immuneUpdate()
-        self.disabled = self.game.money < self.game.tile_library[self.building_id].price
+        self.disabled = self.disabled or self.game.money < self.game.tile_library[self.building_id].price
 
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
-            if self.hovering and not self.disabled and self.game.state == self.parentPanel.menu_state:
+            if self.hovering and not self.disabled:
                 self.game.money -= self.game.tile_library[self.building_id].price
                 self.clicking = True
                 self.call()
@@ -140,11 +139,9 @@ class BuyItemButton(Button):
         scale = min(TILE_WIDTH / sprite.get_width(), TILE_HEIGHT / sprite.get_height())
         self.sprite = pg.transform.scale_by(self.game.item_library[self.item_id].sprite, scale)
 
-        self.disabled = False
-
     def immuneUpdate(self):
         super().immuneUpdate()
-        self.disabled = self.game.money < self.game.item_library[self.item_id].buyprice or self.game.player.inventory.isFull()
+        self.disabled = self.disabled or self.game.money < self.game.item_library[self.item_id].buyprice or self.game.player.inventory.isFull()
         # law of demeter? snake_case?
 
     def callEvent(self, event):
@@ -172,13 +169,10 @@ class StorageSlot(Button):
         self.name_text.set_text(self.item.name)
         scale = min(TILE_WIDTH / self.item.sprite.get_width(), TILE_HEIGHT / self.item.sprite.get_height())
         self.sprite = pg.transform.scale_by( self.item.sprite, (int(self.item.sprite.get_width() * scale), int(self.item.sprite.get_height() * scale)))
-        # chatgpt
-        self.disabled = False
 
     def immuneUpdate(self):
         mouse_pos = pg.Vector2(pg.mouse.get_pos())
         self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
-
 
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
