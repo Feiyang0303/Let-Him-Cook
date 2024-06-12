@@ -6,10 +6,11 @@ from settings import *
 from gameObject import *
 
 class Item(GameObject):
-    def __init__(self, game, name, image):
+    def __init__(self, game, name, image, price=5):
         self.game = game
         self.name = name
         self.id = name
+        self.price = price
         self.spriteRect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
         self.sprite = pg.transform.scale(pg.image.load(image).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 
