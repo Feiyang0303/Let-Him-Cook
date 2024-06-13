@@ -157,41 +157,51 @@ class BuyItemButton(Button):
         self.name_text.draw()
 
 class StorageSlot(Button):
-    def __init__(self, game, pos, hitbox, item, parentPanel=None):
-        super().__init__(game, pos, hitbox, parentPanel)
-        self.item=item
-        self.name_text = Text(game, pg.Vector2(pos.x + hitbox.x / 2, pos.y), "fonts/pixel-bit-advanced.ttf", 16,
+    def __init__(self, game, pos, hitbox, item=None, parentPanel=None):
+        super().__init__(game, pos, hitbox, self.take_item, parentPanel)
+        self.item = item
+        self.name_text = Text(game, pg.Vector2(pos.x + hitbox.x / 2, pos.y), "fonts/pixel-bit-advanced.ttf", 12,
                               (130, 149, 130), justification=JUSTIFY_CENTER, parentPanel=parentPanel)
-        self.name_text.set_text(self.item.name)
-        scale = min(TILE_WIDTH / self.item.sprite.get_width(), TILE_HEIGHT / self.item.sprite.get_height())
-        self.sprite = pg.transform.scale_by( self.item.sprite, (int(self.item.sprite.get_width() * scale), int(self.item.sprite.get_height() * scale)))
+        self.update_text_and_sprite()
 
-    def immuneUpdate(self):
-        mouse_pos = pg.Vector2(pg.mouse.get_pos())
-        self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
+    def update_text_and_sprite(self):
+        if isinstance(self.item, Item):
+            self.name_text.set_text(self.item.name)
+            scale = min(TILE_WIDTH / self.item.sprite.get_width(), TILE_HEIGHT / self.item.sprite.get_height())
+            self.sprite = pg.transform.scale(self.item.sprite, (int(self.item.sprite.get_width() * scale),
+                                                                int(self.item.sprite.get_height() * scale)))
+        else:
+            self.name_text.set_text("")
+            self.sprite = pg.Surface((self.hitbox.x, self.hitbox.y), pg.SRCALPHA)
+
+    def take_item(self):
+        if isinstance(self.item, Item):
+            self.game.player.inventory.add_item(self.item)
+            self.item = None
+            self.update_text_and_sprite()
+
+    def place_item(self):
+        if not self.game.player.inventory.isEmpty():
+            self.item = self.game.player.inventory.pop()[0]
+            self.update_text_and_sprite()
+
+    def take_or_place_item(self):
+        if isinstance(self.item, Item):
+            self.take_item()
+        else:
+            self.place_item()
 
     def callEvent(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
-            if self.hovering and not self.disabled and self.game.state == FRIDGE_STATE:
-                self.clicking = True
-                self.call()
-            elif event.type == pg.MOUSEBUTTONUP:
-                self.clicking = False
+            if self.hovering and not self.disabled and self.game.state == self.parentPanel.menu_state:
+                self.take_or_place_item()
+
     def draw(self):
         super().draw()
-
-        self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2, self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2 + 8))
+        self.game.screen.blit(self.sprite, (self.pos.x + (self.hitbox.x - self.sprite.get_width()) / 2,
+                                            self.pos.y + (self.hitbox.y - self.sprite.get_height()) / 2 + 8))
         self.name_text.draw()
 
-    # def place_item(self):
-    #     if self.game.player.inventory.items:
-    #         self.item = self.game.player.inventory.items.pop(0)
-
-    #def take_item(self):
-    # if self.item:
-    #     self.game.player.inventory.add(self.item)
-    #     self.item = None
-    #     self.name_text.set_text("Empty")
 
 
 
@@ -276,7 +286,12 @@ class StorageMenu(Panel):
         for i, item in enumerate(self.storage.items):
             x = TILE_WIDTH / 2 + (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN) * (i % 5)
             y = TILE_WIDTH / 2 + (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN) * int(i/5)
-            self.elements.append(Image(self.game, pg.Vector2(x, y), item.sprite, self))
+            # self.elements.append(Image(self.game, pg.Vector2(x, y), item.sprite, self))
+            item = self.storage.items[i] if i < len(self.storage.items) else None
+            self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),
+                                             pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item.sprite, self))
+            if item:
+                print(f"{item.name} is added to the storage menu")
 
             # self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item, self))
             print(f"{item.name} is added to the storage menu")
