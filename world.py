@@ -12,6 +12,7 @@ from items import *
 from settings import TILE_HEIGHT, TILE_WIDTH
 from game import *
 from savesystem import *
+from particle import *
 
 class World(GameObject):
     def __init__(self, game):
@@ -194,6 +195,8 @@ class Seller(Building):
 
     def interact(self, player):
         if not player.inventory.isEmpty():
+            self.game.particles.append(SellParticle(self.game, self.pos, text=f"+${player.inventory.next().sellprice}"))
+
             self.game.money += player.inventory.next().sellprice
             player.inventory.pop()
 
@@ -221,6 +224,7 @@ class Fridge(Building):
 
     def copy(self, pos: pg.Vector2):
         return Fridge(self.game, self.id, self.sprite, pos, self.hitbox, self.spriteRect, self.isSolid, self.price)
+    
     def draw(self):
         super().draw()
 
@@ -245,7 +249,7 @@ class Processor(Building):
             if self.progress < 1:
                 self.progress += self.ppi
                 if self.progress >= 1:
-                    self.item = player.inventory.item_library["cookie"]
+                    self.item = self.game.item_library["cookie"]
             
             elif self.item != None and not player.inventory.isFull():
                 player.inventory.add_item(self.item)

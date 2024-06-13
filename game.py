@@ -11,6 +11,7 @@ from userinterface import *
 from items import *
 from worldrenderer import *
 from preferencescreen import *
+from particle import *
 from mainscreen import MainMenu
 
 
@@ -41,9 +42,10 @@ class Game:
             "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
             "butter": Item(self, "butter", "new-sprites/items/butter.png"),
             "flour": Item(self, "flour", "new-sprites/items/flour.png"),
-            "cookie": Item(self, "cookie", "new-sprites/items/cookie.png"),
+            "cookie": Item(self, "cookie", "new-sprites/items/cookie.png", sellprice=50),
         }
         self.world = World(self)
+        self.particles = []
 
         self.player = Player(self)
         self.player2 = Player(self, 1)
@@ -102,6 +104,7 @@ class Game:
             self.mainscreen.update()
         else:
             self.world.update()
+            for particle in self.particles: particle.update()
             self.player.update()
             self.player2.update()
             self.buyMenu.update()
@@ -113,6 +116,7 @@ class Game:
             self.mainscreen.immuneUpdate()
         else:
             self.world.immuneUpdate()
+            for particle in self.particles: particle.immuneUpdate()
             self.player.immuneUpdate()
             self.player2.immuneUpdate()
             self.buyMenu.immuneUpdate()
@@ -128,6 +132,7 @@ class Game:
         else:
             self.screen.fill(BACKGROUND_COLOUR)
             self.world.draw()
+            for particle in self.particles: particle.draw()
             self.player.draw()
             self.player2.draw()
             self.world_renderer.draw()
