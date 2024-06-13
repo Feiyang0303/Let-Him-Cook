@@ -24,7 +24,7 @@ class World(GameObject):
         self.tile_library = {"empty" :      EmptyTile(self.game, "empty"),
                              "floor" :      Tile(self.game, "floor", "new-sprites/buildings/floor.png"),
                              "counter" :    Counter(self.game, "counter", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=10),
-                             "seller" :     Seller(self.game, "seller", "new-sprites/buildings/counter.png", spriteRect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=1000),
+                             "seller" :     Seller(self.game, "seller", "new-sprites/buildings/seller.png", hitbox=pg.Vector2(2, 2), spriteRect=pg.Rect(0, -4*PPU, 2*TILE_WIDTH, 38*PPU), price=1000),
                              "fridge" :     Fridge(self.game, "fridge", "new-sprites/buildings/fridge.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=1000),
                              "shop" :       Shop(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
                              "item-shop" :  ItemShop(self.game, "item-shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), spriteRect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
