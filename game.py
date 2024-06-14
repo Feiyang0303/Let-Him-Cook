@@ -37,6 +37,9 @@ class Game:
         self.mainscreen=MainMenu(self)
 
     def new_game(self):
+        self.eventees.clear()
+
+        self.mainscreen=MainMenu(self)
 
         self.item_library = self.item_library = {
             "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
@@ -69,7 +72,9 @@ class Game:
 
     def load_game(self):
         self.new_game()
-        load_game_state(self)
+        if not load_game_state(self):
+            self.new_game()
+
 
     def set_game_state(self, state):
         print(state)

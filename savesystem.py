@@ -17,7 +17,8 @@ def save_game_state(game):
     game_state = {
       'playerx' : game.player.pos.x,
       'playery' : game.player.pos.y,
-      'building_layer' : building_storage
+      'building_layer' : building_storage,
+      'money' : game.money
       }
 
     with open('gamesave.json','w') as f:
@@ -35,9 +36,9 @@ def load_game_state(game):
             for x, buildingid in enumerate(building_row):
               if buildingid != "empty":
                 game.world.place(buildingid, pg.Vector2(x, y))
+          game.money = game_state["money"]
 
-
-          return True
-    except FileNotFoundError:
-      print("Save File not Found")
+      return True
+    except:
+      print("Save File not Found, resetting save...")
       return False
