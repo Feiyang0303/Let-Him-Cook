@@ -32,24 +32,20 @@ class Player(GameObject):
         self.game = game
         self.pos = pg.Vector2(2, 2)
         self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
-        self.spriteRect = pg.Rect(-3*PPU, -19*PPU, 13*PPU, 26*PPU)
-
-        self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.spriteRect.size)
-        # self.sprite = pg.transform.scale(pg.image.load("sprites/Cookie.png"), self.spriteRect.size) -> old code
+        self.sprite_rect = pg.Rect(-3*PPU, -19*PPU, 13*PPU, 26*PPU)
+        self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.sprite_rect.size)
+        self.game.eventees.append(self)
 
         self.velocity = pg.Vector2(0, 0)
-
-        self.game.eventees.append(self)
+        self.inventory = Inventory(game, self)
 
         # Selected Tile
         self.selected_building = None
         self.dir = pg.Vector2(1, 0)
 
-        # Collision Info
+        # Movement Info
         self.collisionInfo = PlayerCollisionInfo()
-
         self.disable_movement_cap_timer = 0
-        self.inventory = Inventory(game, self)
 
         self.controls = {}
         if control_schema == 0:
@@ -89,18 +85,18 @@ class Player(GameObject):
 
     def set_sprite(self):
         if self.dir.y == 1 and self.dir.x == 1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-se.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-se.png"), self.sprite_rect.size)
         elif self.dir.y == 1 and self.dir.x == -1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-sw.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-sw.png"), self.sprite_rect.size)
         elif self.dir.y == 1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.sprite_rect.size)
         elif self.dir.x == 1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-e.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-e.png"), self.sprite_rect.size)
         elif self.dir.x == -1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-w.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-w.png"), self.sprite_rect.size)
         
         if self.dir.y == -1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-n.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-n.png"), self.sprite_rect.size)
 
     def move(self):
         keys = pg.key.get_pressed()

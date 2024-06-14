@@ -25,7 +25,7 @@ class WorldRenderer:
         return pg.Vector2(x, y)
 
     def draw_object_immediate(self, go, sprite=None):
-        screenspace_pos = ((go.pos.x + self.scroll.x)*TILE_WIDTH + go.spriteRect.x, (go.pos.y + self.scroll.y)*TILE_HEIGHT + go.spriteRect.y)
+        screenspace_pos = ((go.pos.x + self.scroll.x)*TILE_WIDTH + go.sprite_rect.x, (go.pos.y + self.scroll.y)*TILE_HEIGHT + go.sprite_rect.y)
         if sprite == None:
             self.img.blit(go.sprite, screenspace_pos)
         else:
@@ -34,7 +34,7 @@ class WorldRenderer:
     def draw_object(self, go, sprite:pg.Surface=None, pos:pg.Vector2=None, offset:pg.Vector2=None, z=0):
         sprite = go.sprite if sprite==None else sprite
         pos = go.pos if pos==None else pos
-        offset = pg.Vector2(go.spriteRect.x, go.spriteRect.y) if offset==None else offset
+        offset = pg.Vector2(go.sprite_rect.x, go.sprite_rect.y) if offset==None else offset
 
         self.draw_call.append(DrawCall(sprite, pos, offset, z))
 
