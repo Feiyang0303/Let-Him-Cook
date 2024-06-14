@@ -84,12 +84,12 @@ class Game:
     def check_freeze(self):
         self.is_frozen = self.is_paused or (self.state != PLAY_STATE)
 
-    def open_storage_menu(self, storage):
-        self.storageMenu.set(storage)
-        self.set_game_state(FRIDGE_STATE)
-
-    def close_storage_menu(self):
-        self.set_game_state(FRIDGE_STATE)
+    # def open_storage_menu(self, storage):
+    #     self.storageMenu.set(storage)
+    #     self.set_game_state(FRIDGE_STATE)
+    #
+    # def close_storage_menu(self):
+    #     self.set_game_state(FRIDGE_STATE)
 
     def events(self):
         self.do_lag_compensation = True
