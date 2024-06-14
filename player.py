@@ -15,14 +15,14 @@ class PlayerCollisionInfo:
         self.reset()
 
     def reset(self):
-        self.isColliding = False
+        self.is_colliding = False
         self.collidingX = False
         self.collidingY = False
-        self.collidingRight = False
-        self.collidingLeft = False
-        self.collidingTop = False
-        self.collidingDown = False
-        self.collidingTile = None
+        self.colliding_right = False
+        self.colliding_left = False
+        self.colliding_top = False
+        self.colliding_down = False
+        self.colldiing_tile = None
 
 
 class Player(GameObject):
@@ -32,24 +32,20 @@ class Player(GameObject):
         self.game = game
         self.pos = pg.Vector2(2, 2)
         self.hitbox = pg.Vector2(PLAYER_HITBOX_HEIGHT, PLAYER_HITBOX_WIDTH)
-        self.spriteRect = pg.Rect(-3*PPU, -19*PPU, 13*PPU, 26*PPU)
-
-        self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.spriteRect.size)
-        # self.sprite = pg.transform.scale(pg.image.load("sprites/Cookie.png"), self.spriteRect.size) -> old code
+        self.sprite_rect = pg.Rect(-3*PPU, -19*PPU, 13*PPU, 26*PPU)
+        self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.sprite_rect.size)
+        self.game.eventees.append(self)
 
         self.velocity = pg.Vector2(0, 0)
-
-        self.game.eventees.append(self)
+        self.inventory = Inventory(game, self)
 
         # Selected Tile
         self.selected_building = None
         self.dir = pg.Vector2(1, 0)
 
-        # Collision Info
+        # Movement Info
         self.collisionInfo = PlayerCollisionInfo()
-
         self.disable_movement_cap_timer = 0
-        self.inventory = Inventory(game, self)
 
         self.controls = {}
         if control_schema == 0:
@@ -70,7 +66,7 @@ class Player(GameObject):
     def update(self):
         self.move()
 
-    def callEvent(self, event):
+    def call_event(self, event):
         if event.type == pg.KEYDOWN:
             if event.key == self.controls["interact"]:
                 if self.selected_building != None:
@@ -89,18 +85,18 @@ class Player(GameObject):
 
     def set_sprite(self):
         if self.dir.y == 1 and self.dir.x == 1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-se.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-se.png"), self.sprite_rect.size)
         elif self.dir.y == 1 and self.dir.x == -1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-sw.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-sw.png"), self.sprite_rect.size)
         elif self.dir.y == 1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-s.png"), self.sprite_rect.size)
         elif self.dir.x == 1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-e.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-e.png"), self.sprite_rect.size)
         elif self.dir.x == -1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-w.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-w.png"), self.sprite_rect.size)
         
         if self.dir.y == -1:
-            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-n.png"), self.spriteRect.size)
+            self.sprite = pg.transform.scale(pg.image.load("new-sprites/player/player-n.png"), self.sprite_rect.size)
 
     def move(self):
         keys = pg.key.get_pressed()
@@ -158,12 +154,12 @@ class Player(GameObject):
                 if not isSolidBuilding: continue
 
                 if (are_hitboxes_colliding(fposx, self.hitbox, tile.pos, tile.hitbox)):
-                    self.collisionInfo.isColliding = True
+                    self.collisionInfo.is_colliding = True
                     self.collisionInfo.collidingX = True
-                    self.collisionInfo.collidingLeft = delta.x < 0
-                    self.collisionInfo.collidingRight = delta.x > 0
+                    self.collisionInfo.colliding_left = delta.x < 0
+                    self.collisionInfo.colliding_right = delta.x > 0
 
-                    if self.collisionInfo.collidingRight:
+                    if self.collisionInfo.colliding_right:
                         self.pos.x = tile.pos.x - self.hitbox.x
                     else:
                         self.pos.x = tile.pos.x + tile.hitbox.x
@@ -183,12 +179,12 @@ class Player(GameObject):
                 if not isSolidBuilding: continue
 
                 if (are_hitboxes_colliding(fposy, self.hitbox, tile.pos, tile.hitbox)):
-                    self.collisionInfo.isColliding = True
+                    self.collisionInfo.is_colliding = True
                     self.collisionInfo.collidingY = True
-                    self.collisionInfo.collidingTop = delta.y < 0
-                    self.collisionInfo.collidingDown = delta.y > 0
+                    self.collisionInfo.colliding_top = delta.y < 0
+                    self.collisionInfo.colliding_down = delta.y > 0
 
-                    if self.collisionInfo.collidingTop:
+                    if self.collisionInfo.colliding_top:
                         self.pos.y = tile.pos.y + tile.hitbox.y
                     else:
                         self.pos.y = tile.pos.y - self.hitbox.y

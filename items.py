@@ -12,7 +12,7 @@ class Item(GameObject):
         self.id = name
         self.sellprice = sellprice
         self.buyprice = buyprice
-        self.spriteRect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
+        self.sprite_rect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
 
         self.sprite = pg.transform.scale(pg.image.load(sprite).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 

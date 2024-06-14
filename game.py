@@ -26,17 +26,20 @@ class Game:
 
         self.eventees = []
 
-        self.isFreezed = False
-        self.isPaused = False
+        self.is_frozen = False
+        self.is_paused = False
         self.state=MAIN_MENU_STATE
         # self.state = PLAY_STATE
 
         self.money = AERSOL
 
-        self.lagCompensation = True
+        self.do_lag_compensation = True
         self.mainscreen=MainMenu(self)
 
     def new_game(self):
+        self.eventees.clear()
+
+        self.mainscreen=MainMenu(self)
 
         self.item_library = self.item_library = {
             "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
@@ -57,9 +60,9 @@ class Game:
         self.pause_screen = PreferenceScreen(self)
 
         # UI
-        self.buyMenu = BuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
-        self.storageMenu = StorageMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
-        self.buyItemMenu = ItemBuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
+        self.buy_menu = BuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
+        self.storage_menu = StorageMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
+        self.buy_item_menu = ItemBuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
 
         self.scoreText = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255),
                               text=f"${AERSOL}")
@@ -69,15 +72,17 @@ class Game:
 
     def load_game(self):
         self.new_game()
-        load_game_state(self)
+        if not load_game_state(self):
+            self.new_game()
+
 
     def set_game_state(self, state):
         print(state)
         self.state = state
-        self.isFreezed = self.state != PLAY_STATE
+        self.is_frozen = self.state != PLAY_STATE
 
     def check_freeze(self):
-        self.isFreezed = self.isPaused or (self.state != PLAY_STATE)
+        self.is_frozen = self.is_paused or (self.state != PLAY_STATE)
 
     def open_storage_menu(self, storage):
         self.storageMenu.set(storage)
@@ -87,7 +92,7 @@ class Game:
         self.set_game_state(FRIDGE_STATE)
 
     def events(self):
-        self.lagCompensation = True
+        self.do_lag_compensation = True
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -99,12 +104,12 @@ class Game:
                     if self.state != PLAY_STATE:
                         self.state = PLAY_STATE
                     else:
-                        self.isPaused = not self.isPaused
+                        self.is_paused = not self.is_paused
                 elif event.key == pg.K_i:
                     self.state = INVENTORY_STATE if self.state == PLAY_STATE else PLAY_STATE
 
             for eventee in self.eventees:
-                eventee.callEvent(event)
+                eventee.call_event(event)
 
     def update(self):
         if self.state == MAIN_MENU_STATE:
@@ -114,8 +119,8 @@ class Game:
             for particle in self.particles: particle.update()
             self.player.update()
             self.player2.update()
-            self.buyMenu.update()
-            self.storageMenu.update()
+            self.buy_menu.update()
+            self.storage_menu.update()
             self.world_editor.update()
 
     def immuneUpdate(self):
@@ -126,9 +131,9 @@ class Game:
             for particle in self.particles: particle.immuneUpdate()
             self.player.immuneUpdate()
             self.player2.immuneUpdate()
-            self.buyMenu.immuneUpdate()
-            self.buyItemMenu.immuneUpdate()
-            self.storageMenu.immuneUpdate()
+            self.buy_menu.immuneUpdate()
+            self.buy_item_menu.immuneUpdate()
+            self.storage_menu.immuneUpdate()
             self.world_editor.immuneUpdate()
             
             self.scoreText.set_text(f"${self.money}")
@@ -150,11 +155,11 @@ class Game:
             # these menus should really be handling that themselves....
             # ...whatever.
             # k i fixed it
-            self.buyMenu.draw()
-            self.storageMenu.draw()
-            self.buyItemMenu.draw()
+            self.buy_menu.draw()
+            self.storage_menu.draw()
+            self.buy_item_menu.draw()
 
-            if self.isPaused:
+            if self.is_paused:
                 self.pause_screen.draw()
 
         pg.display.update()
@@ -165,7 +170,7 @@ class Game:
             self.DT = min(self.clock.tick(self.FPS) / 1000, 1 / 12)
 
             self.check_freeze()
-            if not self.isFreezed:
+            if not self.is_frozen:
                 self.update()
             self.immuneUpdate()
             self.draw()
