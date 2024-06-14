@@ -66,7 +66,7 @@ class Player(GameObject):
     def update(self):
         self.move()
 
-    def callEvent(self, event):
+    def call_event(self, event):
         if event.type == pg.KEYDOWN:
             if event.key == self.controls["interact"]:
                 if self.selected_building != None:

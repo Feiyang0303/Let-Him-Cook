@@ -27,7 +27,7 @@ class WorldEditor(GameObject):
 
             self.selectedBuilding.pos = rounded_pos
     
-    def callEvent(self, event):
+    def call_event(self, event):
         if self.game.state == EDIT_STATE:
             if event.type == pg.MOUSEBUTTONDOWN:
                 if self.game.world.is_legible_tile_placement(self.selectedBuilding.id, self.selectedBuilding.pos):

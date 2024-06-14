@@ -70,7 +70,7 @@ class Button(UIElement):
         self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
         self.disabled = self.parentPanel != None and self.game.state != self.parentPanel.menu_state
     
-    def callEvent(self, event):
+    def call_event(self, event):
         self.immuneUpdate()
         if event.type == pg.MOUSEBUTTONDOWN:
             if self.hovering and not self.disabled:
@@ -140,7 +140,7 @@ class BuyItemButton(Button):
         self.disabled = self.disabled or self.game.money < self.game.item_library[self.item_id].buyprice or self.game.player.inventory.isFull()
         # law of demeter? snake_case?
 
-    def callEvent(self, event):
+    def call_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             if self.hovering and not self.disabled and self.game.state == self.parentPanel.menu_state:
                 self.game.money -= self.game.item_library[self.item_id].buyprice
@@ -191,7 +191,7 @@ class StorageSlot(Button):
         else:
             self.place_item()
 
-    def callEvent(self, event):
+    def call_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
             if self.hovering and not self.disabled and self.game.state == self.parentPanel.menu_state:
                 self.take_or_place_item()

@@ -223,7 +223,7 @@ class Fridge(Building):
     def interact(self, player):
         print("opening storage...")
         self.game.state = FRIDGE_STATE
-        self.game.storageMenu.set(self.storage)
+        self.game.storage_menu.set(self.storage)
 
     def copy(self, pos: pg.Vector2):
         return Fridge(self.game, self.id, self.sprite, pos, self.hitbox, self.sprite_rect, self.isSolid, self.price)

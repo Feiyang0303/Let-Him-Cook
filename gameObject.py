@@ -27,7 +27,7 @@ class GameObject:
     def draw(self):
         pass
     
-    def callEvent(self, event):
+    def call_event(self, event):
         pass
 
     def delete(self):
