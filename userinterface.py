@@ -279,25 +279,22 @@ class StorageMenu(Panel):
         self.menu_state = FRIDGE_STATE
 
     def set(self, storage: Storage):
-        print("set storage")
+        if self.storage is not storage:
+            self.storage = storage
+            self.elements.clear()
+            print("set storage")
 
-        self.elements.clear()
-        self.storage = storage
-        for i, item in enumerate(self.storage.items):
-            x = TILE_WIDTH / 2 + (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN) * (i % 5)
-            y = TILE_WIDTH / 2 + (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN) * int(i/5)
+            for i, item in enumerate(self.storage.items):
+                x = TILE_WIDTH / 2 + (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN) * (i % 5)
+                y = TILE_WIDTH / 2 + (StorageMenu.BUTTON_WIDTH + StorageMenu.MARGIN) * int(i/5)
             # self.elements.append(Image(self.game, pg.Vector2(x, y), item.sprite, self))
-            item = self.storage.items[i] if i < len(self.storage.items) else None
-            self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),
+            # item = self.storage.items[i] if i < len(self.storage.items) else None
+                self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),
                                              pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item.sprite, self))
-            if item:
-                print(f"{item.name} is added to the storage menu")
+                if item:
+                    print(f"{item.name} is added to the storage menu")
 
-            # self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item, self))
-            print(f"{item.name} is added to the storage menu")
-            
-            # self.elements.append(StorageSlot(self.game, pg.Vector2(x, y),pg.Vector2(StorageMenu.BUTTON_WIDTH, StorageMenu.BUTTON_WIDTH), item, self))
-        # print(f"{self.item} is added to the fridge storage")
+
 
 
 
