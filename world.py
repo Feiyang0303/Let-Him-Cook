@@ -51,7 +51,12 @@ class World(GameObject):
         return True
 
     def destroy(self, pos:pg.Vector2):
-        pass
+        tile = self.get(pos.x, pos.y)
+        if tile == self.tile_library["empty"]: return
+
+        for space in tile.get_spaces():
+            self.building_layer[int(space.y)][int(space.x)] = self.tile_library["empty"]
+
 
     def place(self, id:str, pos:pg.Vector2):
         if not self.is_legible_tile_placement(id, pos):
@@ -117,16 +122,22 @@ class Building(Tile):
     def copy(self, pos:pg.Vector2):
         return Building(self.game, self.id, self.sprite, pos, self.hitbox, self.sprite_rect, self.isSolid, self.price)
 
-    def draw_highlighted(self):
+    def draw_highlighted(self, layer=0):
         highlight = self.sprite.convert_alpha()
         highlight.fill((255, 255, 255), special_flags=pg.BLEND_RGB_ADD)
         highlight.set_alpha(128)
-        self.game.world_renderer.draw_object(self, highlight)
+        self.game.world_renderer.draw_object(self, highlight, layer=layer)
     
-    def draw_ghost(self): 
+    def draw_ghost(self, layer=0): 
         ghost = self.sprite.convert_alpha()
         ghost.set_alpha(128)
-        self.game.world_renderer.draw_object(self, ghost, self.pos)
+        self.game.world_renderer.draw_object(self, ghost, self.pos, layer=layer)
+    
+    def draw_red(self, layer=0):
+        highlight = self.sprite.convert_alpha()
+        highlight.fill((255, 100, 100), special_flags=pg.BLEND_RGB_ADD)
+        highlight.set_alpha(128)
+        self.game.world_renderer.draw_object(self, highlight, layer=layer)
 
 
 class Shop(Building):
@@ -160,14 +171,23 @@ class ReferenceTile(Building):
         super().__init__(game, reference.id, reference.sprite, pos, pg.Vector2(1, 1), reference.sprite_rect, reference.isSolid)
         self.reference = reference
     
+    def get_spaces(self):
+        return self.reference.get_spaces()
+
     def draw(self):
         pass
     
     def interact(self, player):
         self.reference.interact(player)
 
-    def draw_highlighted(self):
-        self.reference.draw_highlighted()
+    def draw_highlighted(self, layer=0):
+        self.reference.draw_highlighted(layer)
+    
+    def draw_red(self, layer=0):
+        self.reference.draw_red(layer)
+    
+    def draw_ghost(self, layer=0):
+        self.reference.draw_ghost(layer)
 
 class Counter(Building):
     def __init__(self, game, id, sprite, pos:pg.Vector2=pg.Vector2(0, 0), hitbox:pg.Vector2=pg.Vector2(1, 1), sprite_rect=pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT), isSolid=True, price=100):

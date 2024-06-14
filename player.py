@@ -15,14 +15,14 @@ class PlayerCollisionInfo:
         self.reset()
 
     def reset(self):
-        self.isColliding = False
+        self.is_colliding = False
         self.collidingX = False
         self.collidingY = False
-        self.collidingRight = False
-        self.collidingLeft = False
-        self.collidingTop = False
-        self.collidingDown = False
-        self.collidingTile = None
+        self.colliding_right = False
+        self.colliding_left = False
+        self.colliding_top = False
+        self.colliding_down = False
+        self.colldiing_tile = None
 
 
 class Player(GameObject):
@@ -154,12 +154,12 @@ class Player(GameObject):
                 if not isSolidBuilding: continue
 
                 if (are_hitboxes_colliding(fposx, self.hitbox, tile.pos, tile.hitbox)):
-                    self.collisionInfo.isColliding = True
+                    self.collisionInfo.is_colliding = True
                     self.collisionInfo.collidingX = True
-                    self.collisionInfo.collidingLeft = delta.x < 0
-                    self.collisionInfo.collidingRight = delta.x > 0
+                    self.collisionInfo.colliding_left = delta.x < 0
+                    self.collisionInfo.colliding_right = delta.x > 0
 
-                    if self.collisionInfo.collidingRight:
+                    if self.collisionInfo.colliding_right:
                         self.pos.x = tile.pos.x - self.hitbox.x
                     else:
                         self.pos.x = tile.pos.x + tile.hitbox.x
@@ -179,12 +179,12 @@ class Player(GameObject):
                 if not isSolidBuilding: continue
 
                 if (are_hitboxes_colliding(fposy, self.hitbox, tile.pos, tile.hitbox)):
-                    self.collisionInfo.isColliding = True
+                    self.collisionInfo.is_colliding = True
                     self.collisionInfo.collidingY = True
-                    self.collisionInfo.collidingTop = delta.y < 0
-                    self.collisionInfo.collidingDown = delta.y > 0
+                    self.collisionInfo.colliding_top = delta.y < 0
+                    self.collisionInfo.colliding_down = delta.y > 0
 
-                    if self.collisionInfo.collidingTop:
+                    if self.collisionInfo.colliding_top:
                         self.pos.y = tile.pos.y + tile.hitbox.y
                     else:
                         self.pos.y = tile.pos.y - self.hitbox.y
