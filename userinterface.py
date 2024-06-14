@@ -247,7 +247,8 @@ class BuyMenu(Panel):
                 BuyStructureButton(game, pg.Vector2(x, y), pg.Vector2(BuyMenu.BUTTON_WIDTH, BuyMenu.BUTTON_WIDTH),
                                    building, self))
         
-        self.elements.append(Button(game, pg.Vector2(0, 0), pg.Vector2(TILE_WIDTH, TILE_HEIGHT), lambda:self.game.set_game_state(SELECT_STATE), self))
+        self.elements.append(Button(game, pg.Vector2(-40, 0), pg.Vector2(TILE_WIDTH, TILE_HEIGHT), lambda:self.game.set_game_state(DELETE_STATE), self))
+        self.elements.append(Button(game, pg.Vector2(-40, TILE_WIDTH + 32), pg.Vector2(TILE_WIDTH, TILE_HEIGHT), lambda:self.game.set_game_state(MOVE_STATE), self))
             
         self.menu_state = BUY_STATE
 

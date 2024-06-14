@@ -135,7 +135,13 @@ class Building(Tile):
     
     def draw_red(self, layer=0):
         highlight = self.sprite.convert_alpha()
-        highlight.fill((255, 100, 100), special_flags=pg.BLEND_RGB_ADD)
+        highlight.fill((255, 50, 50), special_flags=pg.BLEND_RGB_ADD)
+        highlight.set_alpha(128)
+        self.game.world_renderer.draw_object(self, highlight, layer=layer)
+    
+    def draw_blue(self, layer=0):
+        highlight = self.sprite.convert_alpha()
+        highlight.fill((50, 100, 255), special_flags=pg.BLEND_RGB_ADD)
         highlight.set_alpha(128)
         self.game.world_renderer.draw_object(self, highlight, layer=layer)
 
@@ -185,6 +191,9 @@ class ReferenceTile(Building):
     
     def draw_red(self, layer=0):
         self.reference.draw_red(layer)
+
+    def draw_blue(self, layer=0):
+        self.reference.draw_blue(layer)
     
     def draw_ghost(self, layer=0):
         self.reference.draw_ghost(layer)
