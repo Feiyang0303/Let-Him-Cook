@@ -33,6 +33,9 @@ class Text(UIElement):
     def set_text(self, text: str):
         self.text = text
         self.img = self.font.render(self.text, False, self.color)
+    
+    def set_color(self, color):
+        self.color = color
 
     def draw(self):
         if self.justification == JUSTIFY_LEFT:

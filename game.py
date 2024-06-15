@@ -12,7 +12,8 @@ from items import *
 from worldrenderer import *
 from preferencescreen import *
 from particle import *
-from mainscreen import MainMenu
+from mainscreen import *
+from waves import *
 
 
 class Game:
@@ -28,18 +29,14 @@ class Game:
 
         self.is_frozen = False
         self.is_paused = False
-        self.state=MAIN_MENU_STATE
-        # self.state = PLAY_STATE
-
-        self.money = AERSOL
+        self.state = MAIN_MENU_STATE
 
         self.do_lag_compensation = True
-        self.mainscreen=MainMenu(self)
 
     def new_game(self):
         self.eventees.clear()
 
-        self.mainscreen=MainMenu(self)
+        self.mainscreen = MainMenu(self)
 
         self.item_library = self.item_library = {
             "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
@@ -64,17 +61,20 @@ class Game:
         self.storage_menu = StorageMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
         self.buy_item_menu = ItemBuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
 
-        self.scoreText = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255),
-                              text=f"${AERSOL}")
+        self.scoreText = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), text=f"${AERSOL}")
 
-        self.timerText = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24,
-                              (255, 255, 255), justification=JUSTIFY_RIGHT, text="1:00")
+        self.quotaText = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, 0), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text=f"$0/${100}")
+        self.timerText = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text="1:00")
+        
+        self.money = AERSOL
+
+        self.day_manager = DayManager(self)
+        self.wave_state = COOK_WAVE
 
     def load_game(self):
         self.new_game()
         if not load_game_state(self):
             self.new_game()
-
 
     def set_game_state(self, state):
         print(state)
@@ -83,13 +83,6 @@ class Game:
 
     def check_freeze(self):
         self.is_frozen = self.is_paused or (self.state != PLAY_STATE)
-
-    # def open_storage_menu(self, storage):
-    #     self.storageMenu.set(storage)
-    #     self.set_game_state(FRIDGE_STATE)
-    #
-    # def close_storage_menu(self):
-    #     self.set_game_state(FRIDGE_STATE)
 
     def events(self):
         self.do_lag_compensation = True
@@ -122,6 +115,7 @@ class Game:
             self.buy_menu.update()
             self.storage_menu.update()
             self.world_editor.update()
+            self.day_manager.update()
 
     def immuneUpdate(self):
         if self.state==MAIN_MENU_STATE:
@@ -150,6 +144,7 @@ class Game:
             self.world_renderer.draw()
             self.world_editor.draw()
             self.scoreText.draw()
+            self.quotaText.draw()
             self.timerText.draw()
 
             # these menus should really be handling that themselves....
