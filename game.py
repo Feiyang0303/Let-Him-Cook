@@ -61,12 +61,13 @@ class Game:
         self.storage_menu = StorageMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
         self.buy_item_menu = ItemBuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
 
-        self.scoreText = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), text=f"${AERSOL}")
+        self.money_text = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), text=f"${STARTING_MONEY}")
 
-        self.quotaText = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, 0), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text=f"$0/${100}")
-        self.timerText = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text="1:00")
+        self.quota_text = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN * 3), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text=f"$0/${100}")
+        self.timer_text = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text="1:00")
         
-        self.money = AERSOL
+        self.money = STARTING_MONEY
+        self.money_made_today = 0
 
         self.day_manager = DayManager(self)
         self.wave_state = COOK_WAVE
@@ -130,7 +131,7 @@ class Game:
             self.storage_menu.immuneUpdate()
             self.world_editor.immuneUpdate()
             
-            self.scoreText.set_text(f"${self.money}")
+            self.money_text.set_text(f"${self.money}")
 
     def draw(self):
         if self.state==MAIN_MENU_STATE:
@@ -143,9 +144,9 @@ class Game:
             self.player2.draw()
             self.world_renderer.draw()
             self.world_editor.draw()
-            self.scoreText.draw()
-            self.quotaText.draw()
-            self.timerText.draw()
+            self.money_text.draw()
+            self.quota_text.draw()
+            self.timer_text.draw()
 
             # these menus should really be handling that themselves....
             # ...whatever.

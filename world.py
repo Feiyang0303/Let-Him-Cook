@@ -229,7 +229,7 @@ class Seller(Building):
         if not player.inventory.isEmpty():
             self.game.particles.append(SellParticle(self.game, self.pos, text=f"+${player.inventory.next().sellprice}"))
 
-            self.game.money += player.inventory.next().sellprice
+            self.game.money_made_today += player.inventory.next().sellprice
             player.inventory.pop()
 
     def draw(self):

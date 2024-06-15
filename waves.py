@@ -13,6 +13,7 @@ class DayManager:
         self.current_wave = None
         self.wave_buffer = []
 
+        self.start_money = 0
         self.quota = 100
         self.quota_add = [0, 10, 10, 10, 20, 30, 20]
 
@@ -22,8 +23,15 @@ class DayManager:
     
     def update(self):
         self.current_wave.update()
+
+        self.game.quota_text.set_text(f"${self.game.money_made_today}/${self.quota}")
+        if self.game.money_made_today >= self.quota:
+            self.game.quota_text.set_color((0, 255, 0))
+        else:
+            self.game.quota_text.set_color((255, 0, 0))
     
     def new_day(self):
+        self.game.money_made_today = 0
         self.quota += self.quota_add[self.day]
         self.day += 1
 
@@ -46,6 +54,13 @@ class DayManager:
 
         self.current_wave = self.wave_buffer[0]
         self.current_wave.start()
+    
+    def end_day(self):
+        if self.game.money_made_today < self.quota:
+            self.game.game_over()
+        else:
+            self.game.money += self.game.money_made_today - self.quota
+        self.new_day()
     
     def new_friday(self):
         self.quota = 1000
@@ -96,7 +111,7 @@ class TimerWave(Wave):
         self.timer += self.game.DT
         if self.timer > self.delay: self.finish()
 
-        self.game.timerText.set_text(format_time(self.delay - self.timer))
+        self.game.timer_text.set_text(format_time(self.delay - self.timer))
 
 class CookWave(TimerWave):
     def __init__(self, game, delay):

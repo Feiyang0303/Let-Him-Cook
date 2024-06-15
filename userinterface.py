@@ -36,6 +36,7 @@ class Text(UIElement):
     
     def set_color(self, color):
         self.color = color
+        self.img = self.font.render(self.text, False, self.color)
 
     def draw(self):
         if self.justification == JUSTIFY_LEFT:
@@ -84,7 +85,8 @@ class Button(UIElement):
             self.clicking = False
 
     def disable(self):
-        self.game.eventees.remove(self)
+        if self in self.game.eventees:
+            self.game.eventees.remove(self)
 
     def draw(self):
         if self.disabled:
