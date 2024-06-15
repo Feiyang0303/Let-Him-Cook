@@ -17,18 +17,18 @@ class MainMenu:
         self.new_game_button_text = Text(game, pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 300), "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), justification=JUSTIFY_CENTER, text='NEW GAME')
 
     def load_game(self):
+        self.new_game_button.disable()
+        self.load_game_button.disable()
+
         self.game.load_game()
         self.game.set_game_state(PLAY_STATE)
-
-        self.new_game_button.disable()
-        self.load_game_button.disable()
     
     def new_game(self):
-        self.game.new_game()
-        self.game.set_game_state(PLAY_STATE)
-
         self.new_game_button.disable()
         self.load_game_button.disable()
+
+        self.game.new_game()
+        self.game.set_game_state(PLAY_STATE)
 
     def draw(self):
         self.game.screen.fill((0, 0, 0))
@@ -43,6 +43,6 @@ class MainMenu:
         self.load_game_button.update()
         self.new_game_button.update()
 
-    def immuneUpdate(self):
-        self.load_game_button.immuneUpdate()
-        self.new_game_button.immuneUpdate()
+    def immune_update(self):
+        self.load_game_button.immune_update()
+        self.new_game_button.immune_update()
