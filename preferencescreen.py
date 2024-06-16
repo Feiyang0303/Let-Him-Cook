@@ -55,13 +55,15 @@ class Slider:
 
         self.container_rect = pg.Rect(self.slider_left_pos, self.slider_top_pos, self.size[0], self.size[1])
         self.button_rect = pg.Rect(self.slider_left_pos + self.initial_val - 5, self.slider_top_pos, 10, self.size[1])
-    
+
+        
+
     def move_slider(self, mouse_pos):
         self.button_rect.centerx = mouse_pos[0]
 
     def render(self, game):
-        pg.draw.rect(game.screen, "white", self.container_rect)
-        pg.draw.rect(game.screen, "blue", self.button_rect)
+        pg.draw.rect(game.screen, (224,171,114), self.container_rect)
+        pg.draw.rect(game.screen, (120,54,42), self.button_rect)
     def get_value(self):
         val_range = self.slider_right_pos - self.slider_left_pos - 1
         button_val = self.button_rect.centerx - self.slider_left_pos

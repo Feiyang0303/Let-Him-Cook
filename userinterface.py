@@ -17,6 +17,9 @@ class UIElement(GameObject):
             super().__init__(game, parentPanel.pos + pos, hitbox)
         else:
             super().__init__(game, pos, hitbox)
+    
+    def disable(self):
+        pass
 
 
 class Text(UIElement):
@@ -69,13 +72,13 @@ class Button(UIElement):
         self.clicking = False
         self.disabled = False
 
-    def immuneUpdate(self):
+    def immune_update(self):
         mouse_pos = pg.Vector2(pg.mouse.get_pos())
         self.hovering = is_point_in_hitbox(mouse_pos, self.pos, self.hitbox)
-        self.disabled = self.parentPanel != None and self.game.state != self.parentPanel.menu_state
+        self.disabled = self.parentPanel != None and self.parentPanel.menu_state != None and self.game.state != self.parentPanel.menu_state
     
     def call_event(self, event):
-        self.immuneUpdate()
+        self.immune_update()
         if event.type == pg.MOUSEBUTTONDOWN:
             if self.hovering and not self.disabled:
                 print("BUTTON PRESS!")
@@ -117,8 +120,8 @@ class BuyStructureButton(Button):
         self.game.world_editor.place(self.building_id)
         self.game.money -= self.game.tile_library[self.building_id].price
 
-    def immuneUpdate(self):
-        super().immuneUpdate()
+    def immune_update(self):
+        super().immune_update()
         self.disabled = self.disabled or self.game.money < self.game.tile_library[self.building_id].price
 
     def draw(self):
@@ -140,8 +143,8 @@ class BuyItemButton(Button):
         scale = min(TILE_WIDTH / sprite.get_width(), TILE_HEIGHT / sprite.get_height())
         self.sprite = pg.transform.scale_by(self.game.item_library[self.item_id].sprite, scale)
 
-    def immuneUpdate(self):
-        super().immuneUpdate()
+    def immune_update(self):
+        super().immune_update()
         self.disabled = self.disabled or self.game.money < self.game.item_library[self.item_id].buyprice or self.game.player.inventory.isFull()
         # law of demeter? snake_case?
 
@@ -211,20 +214,22 @@ class StorageSlot(Button):
 
 
 class Panel(GameObject):
-    def __init__(self, game, hitbox: pg.Vector2):
+    def __init__(self, game, hitbox: pg.Vector2, color=(57, 59, 60)):
         self.game = game
 
         self.hitbox = hitbox
 
+        self.color = color
+
         self.elements = []
-        self.pos = pg.Vector2((SCREEN_WIDTH - hitbox.x) / 2, (SCREEN_HEIGHT - hitbox.y) / 2)
+        self.pos = pg.Vector2((SCREEN_WIDTH - hitbox.x) / 2, ((WORLD_HEIGHT + WORLD_WALL_HEIGHT)*TILE_HEIGHT - hitbox.y) / 2 + STATS_MARGIN + MARGIN)
 
         self.menu_state = None
 
-    def immuneUpdate(self):
+    def immune_update(self):
         if self.game.state == self.menu_state:
             for element in self.elements:
-                element.immuneUpdate()
+                element.immune_update()
 
     def update(self):
         if self.game.state == self.menu_state:
@@ -232,10 +237,14 @@ class Panel(GameObject):
                 element.update()
 
     def draw(self):
-        if self.game.state == self.menu_state:
-            pg.draw.rect(self.game.screen, (57, 59, 60), (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
+        if self.game.state == self.menu_state or self.menu_state == None:
+            pg.draw.rect(self.game.screen, self.color, (self.pos.x, self.pos.y, self.hitbox.x, self.hitbox.y))
             for element in self.elements:
                 element.draw()
+    
+    def disable(self):
+        for element in self.elements:
+            element.disable()
 
 
 class BuyMenu(Panel):

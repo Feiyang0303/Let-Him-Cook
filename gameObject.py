@@ -21,7 +21,7 @@ class GameObject:
     def update(self):
         pass
 
-    def immuneUpdate(self):
+    def immune_update(self):
         pass
     
     def draw(self):

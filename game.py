@@ -33,10 +33,10 @@ class Game:
 
         self.do_lag_compensation = True
 
+        self.mainscreen = MainMenu(self)
+
     def new_game(self):
         self.eventees.clear()
-
-        self.mainscreen = MainMenu(self)
 
         self.item_library = self.item_library = {
             "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
@@ -62,12 +62,14 @@ class Game:
         self.buy_item_menu = ItemBuyMenu(self, pg.Vector2(12 * TILE_WIDTH, 10 * TILE_HEIGHT))
 
         self.money_text = Text(self, pg.Vector2(MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), text=f"${STARTING_MONEY}")
+        self.quota_text = Text(self, pg.Vector2(MARGIN, MARGIN * 3), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), text=f"$0/${100}")
 
-        self.quota_text = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN * 3), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text=f"$0/${100}")
-        self.timer_text = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text="1:00")
+        self.wave_text = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text="break")
+        self.timer_text = Text(self, pg.Vector2(SCREEN_WIDTH - MARGIN, MARGIN * 3), "fonts/pixel-bit-advanced.ttf", 24, (255, 255, 255), justification=JUSTIFY_RIGHT, text="1:00")
         
         self.money = STARTING_MONEY
         self.money_made_today = 0
+        self.sold_items = []
 
         self.day_manager = DayManager(self)
         self.wave_state = COOK_WAVE
@@ -116,22 +118,23 @@ class Game:
             self.buy_menu.update()
             self.storage_menu.update()
             self.world_editor.update()
-            self.day_manager.update()
 
-    def immuneUpdate(self):
+    def immune_update(self):
         if self.state==MAIN_MENU_STATE:
-            self.mainscreen.immuneUpdate()
+            self.mainscreen.immune_update()
         else:
-            self.world.immuneUpdate()
-            for particle in self.particles: particle.immuneUpdate()
-            self.player.immuneUpdate()
-            self.player2.immuneUpdate()
-            self.buy_menu.immuneUpdate()
-            self.buy_item_menu.immuneUpdate()
-            self.storage_menu.immuneUpdate()
-            self.world_editor.immuneUpdate()
+            self.world.immune_update()
+            for particle in self.particles: particle.immune_update()
+            self.player.immune_update()
+            self.player2.immune_update()
+            self.buy_menu.immune_update()
+            self.buy_item_menu.immune_update()
+            self.storage_menu.immune_update()
+            self.world_editor.immune_update()
+            self.day_manager.immune_update()
             
             self.money_text.set_text(f"${self.money}")
+            self.wave_text.set_text("break time" if self.wave_state == BREAK_WAVE else "cookin time")
 
     def draw(self):
         if self.state==MAIN_MENU_STATE:
@@ -147,6 +150,8 @@ class Game:
             self.money_text.draw()
             self.quota_text.draw()
             self.timer_text.draw()
+            self.wave_text.draw()
+            self.day_manager.draw()
 
             # these menus should really be handling that themselves....
             # ...whatever.
@@ -168,5 +173,5 @@ class Game:
             self.check_freeze()
             if not self.is_frozen:
                 self.update()
-            self.immuneUpdate()
+            self.immune_update()
             self.draw()

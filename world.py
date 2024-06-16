@@ -41,7 +41,8 @@ class World(GameObject):
         # self.building_layer = [[self.tile_library["empty"] for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
         self.building_layer = [[self.tile_library["empty"] for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
 
-        self.place("shop", pg.Vector2(7, 0))
+        self.place("shop", pg.Vector2(int(WORLD_WIDTH/2)-1, 0))
+        self.place("seller", pg.Vector2(int(WORLD_WIDTH/2)-1, WORLD_HEIGHT - 2))
 
     def is_legible_tile_placement(self, id:str, pos:pg.Vector2):
         tile = self.tile_library[id].copy(pos)
@@ -151,6 +152,9 @@ class Shop(Building):
         super().__init__(game, id, sprite, pos, hitbox, sprite_rect, isSolid, price)
     
     def interact(self, player):
+        if self.game.wave_state != BREAK_WAVE:
+            self.game.particles.append(DisabledParticle(self.game, self.pos))
+            return
         super().interact(player)
         if self.game.state == PLAY_STATE:
             self.game.state = BUY_STATE
@@ -164,6 +168,9 @@ class ItemShop(Building):
         super().__init__(game, id, sprite, pos, hitbox, sprite_rect, isSolid, price)
     
     def interact(self, player):
+        if self.game.wave_state != BREAK_WAVE:
+            self.game.particles.append(DisabledParticle(self.game, self.pos))
+            return
         super().interact(player)
         if self.game.state == PLAY_STATE:
             self.game.state = BUY_ITEM_STATE
@@ -226,6 +233,10 @@ class Seller(Building):
         super().__init__(game, id, sprite, pos, hitbox, sprite_rect, isSolid, price)
 
     def interact(self, player):
+        if self.game.wave_state != COOK_WAVE:
+            self.game.particles.append(DisabledParticle(self.game, self.pos))
+            return
+            
         if not player.inventory.isEmpty():
             self.game.particles.append(SellParticle(self.game, self.pos, text=f"+${player.inventory.next().sellprice}"))
 

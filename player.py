@@ -75,8 +75,9 @@ class Player(GameObject):
                         if self.game.state != FRIDGE_STATE:
                             self.game.state = FRIDGE_STATE
             elif event.key == self.controls["dash"]:
-                self.velocity = self.dir * DASH_POWER
-                self.disable_movement_cap_timer = TIME_TO_TAKE_DASH
+                pass
+                # self.velocity = self.dir * DASH_POWER
+                # self.disable_movement_cap_timer = TIME_TO_TAKE_DASH
             elif event.key == pg.K_i:
                 self.inventory.toggle_inventory()
             elif event.key == pg.K_SPACE:

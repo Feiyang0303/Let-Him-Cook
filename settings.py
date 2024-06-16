@@ -46,7 +46,7 @@ PLAYER_DECELERATION = PLAYER_MAX_SPEED / PLAYER_DECELERATION_TIME
 DASH_POWER = 25
 TIME_TO_TAKE_DASH = 0.08
 
-STARTING_MONEY = 1000
+STARTING_MONEY = 500
 
 BUY_BUILDINGS = ["counter", "fridge", "chopper", "oven", "seller", "item-shop"]
 BUY_ITEMS = ["sugar", "flour", "butter"]
