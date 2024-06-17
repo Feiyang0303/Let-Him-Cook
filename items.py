@@ -6,7 +6,7 @@ from settings import *
 from gameObject import *
 
 class Item(GameObject):
-    def __init__(self, game, name, sprite, sellprice=1, buyprice=10):
+    def __init__(self, game, name, sprite, sellprice=1, buyprice=1):
         self.game = game
         self.name = name
         self.id = name
