@@ -50,35 +50,50 @@ class Game:
             "cheese": Item(self, "cheese", "new-sprites/items/cheese.png"),
             "chili": Item(self, "chili", "new-sprites/items/Chili.png"),
             "chocolate": Item(self, "chocolate", "new-sprites/items/chocolate.png"),
-            "chopped_apple": Item(self, "chopped_apple", "new-sprites/items/chopped_apple.png"),
-            "chopped_chocolate": Item(self, "chopped_chocolate", "new-sprites/items/chopped_chocolate.png"),
-            "cookie_batter": Item(self, "cookie_batter", "new-sprites/items/cookie_batter.png"),
+            "chopped-apple": Item(self, "chopped-apple", "new-sprites/items/chopped_apple.png"),
+            "chopped-chocolate": Item(self, "chopped-chocolate", "new-sprites/items/chopped_chocolate.png"),
+            "cookie-batter": Item(self, "cookie-batter", "new-sprites/items/cookie_batter.png"),
             "cookie": Item(self, "cookie", "new-sprites/items/cookie.png", sellprice=50),
             "flour": Item(self, "flour", "new-sprites/items/flour.png"),
             "fries": Item(self, "fries", "new-sprites/items/Fries.png"),
-            "hot_dog": Item(self, "hot_dog", "new-sprites/items/Hot Dog.png"),
-            "ice_cream": Item(self, "ice_cream", "new-sprites/items/ice_cream.png"),
+            "hot-dog": Item(self, "hot-dog", "new-sprites/items/Hot Dog.png"),
+            "ice-cream": Item(self, "ice_cream", "new-sprites/items/ice_cream.png"),
             "lettuce": Item(self, "lettuce", "new-sprites/items/Lettuce.png"),
             "meat": Item(self, "meat", "new-sprites/items/Meat.png"),
             "milk": Item(self, "milk", "new-sprites/items/milk.png"),
             "pasta": Item(self, "pasta", "new-sprites/items/Pasta.png"),
-            "potato_slices": Item(self, "potato_slices", "new-sprites/items/Potato Slices.png"),
+            "potato-slices": Item(self, "potato-slices", "new-sprites/items/Potato Slices.png"),
             "potato": Item(self, "potato", "new-sprites/items/Potato.png"),
             "poutine": Item(self, "poutine", "new-sprites/items/Poutine.png"),
             "rice": Item(self, "rice", "new-sprites/items/rice.png"),
             "salad": Item(self, "salad", "new-sprites/items/salad.png"),
-            "spaghetti_meatballs": Item(self, "spaghetti_meatball", "new-sprites/items/spaghetti meatballs.png"),
+            "spaghetti-meatballs": Item(self, "spaghetti-meatball", "new-sprites/items/spaghetti meatballs.png"),
             "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
-            "supreme_burger": Item(self, "supreme_burger", "new-sprites/items/Supreme Burger.png"),
-            "tomato_slice": Item(self, "tomato_slice", "new-sprites/items/Tomato Slice.png"),
+            "supreme-burger": Item(self, "supreme-burger", "new-sprites/items/Supreme Burger.png"),
+            "tomato-slice": Item(self, "tomato-slice", "new-sprites/items/Tomato Slice.png"),
             "tomato": Item(self, "tomato", "new-sprites/items/Tomato.png"),
             "weiner": Item(self, "weiner", "new-sprites/items/Weiner.png")
         }
         self.counter_recipes = {
-            "cookie-batter": ("sugar", "flour", "chocolate", "butter")
+            "cookie-batter": ("sugar", "flour", "chocolate", "butter"),
+            "burger":("bread","meat","lettuce"),
+            "supreme-burger" :("bread", "meat","lettuce","cheese","chopped-tomato"),
+            "poutine" : ("fries","meat","cheese"),
+            "chili" : ("tomato","milk","meat","cheese"),
+            "hot-dog" : ("weiner","bread"),
+            "chopped-potato" :("potato"),
+            "chopped-tomato" : ("tomato"),
+            "lettuce" :("lettuce"),
+            "salad" : ("tomato", "lettuce","cheese"),
+            "ice-cream" : ("milk","sugar","chocolate")
+            
         }
         self.oven_recipes = {
-            "cookie": ("cookie-batter",)
+            "cookie": ("cookie-batter",),
+            "bread": ("flour", "sugar","milk"),
+            "fries" : ("chopped-potato"),
+            "spaghetti-meatball" : ("chopped-tomato","pasta","meat"),
+            "cake" : ("flour","milk","sugar","chocolate")
         }
 
         self.world = World(self)
