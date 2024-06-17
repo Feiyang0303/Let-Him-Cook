@@ -38,12 +38,49 @@ class Game:
     def new_game(self):
         self.eventees.clear()
 
-        self.item_library = self.item_library = {
-            "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
+        self.item_library = {
+            "package": Package(self, "package", "new-sprites/items/milk.png"),
+            "alfredo": Item(self, "alfredo", "new-sprites/items/alfredo.png"),
+            "apple": Item(self, "apple", "new-sprites/items/apple.png"),
+            "bread": Item(self, "bread", "new-sprites/items/bread.png"),
+            "burger": Item(self, "burger", "new-sprites/items/Burger.png"),
             "butter": Item(self, "butter", "new-sprites/items/butter.png"),
-            "flour": Item(self, "flour", "new-sprites/items/flour.png"),
+            "cake_batter": Item(self, "cake_batter", "new-sprites/items/cake_batter.png"),
+            "caramel": Item(self, "caramel", "new-sprites/items/caramel.png"),
+            "cheese": Item(self, "cheese", "new-sprites/items/cheese.png"),
+            "chili": Item(self, "chili", "new-sprites/items/Chili.png"),
+            "chocolate": Item(self, "chocolate", "new-sprites/items/chocolate.png"),
+            "chopped_apple": Item(self, "chopped_apple", "new-sprites/items/chopped_apple.png"),
+            "chopped_chocolate": Item(self, "chopped_chocolate", "new-sprites/items/chopped_chocolate.png"),
+            "cookie_batter": Item(self, "cookie_batter", "new-sprites/items/cookie_batter.png"),
             "cookie": Item(self, "cookie", "new-sprites/items/cookie.png", sellprice=50),
+            "flour": Item(self, "flour", "new-sprites/items/flour.png"),
+            "fries": Item(self, "fries", "new-sprites/items/Fries.png"),
+            "hot_dog": Item(self, "hot_dog", "new-sprites/items/Hot Dog.png"),
+            "ice_cream": Item(self, "ice_cream", "new-sprites/items/ice_cream.png"),
+            "lettuce": Item(self, "lettuce", "new-sprites/items/Lettuce.png"),
+            "meat": Item(self, "meat", "new-sprites/items/Meat.png"),
+            "milk": Item(self, "milk", "new-sprites/items/milk.png"),
+            "pasta": Item(self, "pasta", "new-sprites/items/Pasta.png"),
+            "potato_slices": Item(self, "potato_slices", "new-sprites/items/Potato Slices.png"),
+            "potato": Item(self, "potato", "new-sprites/items/Potato.png"),
+            "poutine": Item(self, "poutine", "new-sprites/items/Poutine.png"),
+            "rice": Item(self, "rice", "new-sprites/items/rice.png"),
+            "salad": Item(self, "salad", "new-sprites/items/salad.png"),
+            "spaghetti_meatballs": Item(self, "spaghetti_meatball", "new-sprites/items/spaghetti meatballs.png"),
+            "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
+            "supreme_burger": Item(self, "supreme_burger", "new-sprites/items/Supreme Burger.png"),
+            "tomato_slice": Item(self, "tomato_slice", "new-sprites/items/Tomato Slice.png"),
+            "tomato": Item(self, "tomato", "new-sprites/items/Tomato.png"),
+            "weiner": Item(self, "weiner", "new-sprites/items/Weiner.png")
         }
+        self.counter_recipes = {
+            "cookie-batter": ("sugar", "flour", "chocolate", "butter")
+        }
+        self.oven_recipes = {
+            "cookie": ("cookie-batter",)
+        }
+
         self.world = World(self)
         self.particles = []
 
@@ -140,9 +177,9 @@ class Game:
         else:
             self.screen.fill(BACKGROUND_COLOUR)
             self.world.draw()
-            for particle in self.particles: particle.draw()
             self.player.draw()
             self.player2.draw()
+            for particle in self.particles: particle.draw()
             self.world_renderer.draw()
             self.world_editor.draw()
             self.money_text.draw()

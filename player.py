@@ -55,6 +55,7 @@ class Player(GameObject):
             self.controls["left"] = pg.K_a
             self.controls["dash"] = pg.K_LSHIFT
             self.controls["interact"] = pg.K_e
+            self.controls["pickup"] = pg.K_q
         else:
             self.controls["up"] = pg.K_UP
             self.controls["down"] = pg.K_DOWN
@@ -62,6 +63,7 @@ class Player(GameObject):
             self.controls["left"] = pg.K_LEFT
             self.controls["dash"] = pg.K_KP_0
             self.controls["interact"] = pg.K_RSHIFT
+            self.controls["pickup"] = pg.K_RCTRL
 
     def update(self):
         self.move()
@@ -71,9 +73,9 @@ class Player(GameObject):
             if event.key == self.controls["interact"]:
                 if self.selected_building != None:
                     self.selected_building.interact(self)
-                    if isinstance(self.selected_building, Fridge):
-                        if self.game.state != FRIDGE_STATE:
-                            self.game.state = FRIDGE_STATE
+            elif event.key == self.controls["pickup"]:
+                if self.selected_building != None:
+                    self.selected_building.alt_interact(self)
             elif event.key == self.controls["dash"]:
                 pass
                 # self.velocity = self.dir * DASH_POWER
@@ -168,7 +170,6 @@ class Player(GameObject):
             self.pos.x += delta.x
 
         # now we can safely do y collisions! hoorah
-
         fposy = pg.Vector2(self.pos.x, self.pos.y + delta.y)
 
         for y in range(WORLD_HEIGHT):
