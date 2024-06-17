@@ -49,4 +49,4 @@ TIME_TO_TAKE_DASH = 0.08
 STARTING_MONEY = 500
 
 BUY_BUILDINGS = ["counter", "fridge", "chopper", "oven", "seller", "item-shop"]
-BUY_ITEMS = ["sugar", "flour", "butter", "chocolate","tomato","potato","lettuce","meat","cheese","pasta"]
+BUY_ITEMS = ["sugar", "flour", "butter", "chocolate","tomato","potato","lettuce","meat","cheese","pasta","milk"]
