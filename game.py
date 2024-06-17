@@ -88,7 +88,7 @@ class Game:
         }
         self.oven_recipes = {
             "cookie": ("cookie-batter",),
-            "bread": ("flour", "sugar","milk"),
+            "bread": ("flour", "sugar","milk","butter"),
             "fries" : ("chopped-potato"),
             "spaghetti-meatball" : ("chopped-tomato","pasta","meat"),
             "cake" : ("flour","milk","sugar","chocolate")
