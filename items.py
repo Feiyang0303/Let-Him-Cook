@@ -42,10 +42,7 @@ class Inventory:
         self.player = player
         self.game = game
         self.items = []
-        self.show_inventory = False
-
-    def toggle_inventory(self):
-        self.show_inventory = not self.show_inventory
+       
 
     def add_item(self, item):
         if len(self.items) < Inventory.MAX:

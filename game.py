@@ -101,8 +101,6 @@ class Game:
                         self.state = PLAY_STATE
                     else:
                         self.is_paused = not self.is_paused
-                elif event.key == pg.K_i:
-                    self.state = INVENTORY_STATE if self.state == PLAY_STATE else PLAY_STATE
 
             for eventee in self.eventees:
                 eventee.call_event(event)
