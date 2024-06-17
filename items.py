@@ -2,51 +2,97 @@ import pygame as pg
 import math
 import sys
 
-class Item:
-    def __init__(self, name, image):
+from settings import *
+from gameObject import *
+
+class Item(GameObject):
+    def __init__(self, game, name, sprite, sellprice=1, buyprice=10):
+        self.game = game
         self.name = name
-        self.image = pg.image.load(image).convert_alpha()
+        self.id = name
+        self.sellprice = sellprice
+        self.buyprice = buyprice
+        self.sprite_rect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
 
-    def display_item(self, screen, x, y):
-        screen.blit(self.image, (x, y))
+        if isinstance(sprite, pg.Surface): self.sprite = sprite
+        else: self.sprite = pg.transform.scale(pg.image.load(sprite).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 
-#storage
+    def draw(self, pos, z=0):
+        self.game.world_renderer.draw_object(self, self.sprite, pos, z=z)
+
+class Package(Item):
+    def __init__(self, game, name, sprite, sellprice=1, buyprice=10):
+        super().__init__(game, name, sprite, sellprice, buyprice)
+        self.ids = set()
+    
+    def check_recipe(self, building_id):
+        if building_id == "counter":
+            recipes = self.game.counter_recipes
+        else:
+            recipes = self.game.oven_recipes
+
+        for result, recipe in recipes.items():
+            print(self.ids, set(recipe))
+            if self.ids == set(recipe):
+                return self.game.item_library[result]
+        return self
+
+    def add(self, item, building_id="counter"):
+        self.ids.add(item.id)
+        return self.check_recipe(building_id)
+
+    def copy(self):
+        return Package(self.game, self.name, self.sprite)
+
+# storage
 class Storage:
-    #table
-    ROWS = 6
-    COLS = 6
-    CAPACITY = ROWS * COLS
-    SLOT_SIZE = 50
-
-    def __init__(self):
+    def __init__(self, game, capacity):
+        self.game = game
         self.items = []
-        for row in range(Storage.ROWS):
-            row_current = []
-            for col in range(Storage.COLS):
-                row_current.append(None)  # initilize with empty space
-            self.items.append(row_current)
+        self.capacity = capacity
 
-    def append_items(self, item, row, col):
-        if 0 <= row <= Storage.ROWS and 0 <= col <Storage.COLS:
-            self.items[row][col] = item
+    def add(self, item):
+        print("adding", item)
+        if len(self.items) < self.capacity:
+            if type(item) is str:
+                self.items.append(self.game.item_library[item])
+            else:
+                self.items.append(self.game.item_library[item.id])
 
-    def draw(self, screen):
-        for row in range(Storage.ROWS):
-            for col in range(Storage.COLS):
-                x = col * Storage.SLOT_SIZE
-                y = row * Storage.SLOT_SIZE
-                pg.draw.rect(screen, (255, 255, 255), (x, y, Storage.SLOT_SIZE, Storage.SLOT_SIZE), 1)
-                if self.items[row][col]:
-                    self.items[row][col].display_item(screen, x, y)
 
 class Inventory:
-    def __init__(self, storage):
-        self.storage = storage
-        self.show_inventory = False
+    MAX = 10
 
-    def toggle_inventory(self):
-        self.show_inventory = not self.show_inventory
+    def __init__(self, game, player):
+        self.player = player
+        self.game = game
+        self.items = []
+       
 
-    def draw(self, screen):
-        if self.show_inventory:
-            self.storage.draw(screen)
+    def add_item(self, item):
+        if len(self.items) < Inventory.MAX:
+            if type(item) is str:
+                self.items.append(self.game.item_library[item])
+            else:
+                self.items.append(self.game.item_library[item.id])
+
+    def pop(self):
+        if self.items:
+            return [self.items.pop()]
+        return []
+
+    def isFull(self):
+        return len(self.items) >= Inventory.MAX
+
+    def isEmpty(self):
+        return len(self.items) == 0
+
+    def next(self):
+        if len(self.items) >= 1:
+            return self.items[-1]
+        return None
+
+    def draw(self):
+        for i, item in enumerate(self.items):
+            pos = pg.Vector2(self.player.pos.x-0.3, self.player.pos.y)
+            item.draw(pos, z=(i + 3) * 0.6)
