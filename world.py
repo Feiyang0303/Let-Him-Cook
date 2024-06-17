@@ -169,9 +169,6 @@ class ItemShop(Building):
         super().__init__(game, id, sprite, pos, hitbox, sprite_rect, isSolid, price)
     
     def interact(self, player):
-        if self.game.wave_state != BREAK_WAVE:
-            self.game.particles.append(DisabledParticle(self.game, self.pos))
-            return
         super().interact(player)
         if self.game.state == PLAY_STATE:
             self.game.state = BUY_ITEM_STATE

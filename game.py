@@ -52,7 +52,7 @@ class Game:
             "chocolate": Item(self, "chocolate", "new-sprites/items/chocolate.png"),
             "chopped_apple": Item(self, "chopped_apple", "new-sprites/items/chopped_apple.png"),
             "chopped_chocolate": Item(self, "chopped_chocolate", "new-sprites/items/chopped_chocolate.png"),
-            "cookie_batter": Item(self, "cookie_batter", "new-sprites/items/cookie_batter.png"),
+            "cookie-batter": Item(self, "cookie-batter", "new-sprites/items/cookie_batter.png"),
             "cookie": Item(self, "cookie", "new-sprites/items/cookie.png", sellprice=50),
             "flour": Item(self, "flour", "new-sprites/items/flour.png"),
             "fries": Item(self, "fries", "new-sprites/items/Fries.png"),

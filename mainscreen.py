@@ -10,7 +10,7 @@ class MainMenu:
         self.game = game
         self.title_text = Text(game, pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), "fonts/pixel-bit-advanced.ttf", 48, (255, 255, 255), justification=JUSTIFY_CENTER, text='LET HIM COOK')
 
-        self.load_game_button = Button(game, pg.Vector2(0, SCREEN_HEIGHT / 4 + 200), pg.Vector2(SCREEN_WIDTH, 50), call=self.new_game)
+        self.load_game_button = Button(game, pg.Vector2(0, SCREEN_HEIGHT / 4 + 200), pg.Vector2(SCREEN_WIDTH, 50), call=self.load_game)
         self.load_game_button_text = Text(game, pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 + 200), "fonts/pixel-bit-advanced.ttf", 32, (255, 255, 255), justification=JUSTIFY_CENTER, text='LOAD GAME')
 
         self.new_game_button = Button(game, pg.Vector2(0, SCREEN_HEIGHT / 4 + 300), pg.Vector2(SCREEN_WIDTH, 50), call=self.new_game)
@@ -19,6 +19,8 @@ class MainMenu:
     def load_game(self):
         self.new_game_button.disable()
         self.load_game_button.disable()
+
+        print("pressed load button")
 
         self.game.load_game()
         self.game.set_game_state(PLAY_STATE)

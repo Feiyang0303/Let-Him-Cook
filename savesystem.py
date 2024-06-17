@@ -19,7 +19,7 @@ def save_game_state(game):
       'playery' : game.player.pos.y,
       'building_layer' : building_storage,
       'money' : game.money
-      }
+    }
 
     with open('gamesave.json','w') as f:
       json.dump(game_state,f)
@@ -27,6 +27,7 @@ def save_game_state(game):
 def load_game_state(game):
     try:
       with open('gamesave.json','r') as f:
+          print("loading save state")
           game_state = json.load(f)
           building_storage = game_state["building_layer"]
           # building_storage = game_state["building_layer"]
