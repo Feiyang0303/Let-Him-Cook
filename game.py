@@ -38,12 +38,22 @@ class Game:
     def new_game(self):
         self.eventees.clear()
 
-        self.item_library = self.item_library = {
+        self.item_library = {
+            "package": Package(self, "package", "new-sprites/items/milk.png"),
             "sugar": Item(self, "sugar", "new-sprites/items/sugar.png"),
             "butter": Item(self, "butter", "new-sprites/items/butter.png"),
             "flour": Item(self, "flour", "new-sprites/items/flour.png"),
+            "chocolate": Item(self, "chocolate", "new-sprites/items/chocolate.png"),
             "cookie": Item(self, "cookie", "new-sprites/items/cookie.png", sellprice=50),
+            "cookie-batter": Item(self, "cookie-batter", "new-sprites/items/cookie_batter.png"),
         }
+        self.counter_recipes = {
+            "cookie-batter": ("sugar", "flour", "chocolate", "butter")
+        }
+        self.oven_recipes = {
+            "cookie": ("cookie-batter",)
+        }
+
         self.world = World(self)
         self.particles = []
 
@@ -142,9 +152,9 @@ class Game:
         else:
             self.screen.fill(BACKGROUND_COLOUR)
             self.world.draw()
-            for particle in self.particles: particle.draw()
             self.player.draw()
             self.player2.draw()
+            for particle in self.particles: particle.draw()
             self.world_renderer.draw()
             self.world_editor.draw()
             self.money_text.draw()

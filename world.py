@@ -28,13 +28,11 @@ class World(GameObject):
                              "fridge" :     Fridge(self.game, "fridge", "new-sprites/buildings/fridge.png", hitbox=pg.Vector2(2, 1), sprite_rect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT), price=1000),
                              "shop" :       Shop(self.game, "shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), sprite_rect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
                              "item-shop" :  ItemShop(self.game, "item-shop", "new-sprites/buildings/shop.png", hitbox=pg.Vector2(2, 1), sprite_rect=pg.Rect(0, -2*TILE_HEIGHT, 2*TILE_WIDTH, 3*TILE_HEIGHT)),
-                             "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/Counter with Knife.png", sprite_rect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100, pps=0),
+                             "chopper" :    Processor(self.game, "chopper", "new-sprites/buildings/Counter with Knife.png", sprite_rect=pg.Rect(0, -4*PPU, TILE_WIDTH, 20*PPU), price=100, pps=0, ppi=0.1),
                              "oven" :       Processor(self.game, "oven", "new-sprites/buildings/oven.png", sprite_rect=pg.Rect(0, -TILE_WIDTH, TILE_WIDTH, 2*TILE_HEIGHT), price=100, pps=0.1, ppi=0),
         }
         
         self.generateWorld()
-        
-
     
     def generateWorld(self): 
         self.floor_layer = [[self.tile_library["floor"].copy(pg.Vector2(x, y)) for x in range(WORLD_WIDTH)] for y in range(WORLD_HEIGHT)]
@@ -116,6 +114,9 @@ class Building(Tile):
     
     def interact(self, player):
         print(f"wowww you interacted with the {self.id}!")
+
+    def alt_interact(self, player):
+        print(f"wowww you alt interacted with the {self.id}!")
     
     def draw(self):
         self.game.world_renderer.draw_object(self)
@@ -214,8 +215,19 @@ class Counter(Building):
         if self.item == None and not player.inventory.isEmpty():
             self.item = player.inventory.next()
             player.inventory.pop()
+        elif type(self.item) == Package and not player.inventory.isEmpty():
+            self.item = self.item.add(player.inventory.next())
+            player.inventory.pop()
+        elif self.item != None and not player.inventory.isEmpty():
+            package = self.game.item_library["package"].copy()
+            package.add(self.item)
+            package.add(player.inventory.next())
+            player.inventory.pop()
 
-        elif self.item != None and not player.inventory.isFull():
+            self.item = package
+    
+    def alt_interact(self, player):
+        if self.item != None and not player.inventory.isFull():
             player.inventory.add_item(self.item)
             self.item = None
 
@@ -284,25 +296,38 @@ class Processor(Building):
 
     def interact(self, player):
         if self.item == None and not player.inventory.isEmpty():
-            self.item = player.inventory.next()
+            package = self.game.item_library["package"].copy()
+            package = package.add(player.inventory.next(), self.id)
             player.inventory.pop()
+
+            self.item = package
             self.progress = 0
 
         elif self.item != None:
-            if self.progress < 1:
-                self.progress += self.ppi
-                if self.progress >= 1:
-                    self.item = self.game.item_library["cookie"]
+            if not player.inventory.isEmpty():
+                if type(self.item) == Package:
+                    self.item = self.item.add(player.inventory.next(), self.id)
+                    player.inventory.pop()
+                elif self.item != None:
+                    package = self.game.item_library["package"].copy()
+                    package = package.add(self.item, self.id)
+                    package = package.add(player.inventory.next(), self.id)
+                    player.inventory.pop()
+                    self.item = package
+
+                    self.progress = 0
             
-            elif self.item != None and not player.inventory.isFull():
-                player.inventory.add_item(self.item)
-                self.item = None
+            elif self.progress < 1:
+                self.progress += self.ppi
+    
+    def alt_interact(self, player):
+        if self.progress >= 1 and self.item != None and not player.inventory.isFull():
+            player.inventory.add_item(self.item)
+            self.item = None
 
     def update(self):
         if self.item != None and self.progress < 1:
             self.progress += self.pps * self.game.DT
-            if self.progress >= 1:
-                    self.item = self.game.item_library["cookie"]
 
     def draw(self):
         super().draw()
@@ -319,4 +344,4 @@ class Processor(Building):
 
     
     def copy(self, pos: pg.Vector2):
-        return Processor(self.game, self.id, self.sprite, pos, self.hitbox, self.sprite_rect, self.isSolid, self.price)
+        return Processor(self.game, self.id, self.sprite, pos, self.hitbox, self.sprite_rect, self.isSolid, self.price, self.pps, self.ppi)

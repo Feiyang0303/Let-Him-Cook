@@ -6,7 +6,7 @@ from settings import *
 from gameObject import *
 
 class Item(GameObject):
-    def __init__(self, game, name, sprite, sellprice=5, buyprice=10):
+    def __init__(self, game, name, sprite, sellprice=1, buyprice=10):
         self.game = game
         self.name = name
         self.id = name
@@ -14,10 +14,35 @@ class Item(GameObject):
         self.buyprice = buyprice
         self.sprite_rect = pg.Rect(0, 0, TILE_WIDTH, TILE_HEIGHT)
 
-        self.sprite = pg.transform.scale(pg.image.load(sprite).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
+        if isinstance(sprite, pg.Surface): self.sprite = sprite
+        else: self.sprite = pg.transform.scale(pg.image.load(sprite).convert_alpha(), (TILE_WIDTH, TILE_HEIGHT))
 
     def draw(self, pos, z=0):
         self.game.world_renderer.draw_object(self, self.sprite, pos, z=z)
+
+class Package(Item):
+    def __init__(self, game, name, sprite, sellprice=1, buyprice=10):
+        super().__init__(game, name, sprite, sellprice, buyprice)
+        self.ids = set()
+    
+    def check_recipe(self, building_id):
+        if building_id == "counter":
+            recipes = self.game.counter_recipes
+        else:
+            recipes = self.game.oven_recipes
+
+        for result, recipe in recipes.items():
+            print(self.ids, set(recipe))
+            if self.ids == set(recipe):
+                return self.game.item_library[result]
+        return self
+
+    def add(self, item, building_id="counter"):
+        self.ids.add(item.id)
+        return self.check_recipe(building_id)
+
+    def copy(self):
+        return Package(self.game, self.name, self.sprite)
 
 # storage
 class Storage:
