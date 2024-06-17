@@ -28,8 +28,10 @@ class Package(Item):
     def check_recipe(self, building_id):
         if building_id == "counter":
             recipes = self.game.counter_recipes
-        else:
+        elif building_id == "oven":
             recipes = self.game.oven_recipes
+        else:
+            recipes = self.game.chopper_recipes
 
         for result, recipe in recipes.items():
             print(self.ids, set(recipe))

@@ -50,11 +50,8 @@ class Game:
             "cheese": Item(self, "cheese", "new-sprites/items/cheese.png"),
             "chili": Item(self, "chili", "new-sprites/items/Chili.png"),
             "chocolate": Item(self, "chocolate", "new-sprites/items/chocolate.png"),
-
-
             "chopped-apple": Item(self, "chopped-apple", "new-sprites/items/chopped_apple.png"),
             "chopped-chocolate": Item(self, "chopped-chocolate", "new-sprites/items/chopped_chocolate.png"),
-
             "cookie-batter": Item(self, "cookie-batter", "new-sprites/items/cookie_batter.png"),
             "cookie": Item(self, "cookie", "new-sprites/items/cookie.png", sellprice=50),
             "flour": Item(self, "flour", "new-sprites/items/flour.png"),
@@ -84,8 +81,6 @@ class Game:
             "poutine" : ("fries","meat","cheese"),
             "chili" : ("tomato","milk","meat","cheese"),
             "hot-dog" : ("weiner","bread"),
-            "chopped-potato" :("potato"),
-            "chopped-tomato" : ("tomato"),
             "lettuce" :("lettuce"),
             "salad" : ("tomato", "lettuce","cheese"),
             "ice-cream" : ("milk","sugar","chocolate")
@@ -97,6 +92,10 @@ class Game:
             "fries" : ("chopped-potato"),
             "spaghetti-meatball" : ("chopped-tomato","pasta","meat"),
             "cake" : ("flour","milk","sugar","chocolate")
+        }
+        self.chopper_recipes = {
+            "chopped-potato" :("potato"),
+            "chopped-tomato" : ("tomato")
         }
 
         self.world = World(self)
