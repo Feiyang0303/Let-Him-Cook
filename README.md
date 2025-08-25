@@ -35,9 +35,28 @@ A fun cooking simulation game where you manage a kitchen, prepare ingredients, a
 
 **Watch the full gameplay demonstration:**
 
-https://user-images.githubusercontent.com/YOUR_USER_ID/YOUR_VIDEO_ID/readmePics/video/Let_Him_Cook.mp4
+### Option 1: Download and View
+[📥 Download Let_Him_Cook.mp4](readmePics/video/Let_Him_Cook.mp4)
 
-*Click the link above to watch the complete gameplay walkthrough showcasing all features!*
+### Option 2: GitHub Video Upload
+To make the video play directly in GitHub, you need to:
+
+1. **Upload your MP4 file** to GitHub Issues or Discussions
+2. **Copy the generated URL** from the uploaded video
+3. **Replace the link below** with your actual GitHub video URL
+
+**Current video file:** `readmePics/video/Let_Him_Cook.mp4`
+
+*Note: For the video to auto-play in GitHub, it needs to be uploaded through GitHub's interface, not just stored in your repository.*
+
+---
+
+**Video Features Showcased:**
+- 🍳 Real-time cooking mechanics
+- 🏗️ Kitchen building system
+- 🛒 Shop and decoration features
+- 📦 Inventory management
+- 👥 Multiplayer gameplay
 
 ## 🎯 Core Gameplay Features
 
