@@ -30,71 +30,92 @@ A fun cooking simulation game where you manage a kitchen, prepare ingredients, a
 2. **Cooking Wave**: Serve customers and complete orders
 3. **Manage Resources**: Balance money, inventory space, and customer demands
 
-### Cooking Stations
 
-#### Counter
-- **Place Items**: Drop ingredients to create packages
-- **Pick Up**: Retrieve items when inventory has space
-- **Recipe Creation**: Combine ingredients to form new dishes
+## 🎥 Video Demonstration
 
-#### Processor (Chopper/Oven)
-- **Chopper**: Cuts ingredients (e.g., potato → potato slices)
-- **Oven**: Bakes ingredients (e.g., cookie batter → cookie)
-- **Progress System**: Items take time to process
+**Watch the full gameplay demonstration:**
 
-#### Fridge
-- **Storage**: Holds up to 20 items
-- **Pre-filled**: Comes with random ingredients
-- **Access**: Open during break waves
+https://user-images.githubusercontent.com/YOUR_USER_ID/YOUR_VIDEO_ID/readmePics/video/Let_Him_Cook.mp4
 
-#### Seller
-- **Sell Items**: Convert completed dishes to money
-- **Wave Restriction**: Only active during cooking waves
+*Click the link above to watch the complete gameplay walkthrough showcasing all features!*
 
-## 🏗️ Building System
+## 🎯 Core Gameplay Features
 
-### Available Buildings
-- **Counter** ($10): Basic food preparation station
-- **Fridge** ($1000): Ingredient storage
-- **Chopper** ($100): Cuts ingredients
-- **Oven** ($100): Bakes ingredients
-- **Seller** ($1000): Sells completed dishes
-- **Item Shop** ($100): Purchase ingredients
+### **Project Overview:**
+"Let Him Cook" is an innovative multiplayer cooking simulation game that combines strategic kitchen management with real-time culinary challenges. Players work together (or compete) to build, manage, and optimize their kitchen operations while serving customers under time pressure.
 
-### Building Placement
-- Buildings can be placed on empty tiles
-- Some buildings have larger footprints
-- Buildings are solid and block movement
+#### 1. **Stack Food & Create Dishes Using Built-in Recipes Within Cooking Time**
 
-## 🥘 Recipe System
+![Core Cooking Mechanics](readmePics/cooking-mechanics.png)
 
-### Counter Recipes
-- **Cookie Batter**: Sugar + Flour + Chocolate + Butter
-- **Burger**: Bread + Meat + Lettuce
-- **Supreme Burger**: Bread + Meat + Lettuce + Cheese + Tomato Slice
-- **Poutine**: Fries + Meat + Cheese
-- **Chili**: Tomato Slice + Milk + Meat + Cheese
-- **Hot Dog**: Weiner + Bread
-- **Salad**: Tomato Slice + Lettuce + Cheese
-- **Ice Cream**: Milk + Sugar + Chocolate
+- **Real-time Cooking System**: Players must efficiently stack ingredients and create dishes using built-in recipes while racing against the clock
+- **Recipe Management**: Comprehensive recipe system with ingredients like meat, tomato, lettuce, cheese, and more
+- **Time Pressure**: "COOKIN TIME" countdown creates intense, engaging gameplay where every second counts
+- **Ingredient Combination**: Strategic stacking of ingredients at various cooking stations to maximize efficiency
 
-### Oven Recipes
-- **Cookie**: Cookie Batter
-- **Bread**: Flour + Sugar + Milk + Butter
-- **Fries**: Potato Slices
-- **Spaghetti Meatballs**: Tomato Slice + Pasta + Meat
-- **Cake**: Flour + Milk + Sugar + Chocolate
+#### 2. **Customizable Kitchen Building System**
 
-### Chopper Recipes
-- **Potato Slices**: Potato
-- **Tomato Slice**: Tomato
+![Kitchen Building System](readmePics/kitchen-building.png)
 
-## 💰 Economy
+- **Freedom of Design**: Players can build their kitchen exactly how they want with complete freedom of placement
+- **Modular Construction**: Various building types including counters, processors, storage units, and decorative elements
+- **Strategic Layout**: Optimize kitchen flow for maximum efficiency and customer satisfaction
+- **Building Categories**: From basic counters ($10) to advanced processors ($100) and premium storage ($1000)
 
-- **Starting Money**: $500
-- **Income**: Sell completed dishes to customers
-- **Expenses**: Purchase buildings and ingredients
-- **Profit**: Balance customer demand with resource costs
+#### 3. **Comprehensive Shop & Decoration System**
+
+![Shop & Decoration System](readmePics/shop-system.png)
+
+- **Ingredient Shop**: Purchase fresh ingredients like meat, vegetables, dairy, and spices
+- **Equipment Store**: Buy cooking appliances including ovens, choppers, grills, and specialized tools
+- **Decoration Items**: Customize your kitchen with aesthetic elements and functional decorations
+- **Progressive Unlocking**: Unlock new items and buildings as you earn money and progress
+
+#### 4. **Advanced Inventory Management**
+
+![Inventory Management System](readmePics/inventory-system.png)
+
+- **Smart Storage**: Store items in organized inventory systems with capacity management
+- **Multi-tier Storage**: From personal inventory (10 slots) to fridge storage (20 slots)
+- **Item Organization**: Efficiently manage ingredients, prepared dishes, and cooking tools
+- **Quick Access**: Streamlined interface for rapid ingredient selection and combination
+
+#### 5. **Multiplayer Collaboration & Competition**
+
+![Multiplayer Experience](readmePics/multiplayer.png)
+
+- **Cooperative Play**: Work together with friends to build the ultimate kitchen
+- **Competitive Mode**: Race against other players to complete orders and earn profits
+- **Shared Resources**: Collaborate on kitchen expansion and recipe development
+- **Social Interaction**: Build, cook, and succeed together in a shared culinary world
+
+### 🏗️ Technical Implementation
+
+**Game Engine**: Built with Python and Pygame for cross-platform compatibility
+**Multiplayer Architecture**: Real-time synchronization for seamless cooperative gameplay
+**Procedural Generation**: Dynamic recipe and challenge generation for endless replayability
+**Performance Optimization**: Efficient rendering and physics for smooth multiplayer experience
+
+### 🎮 Gameplay Mechanics
+
+**Cooking Stations:**
+- **Counters**: Basic food preparation and ingredient combination
+- **Processors**: Specialized equipment for cutting, cooking, and processing
+- **Storage Units**: Organized ingredient and dish storage
+- **Serving Areas**: Customer interaction and order fulfillment
+
+**Recipe System:**
+- **Counter Recipes**: Burgers, salads, and basic combinations
+- **Oven Recipes**: Baked goods and cooked dishes
+- **Chopper Recipes**: Ingredient preparation and cutting
+- **Advanced Combinations**: Multi-step recipes requiring multiple stations
+
+**Economy & Progression:**
+- **Starting Capital**: $500 to begin kitchen construction
+- **Income Generation**: Sell completed dishes to customers
+- **Investment Strategy**: Balance immediate needs with long-term kitchen expansion
+- **Goal Achievement**: Reach daily targets and unlock new content
+
 
 ## 🎨 Technical Details
 
@@ -137,71 +158,6 @@ python3 -m unittest tests.test_pickup_drop -v
 - **Inventory Management**: Testing capacity limits and item handling
 - **Building Interactions**: Testing various cooking station behaviors
 
-## 🎥 Video Demonstration
-
-### Devpost Project: Let Him Cook - A Multiplayer Kitchen Management Adventure
-
-**Project Overview:**
-"Let Him Cook" is an innovative multiplayer cooking simulation game that combines strategic kitchen management with real-time culinary challenges. Players work together (or compete) to build, manage, and optimize their kitchen operations while serving customers under time pressure.
-
-### 🎯 Core Gameplay Features
-
-#### 1. **Stack Food & Create Dishes Using Built-in Recipes Within Cooking Time**
-- **Real-time Cooking System**: Players must efficiently stack ingredients and create dishes using built-in recipes while racing against the clock
-- **Recipe Management**: Comprehensive recipe system with ingredients like meat, tomato, lettuce, cheese, and more
-- **Time Pressure**: "COOKIN TIME" countdown creates intense, engaging gameplay where every second counts
-- **Ingredient Combination**: Strategic stacking of ingredients at various cooking stations to maximize efficiency
-
-#### 2. **Customizable Kitchen Building System**
-- **Freedom of Design**: Players can build their kitchen exactly how they want with complete freedom of placement
-- **Modular Construction**: Various building types including counters, processors, storage units, and decorative elements
-- **Strategic Layout**: Optimize kitchen flow for maximum efficiency and customer satisfaction
-- **Building Categories**: From basic counters ($10) to advanced processors ($100) and premium storage ($1000)
-
-#### 3. **Comprehensive Shop & Decoration System**
-- **Ingredient Shop**: Purchase fresh ingredients like meat, vegetables, dairy, and spices
-- **Equipment Store**: Buy cooking appliances including ovens, choppers, grills, and specialized tools
-- **Decoration Items**: Customize your kitchen with aesthetic elements and functional decorations
-- **Progressive Unlocking**: Unlock new items and buildings as you earn money and progress
-
-#### 4. **Advanced Inventory Management**
-- **Smart Storage**: Store items in organized inventory systems with capacity management
-- **Multi-tier Storage**: From personal inventory (10 slots) to fridge storage (20 slots)
-- **Item Organization**: Efficiently manage ingredients, prepared dishes, and cooking tools
-- **Quick Access**: Streamlined interface for rapid ingredient selection and combination
-
-#### 5. **Multiplayer Collaboration & Competition**
-- **Cooperative Play**: Work together with friends to build the ultimate kitchen
-- **Competitive Mode**: Race against other players to complete orders and earn profits
-- **Shared Resources**: Collaborate on kitchen expansion and recipe development
-- **Social Interaction**: Build, cook, and succeed together in a shared culinary world
-
-### 🏗️ Technical Implementation
-
-**Game Engine**: Built with Python and Pygame for cross-platform compatibility
-**Multiplayer Architecture**: Real-time synchronization for seamless cooperative gameplay
-**Procedural Generation**: Dynamic recipe and challenge generation for endless replayability
-**Performance Optimization**: Efficient rendering and physics for smooth multiplayer experience
-
-### 🎮 Gameplay Mechanics
-
-**Cooking Stations:**
-- **Counters**: Basic food preparation and ingredient combination
-- **Processors**: Specialized equipment for cutting, cooking, and processing
-- **Storage Units**: Organized ingredient and dish storage
-- **Serving Areas**: Customer interaction and order fulfillment
-
-**Recipe System:**
-- **Counter Recipes**: Burgers, salads, and basic combinations
-- **Oven Recipes**: Baked goods and cooked dishes
-- **Chopper Recipes**: Ingredient preparation and cutting
-- **Advanced Combinations**: Multi-step recipes requiring multiple stations
-
-**Economy & Progression:**
-- **Starting Capital**: $500 to begin kitchen construction
-- **Income Generation**: Sell completed dishes to customers
-- **Investment Strategy**: Balance immediate needs with long-term kitchen expansion
-- **Goal Achievement**: Reach daily targets and unlock new content
 
 ### 🌟 Innovation & Impact
 
@@ -264,52 +220,5 @@ python3 -m unittest tests.test_pickup_drop -v
 - **Short Term**: Complete customer orders efficiently
 - **Medium Term**: Expand kitchen with new equipment
 - **Long Term**: Master all recipes and maximize profits
-
-## 🤝 Contributing
-
-Contributions are welcome! Areas for improvement:
-- Additional recipes and ingredients
-- New cooking stations
-- Enhanced UI/UX
-- Performance optimizations
-- Bug fixes and testing
-
-## 🖼️ Screenshots & Gameplay
-
-### **Image 1: Core Cooking Mechanics**
-![Stack Food & Create Dishes](readmePics/cooking-mechanics.png)
-*Players stack ingredients and create dishes using built-in recipes within the cooking time limit. The interface shows real-time countdown timers and progress tracking.*
-
-### **Image 2: Kitchen Building System**
-![Kitchen Building](readmePics/kitchen-building.png)
-*Players can build their kitchen exactly how they want with complete freedom of placement. The building menu shows various options from basic counters to advanced processors.*
-
-### **Image 3: Shop & Decoration System**
-![Shop & Decorations](readmePics/shop-system.png)
-*Players can purchase decorations, appliances, and ingredients from the shop. The interface displays costs and available items for kitchen customization.*
-
-### **Image 4: Inventory Management**
-![Inventory System](readmePics/inventory-system.png)
-*Advanced inventory management allows players to store items efficiently. The system includes personal inventory and larger storage units like fridges.*
-
-### **Image 5: Multiplayer Experience**
-![Multiplayer Gameplay](readmePics/multiplayer.png)
-*Multiplayer collaboration and competition where players work together to build kitchens and complete cooking challenges.*
-
-## 🎥 Video Demonstration
-
-**Watch the full gameplay demonstration:**
-[![Let Him Cook Gameplay](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
-
-*Click the image above to watch the complete gameplay walkthrough showcasing all features!*
-
-## 🙏 Acknowledgments
-
-- Pixel art sprites and textures
-- Sound effects and music
-- Game design inspiration
-- Testing and feedback contributors
-
----
 
 **Let Him Cook** - Where culinary creativity meets strategic gameplay! 🍽️
