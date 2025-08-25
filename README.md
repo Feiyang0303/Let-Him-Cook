@@ -274,9 +274,34 @@ Contributions are welcome! Areas for improvement:
 - Performance optimizations
 - Bug fixes and testing
 
-## 📝 License
+## 🖼️ Screenshots & Gameplay
 
-[Add your license information here]
+### **Image 1: Core Cooking Mechanics**
+![Stack Food & Create Dishes](readmePics/cooking-mechanics.png)
+*Players stack ingredients and create dishes using built-in recipes within the cooking time limit. The interface shows real-time countdown timers and progress tracking.*
+
+### **Image 2: Kitchen Building System**
+![Kitchen Building](readmePics/kitchen-building.png)
+*Players can build their kitchen exactly how they want with complete freedom of placement. The building menu shows various options from basic counters to advanced processors.*
+
+### **Image 3: Shop & Decoration System**
+![Shop & Decorations](readmePics/shop-system.png)
+*Players can purchase decorations, appliances, and ingredients from the shop. The interface displays costs and available items for kitchen customization.*
+
+### **Image 4: Inventory Management**
+![Inventory System](readmePics/inventory-system.png)
+*Advanced inventory management allows players to store items efficiently. The system includes personal inventory and larger storage units like fridges.*
+
+### **Image 5: Multiplayer Experience**
+![Multiplayer Gameplay](readmePics/multiplayer.png)
+*Multiplayer collaboration and competition where players work together to build kitchens and complete cooking challenges.*
+
+## 🎥 Video Demonstration
+
+**Watch the full gameplay demonstration:**
+[![Let Him Cook Gameplay](https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
+
+*Click the image above to watch the complete gameplay walkthrough showcasing all features!*
 
 ## 🙏 Acknowledgments
 
