@@ -35,21 +35,9 @@ A fun cooking simulation game where you manage a kitchen, prepare ingredients, a
 
 **Watch the full gameplay demonstration:**
 
-### Option 1: Download and View
+
 [📥 Download Let_Him_Cook.mp4](https://github.com/user-attachments/assets/6bc265b6-444b-4640-b6e9-d6e8d7babfb0)
 
-### Option 2: GitHub Video Upload
-To make the video play directly in GitHub, you need to:
-
-1. **Upload your MP4 file** to GitHub Issues or Discussions
-2. **Copy the generated URL** from the uploaded video
-3. **Replace the link below** with your actual GitHub video URL
-
-**Current video file:** `readmePics/video/Let_Him_Cook.mp4`
-
-*Note: For the video to auto-play in GitHub, it needs to be uploaded through GitHub's interface, not just stored in your repository.*
-
----
 
 **Video Features Showcased:**
 - 🍳 Real-time cooking mechanics
@@ -196,20 +184,9 @@ python3 -m unittest tests.test_pickup_drop -v
 
 **Planned Features:**
 - **Mobile Version**: Cross-platform mobile compatibility
-- **VR Support**: Immersive virtual reality kitchen experience
 - **AI Chefs**: Intelligent NPCs for single-player mode
 - **Seasonal Events**: Special challenges and limited-time content
 - **Community Features**: Recipe sharing and kitchen showcase system
-
-**Technical Roadmap:**
-- **Cloud Saves**: Cross-device progress synchronization
-- **Modding Support**: Community-created content and recipes
-- **Analytics Dashboard**: Player performance and kitchen optimization insights
-- **API Integration**: Connect with real-world recipe databases
-
----
-
-**"Let Him Cook" represents the future of collaborative gaming, combining the creativity of building games with the excitement of real-time challenges and the social aspects of multiplayer cooperation. It's not just a game—it's a culinary adventure that brings people together to create, compete, and cook!** 🍳✨
 
 ## 🚀 Getting Started
 
