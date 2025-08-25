@@ -36,7 +36,7 @@ A fun cooking simulation game where you manage a kitchen, prepare ingredients, a
 **Watch the full gameplay demonstration:**
 
 ### Option 1: Download and View
-[📥 Download Let_Him_Cook.mp4](readmePics/video/Let_Him_Cook.mp4)
+[📥 Download Let_Him_Cook.mp4](https://github.com/user-attachments/assets/6bc265b6-444b-4640-b6e9-d6e8d7babfb0)
 
 ### Option 2: GitHub Video Upload
 To make the video play directly in GitHub, you need to:
